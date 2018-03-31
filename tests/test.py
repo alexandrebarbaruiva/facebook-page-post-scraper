@@ -1,11 +1,11 @@
 import unittest
 import os
-from scraper.post_scraper import Scraper
+from scraper.post_scraper import Scraper, retrieve_token
 
 class TestPostScraper(unittest.TestCase):
 
     def setUp(self):
-        self.scraper = Scraper()
+        self.scraper = Scraper(retrieve_token)
 
     def test_nothing(self):
         """
@@ -14,7 +14,7 @@ class TestPostScraper(unittest.TestCase):
         pass
 
     def test_if_link_is_online(self):
-        self.assertEqual(self.scraper.status_code, 200)
+        self.assertEqual(self.scraper.check_status_code(), 404)
 
 if __name__ == '__main__':
     unittest.main()
