@@ -1,0 +1,5 @@
+.DS_Store
+examples/
+venv/
+*.csv
+config.ini
