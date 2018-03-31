@@ -14,8 +14,8 @@ def retrieve_token():
         config = ConfigParser()
         config.read_file(open(str(os.getcwd())+'/scraper/config.ini'))
         return(config['DEFAULT']['token'])
-    except e:
-        return(e)
+    except:
+        return False
 
 
 class Scraper:
@@ -38,7 +38,7 @@ class Scraper:
     def check_status_code(self):
         """
         Checks for page status code, good for testing if page and query are
-        adequate
+        adequate. There's room for improvement here.
         """
         return self.status_code
 

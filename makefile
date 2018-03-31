@@ -11,3 +11,8 @@ install:
 
 style:
 	pycodestyle scraper/ tests/
+
+cov:
+	coverage run -m py.test tests/test.py
+	coverage report -m scraper/post_scraper.py
+	coverage html scraper/post_scraper.py

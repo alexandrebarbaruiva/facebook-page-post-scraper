@@ -14,6 +14,10 @@ class TestPostScraper(unittest.TestCase):
         """
         pass
 
+    def test_if_token_file_exists(self):
+        if not retrieve_token():
+            self.fail("Token file missing, please provide a token file.")
+
     def test_if_token_is_valid(self):
         """
         Check if token provided by user is valid
@@ -28,10 +32,18 @@ class TestPostScraper(unittest.TestCase):
 
     def test_if_page_is_as_provided_by_user(self):
         """
-        Check if page provided by user is correctly stored
+        Check if page provided by user is correctly stored. Example used
+        is Github's page
         """
         self.scraper.set_page('262588213843476')
         self.assertEqual(self.scraper.get_current_page(), '262588213843476')
+
+    def test_if_scraping_page(self):
+        """
+        Check if scraping is correct
+        """
+        self.scraper.set_page('262588213843476')
+        self.scraper.scrape()
 
 
 if __name__ == '__main__':

@@ -1,3 +1,4 @@
 green
+pytest-cov
 pycodestyle
-facebook-sdk
+-e git+https://github.com/mobolic/facebook-sdk.git#egg=facebook-sdk
