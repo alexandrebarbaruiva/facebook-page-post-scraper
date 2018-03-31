@@ -4,7 +4,7 @@ test:
 	green3 . -vvv
 
 run:
-	python3 bot/bot.py
+	python3 scraper/post_scraper.py
 
 install:
 	pip3 install -r requirements.txt
