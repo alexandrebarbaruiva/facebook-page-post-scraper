@@ -63,6 +63,7 @@ class Scraper:
         to scrape.
         """
         self.page = page
+        self.file_name = (str(self.page)+'.json')
 
     def get_current_page(self):
         return self.page
@@ -71,10 +72,19 @@ class Scraper:
         graph = facebook.GraphAPI(access_token=self.token, version="2.12")
         feed_statement = '/feed' if feed else ''
         post = graph.get_object(id=self.page+feed_statement, fields=query)
-        # print(json.dumps(post, indent=4))
+        self.current_data = post
         if 'name' in post.keys():
             return post['name']
         elif 'data' in post.keys():
+            return True
+
+    def write_file(self, file=None):
+        if file is None:
+            file = self.file_name
+        with open(file, 'w') as data_file:
+            data_file.write(
+                json.dumps(self.current_data, indent=2)
+            )  # pretty json
             return True
 
     def get_new_token(self):

@@ -68,6 +68,12 @@ class TestPostScraper(unittest.TestCase):
             (feed=True, query=test_query), True
         )
 
+    def test_if_scraping_outputs_file(self):
+        self.scraper.set_page('262588213843476')
+        test_query = 'message,comments.summary(true){likes}'
+        self.scraper.scrape_current_page(feed=True, query=test_query)
+        self.assertTrue(self.scraper.write_file(), True)
+
     def test_get_new_token(self):
         """
         Check if it's getting a new token and it's a valid token

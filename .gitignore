@@ -1,6 +1,8 @@
 # User addition
 .DS_Store
 *.ini
+*.json
+*.csv
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
