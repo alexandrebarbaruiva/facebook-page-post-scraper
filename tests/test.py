@@ -43,7 +43,7 @@ class TestPostScraper(unittest.TestCase):
         Check if scraping is correct
         """
         self.scraper.set_page('262588213843476')
-        self.scraper.scrape()
+        self.assertEqual(self.scraper.scrape_current_page(),'GitHub')
 
 
 if __name__ == '__main__':

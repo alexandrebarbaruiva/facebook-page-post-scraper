@@ -21,3 +21,13 @@ Para windows
 ```
 pip install -r requirements.txt
 ```
+
+## Modelo para arquivo Token
+
+O armazenamento do token está ocorrendo em um arquivo chamado config.ini para
+evitar falhas de segurança como compartilhamento indevido de tokens
+
+```
+[DEFAULT]
+token={SEUTOKENGIGANTEAQUI}
+```

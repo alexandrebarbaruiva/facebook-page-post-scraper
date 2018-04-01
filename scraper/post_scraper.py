@@ -4,6 +4,7 @@ import os
 import sys
 from configparser import ConfigParser
 import logging
+import json
 
 
 def retrieve_token():
@@ -51,3 +52,9 @@ class Scraper:
 
     def get_current_page(self):
         return self.page
+
+    def scrape_current_page(self):
+        graph = facebook.GraphAPI(access_token=self.token, version="2.12")
+        post = graph.get_object(id=self.page, fields='')
+        # print(json.dumps(post, indent=4))
+        return post['name']
