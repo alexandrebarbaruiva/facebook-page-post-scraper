@@ -1,5 +1,7 @@
 # Facebook Scraper
 
+[![Build Status](https://travis-ci.org/unb-cic-esw/facebook-page-post-scraper.svg?branch=master)](https://travis-ci.org/unb-cic-esw/facebook-page-post-scraper)
+
 ## Fazendo tudo rodar
 
 Uma vez que se tenha instalado python 3 e Git, baixado o repositório e
