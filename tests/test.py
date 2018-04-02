@@ -1,6 +1,6 @@
 import unittest
 import os
-from scraper.post_scraper import Scraper, retrieve_token
+from scraper.post_scraper import Scraper, retrieve_token, update_token
 
 
 class TestPostScraper(unittest.TestCase):
@@ -15,8 +15,19 @@ class TestPostScraper(unittest.TestCase):
         pass
 
     def test_if_token_file_exists(self):
+        self.assertFalse(retrieve_token('test.txt'))
         if not retrieve_token():
-            self.fail("Token file missing, please provide a token file.")
+            self.fail('Token file missing, please provide a token file.')
+
+    def test_if_token_can_be_updated(self):
+        self.assertEqual(
+            update_token(file='default.ini'),
+            'Token not updated.'
+        )
+        self.assertEqual(
+            update_token('TestTokenNotValid', file='default.ini'),
+            'New token written successfuly.'
+        )
 
     def test_if_token_is_valid(self):
         """
@@ -40,10 +51,35 @@ class TestPostScraper(unittest.TestCase):
 
     def test_if_scraping_page(self):
         """
-        Check if scraping is correct
+        Check if scraping is correct and working
         """
         self.scraper.set_page('262588213843476')
         self.assertEqual(self.scraper.scrape_current_page(), 'GitHub')
+
+    def test_if_scraping_page_with_queries(self):
+        """
+        Check if scraping with queries is correct and working correctly
+        """
+        self.scraper.set_page('262588213843476')
+        self.assertEqual(self.scraper.scrape_current_page(feed=True), True)
+        test_query = 'message,comments.summary(true){likes}'
+        self.assertEqual(
+            self.scraper.scrape_current_page
+            (feed=True, query=test_query), True
+        )
+
+    def test_if_scraping_outputs_file(self):
+        self.scraper.set_page('262588213843476')
+        test_query = 'message,comments.summary(true){likes}'
+        self.scraper.scrape_current_page(feed=True, query=test_query)
+        self.assertTrue(self.scraper.write_file(), True)
+
+    def test_get_new_token(self):
+        """
+        Check if it's getting a new token and it's a valid token
+        """
+        self.scraper.get_new_token()
+        # self.assertTrue(self.scraper.check_valid_token())
 
 
 if __name__ == '__main__':

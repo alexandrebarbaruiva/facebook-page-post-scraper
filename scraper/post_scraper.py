@@ -7,16 +7,30 @@ import logging
 import json
 
 
-def retrieve_token():
+def retrieve_token(file='config.ini'):
     """
     Retrives token from config.ini file on scraper folder
     """
     try:
         config = ConfigParser()
-        config.read_file(open(str(os.getcwd())+'/scraper/config.ini'))
+        config.read_file(open(str(os.getcwd())+'/scraper/'+file))
         return(config['DEFAULT']['token'])
     except:
         return False
+
+
+def update_token(new_token=None, file='config.ini'):
+    """
+    Update token from config.ini file on scraper folder
+    """
+    if new_token is not None:
+        config = ConfigParser()
+        config['DEFAULT'] = {'token': new_token}
+        with open(str(os.getcwd())+'/scraper/'+file, 'w') as configfile:
+            config.write(configfile)
+        return 'New token written successfuly.'
+    else:
+        return 'Token not updated.'
 
 
 class Scraper:
@@ -49,12 +63,29 @@ class Scraper:
         to scrape.
         """
         self.page = page
+        self.file_name = (str(self.page)+'.json')
 
     def get_current_page(self):
         return self.page
 
-    def scrape_current_page(self):
+    def scrape_current_page(self, feed=False, query=''):
         graph = facebook.GraphAPI(access_token=self.token, version="2.12")
-        post = graph.get_object(id=self.page, fields='')
-        # print(json.dumps(post, indent=4))
-        return post['name']
+        feed_statement = '/feed' if feed else ''
+        post = graph.get_object(id=self.page+feed_statement, fields=query)
+        self.current_data = post
+        if 'name' in post.keys():
+            return post['name']
+        elif 'data' in post.keys():
+            return True
+
+    def write_file(self, file=None):
+        if file is None:
+            file = self.file_name
+        with open(file, 'w') as data_file:
+            data_file.write(
+                json.dumps(self.current_data, indent=2)
+            )  # pretty json
+            return True
+
+    def get_new_token(self):
+        pass
