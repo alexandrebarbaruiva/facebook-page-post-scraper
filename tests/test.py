@@ -1,6 +1,7 @@
 import unittest
 import os
-from scraper.post_scraper import Scraper, retrieve_token, update_token
+from scraper.post_scraper import Scraper
+from scraper.token_manager import retrieve_token, update_token
 
 
 class TestPostScraper(unittest.TestCase):
@@ -15,9 +16,18 @@ class TestPostScraper(unittest.TestCase):
         pass
 
     def test_if_token_file_exists(self):
+        """
+        Check if token file exists, if it doesn't
+        """
         self.assertFalse(retrieve_token('test.txt'))
         if not retrieve_token():
             self.fail('Token file missing, please provide a token file.')
+
+    def test_if_token_is_well_formatted(self):
+        self.assertEqual(
+            retrieve_token('badtoken.ini'),
+            'Token with bad structure'
+        )
 
     def test_if_token_can_be_updated(self):
         self.assertEqual(

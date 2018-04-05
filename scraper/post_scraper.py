@@ -1,36 +1,7 @@
 import facebook
 import requests
-import os
 import sys
-from configparser import ConfigParser
-import logging
 import json
-
-
-def retrieve_token(file='config.ini'):
-    """
-    Retrives token from config.ini file on scraper folder
-    """
-    try:
-        config = ConfigParser()
-        config.read_file(open(str(os.getcwd())+'/scraper/'+file))
-        return(config['DEFAULT']['token'])
-    except:
-        return False
-
-
-def update_token(new_token=None, file='config.ini'):
-    """
-    Update token from config.ini file on scraper folder
-    """
-    if new_token is not None:
-        config = ConfigParser()
-        config['DEFAULT'] = {'token': new_token}
-        with open(str(os.getcwd())+'/scraper/'+file, 'w') as configfile:
-            config.write(configfile)
-        return 'New token written successfuly.'
-    else:
-        return 'Token not updated.'
 
 
 class Scraper:
