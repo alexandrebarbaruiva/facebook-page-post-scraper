@@ -36,7 +36,7 @@ def update_token(new_token=None, file='config.ini'):
 
 def generate_token_file(new_token=None, file='config.ini'):
     """
-    Generate empty token file if none is found, else returns
+    Generate empty token file with token provided, else returns
     that token already exists
     """
     if(not retrieve_token(file)):
