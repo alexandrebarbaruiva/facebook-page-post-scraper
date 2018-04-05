@@ -34,15 +34,15 @@ def update_token(new_token=None, file='config.ini'):
         return 'Token not updated.'
 
 
-def generate_empty_token(new_token=None, file='config.ini'):
+def generate_token_file(new_token=None, file='config.ini'):
     """
-    Generate empty token if none is found, else returns
+    Generate empty token file if none is found, else returns
     that token already exists
     """
     if(not retrieve_token(file)):
-        token_data = '[DEFAULT]\ntoken = \'\''
+        token_data = '[DEFAULT]\ntoken = \'' + str(new_token) + '\''
         with open(path+file, 'w') as token_file:
             token_file.write(token_data)
-            return True
+            return [True, new_token]
     else:
-        return 'File already exists'
+        return [False, 'File already exists']

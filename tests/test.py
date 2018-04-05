@@ -2,7 +2,7 @@ import unittest
 import os
 from scraper.post_scraper import Scraper
 from scraper.token_manager import \
-    retrieve_token, update_token, generate_empty_token
+    retrieve_token, update_token, generate_token_file
 
 
 class TestPostScraper(unittest.TestCase):
@@ -49,11 +49,19 @@ class TestPostScraper(unittest.TestCase):
         """
         self.assertTrue(self.scraper.check_valid_token())
 
-    def test_if_empty_token_can_be_generated(self):
-        self.assertEqual(generate_empty_token(file='empty.ini'), True)
+    def test_if_empty_token_file_can_be_generated(self):
+        self.assertEqual(generate_token_file(file='empty.ini')[0], True)
         self.assertEqual(
-            generate_empty_token(file='empty.ini'),
-            'File already exists'
+            generate_token_file(file='empty.ini'),
+            [False, 'File already exists']
+        )
+        os.remove(str(os.getcwd())+'/scraper/empty.ini')
+
+    def test_if_token_file_can_be_generated(self):
+        new_token = "THISISAGOODTEST"
+        self.assertEqual(
+            generate_token_file(new_token, file='empty.ini'),
+            [True, new_token]
         )
         os.remove(str(os.getcwd())+'/scraper/empty.ini')
 
