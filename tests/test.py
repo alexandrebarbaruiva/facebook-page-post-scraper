@@ -1,13 +1,17 @@
 import unittest
 import os
 from scraper.post_scraper import Scraper
-from scraper.token_manager import retrieve_token, update_token
+from scraper.token_manager import \
+    retrieve_token, update_token, generate_empty_token
 
 
 class TestPostScraper(unittest.TestCase):
 
     def setUp(self):
         self.scraper = Scraper(retrieve_token())
+
+    def tearDown(self):
+        self.scraper = None
 
     def test_nothing(self):
         """
@@ -44,6 +48,14 @@ class TestPostScraper(unittest.TestCase):
         Check if token provided by user is valid
         """
         self.assertTrue(self.scraper.check_valid_token())
+
+    def test_if_empty_token_can_be_generated(self):
+        self.assertEqual(generate_empty_token(file='empty.ini'), True)
+        self.assertEqual(
+            generate_empty_token(file='empty.ini'),
+            'File already exists'
+        )
+        os.remove(str(os.getcwd())+'/scraper/empty.ini')
 
     def test_if_status_is_400(self):
         """

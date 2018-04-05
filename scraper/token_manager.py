@@ -2,13 +2,16 @@ import os
 from configparser import ConfigParser
 
 
+path = str(os.getcwd())+'/scraper/'
+
+
 def retrieve_token(file='config.ini'):
     """
     Retrieves token from config.ini file on scraper folder
     """
     try:
         config = ConfigParser()
-        config.read_file(open(str(os.getcwd())+'/scraper/'+file))
+        config.read_file(open(path+file))
         if ('DEFAULT' in config.keys()):
             if ('token' in config['DEFAULT'].keys()):
                 return(config['DEFAULT']['token'])
@@ -24,8 +27,22 @@ def update_token(new_token=None, file='config.ini'):
     if new_token is not None:
         config = ConfigParser()
         config['DEFAULT'] = {'token': new_token}
-        with open(str(os.getcwd())+'/scraper/'+file, 'w') as configfile:
+        with open(path+file, 'w') as configfile:
             config.write(configfile)
         return 'New token written successfuly.'
     else:
         return 'Token not updated.'
+
+
+def generate_empty_token(new_token=None, file='config.ini'):
+    """
+    Generate empty token if none is found, else returns
+    that token already exists
+    """
+    if(not retrieve_token(file)):
+        token_data = '[DEFAULT]\ntoken = \'\''
+        with open(path+file, 'w') as token_file:
+            token_file.write(token_data)
+            return True
+    else:
+        return 'File already exists'
