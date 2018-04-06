@@ -60,3 +60,4 @@ class Scraper:
 
     def get_new_token(self):
         pass
+
