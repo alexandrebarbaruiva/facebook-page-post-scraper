@@ -1,12 +1,17 @@
 import unittest
 import os
-from scraper.post_scraper import Scraper, retrieve_token, update_token
+from scraper.post_scraper import Scraper
+from scraper.token_manager import \
+    retrieve_token, update_token, generate_token_file
 
 
 class TestPostScraper(unittest.TestCase):
 
     def setUp(self):
         self.scraper = Scraper(retrieve_token())
+
+    def tearDown(self):
+        self.scraper = None
 
     def test_nothing(self):
         """
@@ -15,9 +20,18 @@ class TestPostScraper(unittest.TestCase):
         pass
 
     def test_if_token_file_exists(self):
+        """
+        Check if token file exists, if it doesn't
+        """
         self.assertFalse(retrieve_token('test.txt'))
         if not retrieve_token():
             self.fail('Token file missing, please provide a token file.')
+
+    def test_if_token_is_well_formatted(self):
+        self.assertEqual(
+            retrieve_token('badtoken.ini'),
+            'Token with bad structure'
+        )
 
     def test_if_token_can_be_updated(self):
         self.assertEqual(
@@ -34,6 +48,22 @@ class TestPostScraper(unittest.TestCase):
         Check if token provided by user is valid
         """
         self.assertTrue(self.scraper.check_valid_token())
+
+    def test_if_empty_token_file_can_be_generated(self):
+        self.assertEqual(generate_token_file(file='empty.ini')[0], True)
+        self.assertEqual(
+            generate_token_file(file='empty.ini'),
+            [False, 'File already exists']
+        )
+        os.remove(str(os.getcwd())+'/scraper/empty.ini')
+
+    def test_if_token_file_can_be_generated(self):
+        new_token = "THISISAGOODTEST"
+        self.assertEqual(
+            generate_token_file(new_token, file='empty.ini'),
+            [True, new_token]
+        )
+        os.remove(str(os.getcwd())+'/scraper/empty.ini')
 
     def test_if_status_is_400(self):
         """
