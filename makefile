@@ -21,3 +21,6 @@ full:
 	make test
 	make cov
 	make style
+
+dl:
+	python3 scraper/scraper.py

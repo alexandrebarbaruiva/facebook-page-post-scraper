@@ -11,6 +11,7 @@ class Scraper:
     def __init__(self, token):
         self.token = token
         self.status_code = 400
+        # self.current_data = 'NO DATA'
 
     def check_valid_token(self):
         """
@@ -37,17 +38,23 @@ class Scraper:
         self.file_name = (str(self.page)+'.json')
 
     def get_current_page(self):
-        return self.page
+        try:
+            return self.page
+        except:
+            return 'Page not defined'
 
     def scrape_current_page(self, feed=False, query=''):
         graph = facebook.GraphAPI(access_token=self.token, version="2.12")
         feed_statement = '/feed' if feed else ''
-        post = graph.get_object(id=self.page+feed_statement, fields=query)
-        self.current_data = post
-        if 'name' in post.keys():
-            return post['name']
-        elif 'data' in post.keys():
-            return True
+        try:
+            post = graph.get_object(id=self.page+feed_statement, fields=query)
+            self.current_data = post
+            if 'name' in post.keys():
+                return post['name']
+            elif 'data' in post.keys():
+                return True
+        except:
+            return 'Page not defined'
 
     def write_file(self, file=None):
         if file is None:
@@ -60,4 +67,3 @@ class Scraper:
 
     def get_new_token(self):
         pass
-
