@@ -36,21 +36,27 @@ clean:
 	rm -f ./*.json
 	rm -f $(JsonDir)*.json
 
+# Call for *.json clean up
+.PHONY: createconfig
+createconfig:
+	echo '[DEFAULT]\ntoken = YOURTOKENHERE' >./scraper/config.ini
+
 
 # Call for help with this makefile's commands
 .PHONY: help
 help:
 	@echo "\n\t Makefile of Facebook scrapper from UnB\n"
-	@echo " make............= Runs the tests using green3 "
-	@echo " make test.......= Also run the tests using green3"
-	@echo " make run........= Run post_scrapper.py"
-	@echo " make install....= Install the requirements necessary for this project"
-	@echo " make style......= Cheks if your code is our pattern of coding for this project"
-	@echo " make json.......= Creates a json dir and moves all .json files there"
-	@echo " make cov........= Checks how much our program is coverage"
-	@echo " make full.......= runs make test, cov and style" 
-	@echo " make json.......= Creates a json dir and moves all .json files there"
-	@echo " make clean......= Removes all .json files"
+	@echo " make.............= Runs the tests using green3 "
+	@echo " make test........= Also run the tests using green3"
+	@echo " make run.........= Run post_scrapper.py"
+	@echo " make install.....= Install the requirements necessary for this project"
+	@echo " make style.......= Cheks if your code is our pattern of coding for this project"
+	@echo " make json........= Creates a json dir and moves all .json files there"
+	@echo " make cov.........= Checks how much our program is coverage"
+	@echo " make full........= runs make test, cov and style" 
+	@echo " make json........= Creates a json dir and moves all .json files there"
+	@echo " make clean.......= Removes all .json files"
+	@echo " make createconfig= Creates config.ini in scraper dir with the expected way to use it"
 	@echo "\n\t End of Makefile Help\n"
 
 
