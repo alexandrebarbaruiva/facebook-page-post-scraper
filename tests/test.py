@@ -1,23 +1,12 @@
 import unittest
 import os
+from time import strftime
 from scraper.post_scraper import Scraper
 from scraper.token_manager import \
     retrieve_token, update_token, generate_token_file
 
 
-class TestPostScraper(unittest.TestCase):
-
-    def setUp(self):
-        self.scraper = Scraper(retrieve_token())
-
-    def tearDown(self):
-        self.scraper = None
-
-    def test_nothing(self):
-        """
-        Check if testing is really ocurring
-        """
-        pass
+class TestTokenFunctions(unittest.TestCase):
 
     def test_if_token_file_exists(self):
         """
@@ -43,12 +32,6 @@ class TestPostScraper(unittest.TestCase):
             'New token written successfuly.'
         )
 
-    def test_if_token_is_valid(self):
-        """
-        Check if token provided by user is valid
-        """
-        self.assertTrue(self.scraper.check_valid_token())
-
     def test_if_empty_token_file_can_be_generated(self):
         self.assertEqual(generate_token_file(file='empty.ini')[0], True)
         self.assertEqual(
@@ -64,6 +47,27 @@ class TestPostScraper(unittest.TestCase):
             [True, new_token]
         )
         os.remove(str(os.getcwd())+'/scraper/empty.ini')
+
+
+class TestPostScraper(unittest.TestCase):
+
+    def setUp(self):
+        self.scraper = Scraper(retrieve_token())
+
+    def tearDown(self):
+        self.scraper = None
+
+    def test_nothing(self):
+        """
+        Check if testing is really ocurring
+        """
+        pass
+
+    def test_if_token_provided_is_valid(self):
+        """
+        Check if token provided by user hasn't expired
+        """
+        self.assertTrue(self.scraper.check_valid_token())
 
     def test_if_status_is_400(self):
         """
@@ -86,6 +90,16 @@ class TestPostScraper(unittest.TestCase):
         self.scraper.set_page('262588213843476')
         self.assertEqual(self.scraper.scrape_current_page(), 'GitHub')
 
+    def test_scraping_without_page(self):
+        """
+        Check if when user doesn't define page, program returns warning
+        """
+        self.assertEqual(self.scraper.get_current_page(), 'Page not set')
+        self.assertEqual(
+            self.scraper.scrape_current_page(),
+            'Page not defined or bad query structure'
+        )
+
     def test_if_scraping_page_with_queries(self):
         """
         Check if scraping with queries is correct and working correctly
@@ -103,6 +117,17 @@ class TestPostScraper(unittest.TestCase):
         test_query = 'message,comments.summary(true){likes}'
         self.scraper.scrape_current_page(feed=True, query=test_query)
         self.assertTrue(self.scraper.write_file(), True)
+
+    def test_scraping_name_and_likes(self):
+        """
+        Check if it's possible to collect name and like from
+        facebook page with date of collection
+        """
+        self.scraper.set_page('262588213843476')
+        self.assertEqual(
+            self.scraper.get_page_name_and_like(),
+            ['GitHub', strftime("%d/%m/%Y")]
+        )
 
     def test_get_new_token(self):
         """

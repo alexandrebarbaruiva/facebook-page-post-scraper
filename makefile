@@ -53,10 +53,8 @@ help:
 	@echo " make style.......= Cheks if your code is our pattern of coding for this project"
 	@echo " make json........= Creates a json dir and moves all .json files there"
 	@echo " make cov.........= Checks how much our program is coverage"
-	@echo " make full........= runs make test, cov and style" 
+	@echo " make full........= runs make test, cov and style"
 	@echo " make json........= Creates a json dir and moves all .json files there"
 	@echo " make clean.......= Removes all .json files"
 	@echo " make createconfig= Creates config.ini in scraper dir with the expected way to use it"
 	@echo "\n\t End of Makefile Help\n"
-
-
