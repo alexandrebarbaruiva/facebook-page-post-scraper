@@ -24,6 +24,10 @@ full:
 	make cov
 	make style
 
+.PHONY: autotoken
+autotoken:
+	python3 ./scraper/token_manager.py
+
 # Call for creating a Json dir and moves all json files there
 .PHONY: json
 json:
@@ -53,7 +57,9 @@ help:
 	@echo " make style.......= Cheks if your code is our pattern of coding for this project"
 	@echo " make json........= Creates a json dir and moves all .json files there"
 	@echo " make cov.........= Checks how much our program is coverage"
-	@echo " make full........= runs make test, cov and style"
+	@echo " make full........= Runs make test, cov and style"
+	@echo " make autotoken...= Open Facebook Developers web page so that the user can "
+	@echo "                    take a new token and update config.ini file"
 	@echo " make json........= Creates a json dir and moves all .json files there"
 	@echo " make clean.......= Removes all .json files"
 	@echo " make createconfig= Creates config.ini in scraper dir with the expected way to use it"
