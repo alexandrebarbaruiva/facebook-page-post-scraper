@@ -1,6 +1,7 @@
 import os
 from configparser import ConfigParser
-
+import webbrowser
+from time import sleep
 
 path = str(os.getcwd())+'/scraper/'
 
@@ -46,3 +47,18 @@ def generate_token_file(new_token=None, file='config.ini'):
             return [True, new_token]
     else:
         return [False, 'File already exists']
+
+
+if __name__ == '__main__':
+    print(
+        "\n1. Click on \"Get token\" then \"Get User Access Token\"." +
+        "\n2. Then select \"manage_pages\",\"publish_pages\"," +
+        "\n\"pages_show_list\" and \"pages_manage_instant_articles\"." +
+        "\n3. Finish by clicking on \"Get Access Token\"." +
+        "\n\nNow paste your user Access Token here:"
+    )
+    sleep(5.0)
+    webbrowser.open('https://developers.facebook.com/tools/explorer')
+    sleep(2.0)
+    token = input()
+    update_token(token)
