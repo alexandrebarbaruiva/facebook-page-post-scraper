@@ -1,5 +1,6 @@
 import unittest
 import os
+from time import strftime
 from scraper.post_scraper import Scraper
 from scraper.token_manager import \
     retrieve_token, update_token, generate_token_file
@@ -93,10 +94,10 @@ class TestPostScraper(unittest.TestCase):
         """
         Check if when user doesn't define page, program returns warning
         """
-        self.assertEqual(self.scraper.get_current_page(), 'Page not defined')
+        self.assertEqual(self.scraper.get_current_page(), 'Page not set')
         self.assertEqual(
             self.scraper.scrape_current_page(),
-            'Page not defined'
+            'Page not defined or bad query structure'
         )
 
     def test_if_scraping_page_with_queries(self):
@@ -116,6 +117,17 @@ class TestPostScraper(unittest.TestCase):
         test_query = 'message,comments.summary(true){likes}'
         self.scraper.scrape_current_page(feed=True, query=test_query)
         self.assertTrue(self.scraper.write_file(), True)
+
+    def test_scraping_name_and_likes(self):
+        """
+        Check if it's possible to collect name and like from
+        facebook page with date of collection
+        """
+        self.scraper.set_page('262588213843476')
+        self.assertEqual(
+            self.scraper.get_page_name_and_like(),
+            ['GitHub', strftime("%d/%m/%Y")]
+        )
 
     def test_get_new_token(self):
         """

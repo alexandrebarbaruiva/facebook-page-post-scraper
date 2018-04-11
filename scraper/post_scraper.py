@@ -2,6 +2,7 @@ import facebook
 import requests
 import sys
 import json
+from time import strftime
 
 
 class Scraper:
@@ -41,20 +42,23 @@ class Scraper:
         try:
             return self.page
         except:
-            return 'Page not defined'
+            return 'Page not set'
 
     def scrape_current_page(self, feed=False, query=''):
         graph = facebook.GraphAPI(access_token=self.token, version="2.12")
         feed_statement = '/feed' if feed else ''
         try:
-            post = graph.get_object(id=self.page+feed_statement, fields=query)
+            post = graph.get_object(
+                    id=str(self.page)+feed_statement,
+                    fields=query
+            )
             self.current_data = post
             if 'name' in post.keys():
                 return post['name']
             elif 'data' in post.keys():
                 return True
         except:
-            return 'Page not defined'
+            return 'Page not defined or bad query structure'
 
     def write_file(self, file=None):
         if file is None:
@@ -64,6 +68,15 @@ class Scraper:
                 json.dumps(self.current_data, indent=2)
             )  # pretty json
             return True
+
+    def get_page_name_and_like(self):
+        self.scrape_current_page(query='name,fan_count')
+        return([
+            self.current_data['name'],
+            # self.current_data['fan_count'],
+            # self.current_data['id'],
+            strftime("%d/%m/%Y")
+        ])
 
     def get_new_token(self):
         pass
