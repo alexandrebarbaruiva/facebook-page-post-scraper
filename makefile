@@ -50,7 +50,7 @@ createconfig:
 .PHONY: help
 help:
 	@echo "\n\t Makefile of Facebook scrapper from UnB\n"
-	@echo " make.............= Runs the tests using green3 "
+	@echo " make.............= Runs the tests using green3"
 	@echo " make test........= Also run the tests using green3"
 	@echo " make run.........= Run post_scrapper.py"
 	@echo " make install.....= Install the requirements necessary for this project"
