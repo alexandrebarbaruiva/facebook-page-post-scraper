@@ -53,28 +53,35 @@ def generate_token_file(new_token=None, file='config.ini'):
 
 
 def auto(email, password):
+    """
+    Case User already had accepted Facebook Terms and Conditions, this function will login on users
+    Facebook and get his "User Token Acces" and save in config.ini
+    """
     with Browser('chrome') as browser:
-        # Visit URL
+        #Visit Facebook developers web site
         url = "https://developers.facebook.com/tools/explorer/"
         browser.visit(url)
-        # Find and click the 'search' button
+        # Find and click on login button
         browser.click_link_by_partial_href('login')
         Blogin = browser.find_by_name('login')
-        # Interact with elements
+        # Login with email and password from the user
         browser.fill('email', email)
         browser.fill('pass', password)
         Blogin.click()
+        #Request the updated User access token
         Baccess = browser.find_by_text('Obter token')
         Baccess.click()
         Baccessus = browser.find_by_text('Obter token de acesso do usuário')
         Baccessus.click()
         Btoken = browser.find_by_text('Obter token de acesso')
         Btoken.click()
+        #find and catch the new user acces token
         Token = browser.find_by_css('label[class="_2toh _36wp _55r1 _58ak"]')
         Token = Token.first.html
         Token = Token.split("value", 1)[1]
         Token = Token.split("\"", 1)[1]
         Token = Token.split("\"", 1)[0]
+        #update new token into config.ini and print if it worked
         update_token(Token)
         print("\x1b[04;01;32m" + "Auto Token function Completed" + '\x1b[0m')
         browser.quit()
@@ -104,10 +111,11 @@ if __name__ == '__main__':
             "\n\"pages_show_list\" and \"pages_manage_instant_articles\"." +
             "\n3. Finish by clicking on \"Get Access Token\"." +
             "\n\nNow paste your user Access Token here:"
-        )
+        ) #wait enough time so the user can read the menu
         sleep(5.0)
         webbrowser.open('https://developers.facebook.com/tools/explorer')
         sleep(2.0)
+        #update token and print if it worked
         token = input()
         update_token(token)
         print("\x1b[04;01;32m" + "Auto Token function Completed" + '\x1b[0m')
