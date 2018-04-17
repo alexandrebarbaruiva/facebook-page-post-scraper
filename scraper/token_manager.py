@@ -66,6 +66,8 @@ def auto(email, password):
         Blogin.click()
         Baccess = browser.find_by_text('Obter token')
         Baccess.click()
+        Baccessus = browser.find_by_text('Obter token de acesso do usuário')
+        Baccessus.click()
         sleep(5.0)
         # button.double_click()
         sleep(5.0)
