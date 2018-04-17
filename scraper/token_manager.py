@@ -76,27 +76,30 @@ def auto(email, password):
         Token = Token.split("\"", 1)[1]
         Token = Token.split("\"", 1)[0]
         update_token(Token)
-        print("Auto Token function Completed")
+        print("\x1b[04;01;32m" + "Auto Token function Completed" + '\x1b[0m')
         browser.quit()
 
 
 if __name__ == '__main__':
+
+    os.system("clear")
     cond = "something"
-    print(cond)
     while (cond != "Y" and cond != "N"):
         print(
-            "\nIs it your first time getting User Access Token?" +
+            "Is this your first time getting User Access Token?" +
             "\nTipe \"Y\" OR \"N\"")
         cond = input()
     if(cond == "N"):
+        os.system("clear")
         print('Email from your Facebook Account:')
         email = input()
         password = getpass()
         auto(email, password)
 
     elif(cond == "Y"):
+        os.system("clear")
         print(
-            "\n1. Click on \"Get token\" then \"Get User Access Token\"." +
+            "1. Click on \"Get token\" then \"Get User Access Token\"." +
             "\n2. Then select \"manage_pages\",\"publish_pages\"," +
             "\n\"pages_show_list\" and \"pages_manage_instant_articles\"." +
             "\n3. Finish by clicking on \"Get Access Token\"." +
@@ -107,3 +110,5 @@ if __name__ == '__main__':
         sleep(2.0)
         token = input()
         update_token(token)
+        print("\x1b[04;01;32m" + "Auto Token function Completed" + '\x1b[0m')
+        sleep(3.0)
