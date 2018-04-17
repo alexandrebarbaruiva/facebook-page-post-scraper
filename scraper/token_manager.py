@@ -70,9 +70,13 @@ def auto(email, password):
         Baccessus.click()
         Btoken = browser.find_by_text('Obter token de acesso')
         Btoken.click()
-        Text = browser.find_by_css('._371-')
-        token = input()
-        update_token(token)
+        Token = browser.find_by_css('label[class="_2toh _36wp _55r1 _58ak"]').first.html
+        print(Token)
+        Token = Token.split("value",1)[1]
+        Token = Token.split("\"",1)[1]
+        Token = Token.split("\"",1)[0]
+        update_token(Token)
+        print("Auto Token function Completed")
         browser.quit()
 
 
@@ -88,7 +92,6 @@ if __name__ == '__main__':
         print('Email from your Facebook Account:')
         email = input()
         password = getpass()
-        print('\nPaste your User Access Token Here:')
         auto(email, password)
 
     elif(cond == "Y"):
