@@ -70,11 +70,11 @@ def auto(email, password):
         Baccessus.click()
         Btoken = browser.find_by_text('Obter token de acesso')
         Btoken.click()
-        Token = browser.find_by_css('label[class="_2toh _36wp _55r1 _58ak"]').first.html
-        print(Token)
-        Token = Token.split("value",1)[1]
-        Token = Token.split("\"",1)[1]
-        Token = Token.split("\"",1)[0]
+        Token = browser.find_by_css('label[class="_2toh _36wp _55r1 _58ak"]')
+        Token = Token.first.html
+        Token = Token.split("value", 1)[1]
+        Token = Token.split("\"", 1)[1]
+        Token = Token.split("\"", 1)[0]
         update_token(Token)
         print("Auto Token function Completed")
         browser.quit()
