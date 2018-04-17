@@ -44,7 +44,7 @@ class Scraper:
         except:
             return 'Page not set'
 
-    def scrape_current_page(self, feed=False, query=''):
+    def scrape_current_page(self, feed=False, query='', date=''):
         graph = facebook.GraphAPI(access_token=self.token, version="2.12")
         feed_statement = '/feed' if feed else ''
         try:
@@ -53,6 +53,8 @@ class Scraper:
                     fields=query
             )
             self.current_data = post
+            self.current_data['date'] = date
+            # print(self.current_data)
             if 'name' in post.keys():
                 return post['name']
             elif 'data' in post.keys():
@@ -70,12 +72,13 @@ class Scraper:
             return True
 
     def get_page_name_and_like(self):
-        self.scrape_current_page(query='name,fan_count')
+        date_collected = strftime("%d/%m/%Y")
+        self.scrape_current_page(query='name,fan_count', date=date_collected)
         return([
             self.current_data['name'],
             # self.current_data['fan_count'],
             # self.current_data['id'],
-            strftime("%d/%m/%Y")
+            date_collected
         ])
 
     def get_new_token(self):
