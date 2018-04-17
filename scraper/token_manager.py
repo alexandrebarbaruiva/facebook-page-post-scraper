@@ -82,12 +82,11 @@ def auto(email, password):
 
 if __name__ == '__main__':
     cond = "something"
-    print(cond)
     while (cond != "Y" and cond != "N"):
         print(
             "\nIs it your first time getting User Access Token?" +
-            "\nTipe \"Y\" OR \"N\"")
-        cond = input()
+            "\nType \"Y\" OR \"N\"")
+        cond = input().upper()
     if(cond == "N"):
         print('Email from your Facebook Account:')
         email = input()
