@@ -2,9 +2,31 @@ import os
 from configparser import ConfigParser
 import webbrowser
 from time import sleep
+from splinter import Browser
+from time import sleep
+from getpass import getpass
+
+
 
 path = str(os.getcwd())+'/scraper/'
 
+
+def auto(email,password):
+    with Browser('chrome') as browser:
+        # Visit URL
+        url = "https://developers.facebook.com/tools/explorer/"
+        browser.visit(url)
+        # Find and click the 'search' button
+        browser.click_link_by_partial_href('login')
+        button = browser.find_by_name('login')
+        # Interact with elements
+        browser.fill('email', email)
+        browser.fill('pass', password)
+        button.click()
+        sleep(5.0)
+        #button.double_click()
+        sleep(5.0)
+        ou = input()
 
 def retrieve_token(file='config.ini'):
     """
@@ -50,15 +72,29 @@ def generate_token_file(new_token=None, file='config.ini'):
 
 
 if __name__ == '__main__':
-    print(
-        "\n1. Click on \"Get token\" then \"Get User Access Token\"." +
-        "\n2. Then select \"manage_pages\",\"publish_pages\"," +
-        "\n\"pages_show_list\" and \"pages_manage_instant_articles\"." +
-        "\n3. Finish by clicking on \"Get Access Token\"." +
-        "\n\nNow paste your user Access Token here:"
-    )
-    sleep(5.0)
-    webbrowser.open('https://developers.facebook.com/tools/explorer')
-    sleep(2.0)
-    token = input()
-    update_token(token)
+    cond = "something"
+    print(cond)
+    while (cond == "something"):
+        print("\nIs it your first time getting User Access Token?"+
+            "\nTipe \"Y\" OR \"N\"")
+        cond = input()
+    if(cond == "N"):
+        print('Email from your Facebook Account:')
+        email = input()
+        password = getpass()
+
+        auto(email,password)
+
+    elif(cond == "Y"):
+        print(
+            "\n1. Click on \"Get token\" then \"Get User Access Token\"." +
+            "\n2. Then select \"manage_pages\",\"publish_pages\"," +
+            "\n\"pages_show_list\" and \"pages_manage_instant_articles\"." +
+            "\n3. Finish by clicking on \"Get Access Token\"." +
+            "\n\nNow paste your user Access Token here:"
+        )
+        sleep(5.0)
+        webbrowser.open('https://developers.facebook.com/tools/explorer')
+        sleep(2.0)
+        token = input()
+        update_token(token)
