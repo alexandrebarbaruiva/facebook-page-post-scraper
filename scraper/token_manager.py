@@ -5,7 +5,7 @@ from time import sleep
 from splinter import Browser
 from time import sleep
 from getpass import getpass
-from post_scraper import Scraper
+from scraper.post_scraper import Scraper
 
 path = str(os.getcwd())+'/scraper/'
 
