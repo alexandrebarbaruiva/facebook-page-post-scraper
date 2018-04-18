@@ -1,4 +1,5 @@
 import facebook
+import os
 import requests
 import sys
 import json
@@ -12,7 +13,7 @@ class Scraper:
     def __init__(self, token):
         self.token = token
         self.status_code = 400
-        # self.current_data = 'NO DATA'
+        self.current_data = ''
 
     def check_valid_token(self):
         """
@@ -41,7 +42,7 @@ class Scraper:
     def get_current_page(self):
         try:
             return self.page
-        except:
+        except Exception as inst:
             return 'Page not set'
 
     def scrape_current_page(self, feed=False, query=''):
@@ -53,19 +54,23 @@ class Scraper:
                     fields=query
             )
             self.current_data = post
+            self.current_data['date'] = strftime("%d/%m/%Y")
+            # print(self.current_data)
             if 'name' in post.keys():
                 return post['name']
             elif 'data' in post.keys():
                 return True
-        except:
+        except Exception as inst:
             return 'Page not defined or bad query structure'
 
     def write_file(self, file=None):
         if file is None:
             file = self.file_name
-        with open(file, 'w') as data_file:
+        if not os.path.exists('json/'):
+            os.makedirs('json/')
+        with open('json/'+file, 'w', encoding='utf8') as data_file:
             data_file.write(
-                json.dumps(self.current_data, indent=2)
+                json.dumps(self.current_data, indent=2, ensure_ascii=False)
             )  # pretty json
             return True
 
@@ -77,6 +82,3 @@ class Scraper:
             # self.current_data['id'],
             strftime("%d/%m/%Y")
         ])
-
-    def get_new_token(self):
-        pass
