@@ -5,6 +5,7 @@ from time import sleep
 from splinter import Browser
 from time import sleep
 from getpass import getpass
+from post_scraper import Scraper
 
 path = str(os.getcwd())+'/scraper/'
 
@@ -65,12 +66,15 @@ def auto(email, password):
         browser.click_link_by_partial_href('login')
         Blogin = browser.find_by_name('login')
         # Login with email and password from the user
-        browser.fill('email', email)
-        browser.fill('pass', password)
-        Blogin.click()
+        try:
+            browser.fill('email', email)
+            browser.fill('pass', password)
+            Blogin.click()
         #Request the updated User access token
-        Baccess = browser.find_by_text('Obter token')
-        Baccess.click()
+            Baccess = browser.find_by_text('Obter token')
+            Baccess.click()
+        except :
+            print("\x1b[04;01;31m" + "Wrong User Login" + '\x1b[0m')
         Baccessus = browser.find_by_text('Obter token de acesso do usuário')
         Baccessus.click()
         Btoken = browser.find_by_text('Obter token de acesso')
@@ -83,7 +87,6 @@ def auto(email, password):
         Token = Token.split("\"", 1)[0]
         #update new token into config.ini and print if it worked
         update_token(Token)
-        print("\x1b[04;01;32m" + "Auto Token function Completed" + '\x1b[0m')
         browser.quit()
 
 
@@ -101,7 +104,11 @@ if __name__ == '__main__':
         print('Email from your Facebook Account:')
         email = input()
         password = getpass()
-        auto(email, password)
+        try:#tried to get the token
+            auto(email, password)
+            print("\x1b[04;01;32m" + "Auto Token function Completed" + '\x1b[0m')  
+        except :#something went wrong getting the token
+            print("\x1b[04;01;31m" + "Auto Token function Failed!" + '\x1b[0m')
 
     elif(cond == "Y"):
         os.system("clear")
@@ -118,5 +125,11 @@ if __name__ == '__main__':
         #update token and print if it worked
         token = input()
         update_token(token)
+        #checks if the User has pasted correctly the user acces token
+        Token_is_valid = Scraper(token)
+        if(Token_is_valid.check_valid_token()):
+            print("\x1b[04;01;32m" + "Set Token Is Valid" + '\x1b[0m\n')
+        else:
+            print("\x1b[04;01;31m" + "Set Token is not Valid" + '\x1b[0m\n')
         print("\x1b[04;01;32m" + "Auto Token function Completed" + '\x1b[0m')
         sleep(3.0)
