@@ -8,6 +8,9 @@ test:
 run:
 	python3 scraper/post_scraper.py
 
+collect:
+	python3 scraper/collector.py
+
 install:
 	pip3 install -r requirements.txt
 
@@ -17,6 +20,7 @@ style:
 cov:
 	coverage run -m py.test tests/test.py
 	coverage report -m scraper/post_scraper.py
+	coverage report -m scraper/token_manager.py
 	coverage html scraper/post_scraper.py
 
 full:

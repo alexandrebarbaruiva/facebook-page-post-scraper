@@ -129,13 +129,6 @@ class TestPostScraper(unittest.TestCase):
             ['GitHub', strftime("%d/%m/%Y")]
         )
 
-    def test_get_new_token(self):
-        """
-        Check if it's getting a new token and it's a valid token
-        """
-        self.scraper.get_new_token()
-        # self.assertTrue(self.scraper.check_valid_token())
-
 
 if __name__ == '__main__':
     unittest.main()

@@ -12,7 +12,7 @@ class Scraper:
     def __init__(self, token):
         self.token = token
         self.status_code = 400
-        # self.current_data = 'NO DATA'
+        self.current_data = ''
 
     def check_valid_token(self):
         """
@@ -41,10 +41,10 @@ class Scraper:
     def get_current_page(self):
         try:
             return self.page
-        except:
+        except Exception as inst:
             return 'Page not set'
 
-    def scrape_current_page(self, feed=False, query='', date=''):
+    def scrape_current_page(self, feed=False, query=''):
         graph = facebook.GraphAPI(access_token=self.token, version="2.12")
         feed_statement = '/feed' if feed else ''
         try:
@@ -53,33 +53,29 @@ class Scraper:
                     fields=query
             )
             self.current_data = post
-            self.current_data['date'] = date
+            self.current_data['date'] = strftime("%d/%m/%Y")
             # print(self.current_data)
             if 'name' in post.keys():
                 return post['name']
             elif 'data' in post.keys():
                 return True
-        except:
+        except Exception as inst:
             return 'Page not defined or bad query structure'
 
     def write_file(self, file=None):
         if file is None:
             file = self.file_name
-        with open(file, 'w') as data_file:
+        with open('json/'+file, 'w') as data_file:
             data_file.write(
                 json.dumps(self.current_data, indent=2)
             )  # pretty json
             return True
 
     def get_page_name_and_like(self):
-        date_collected = strftime("%d/%m/%Y")
-        self.scrape_current_page(query='name,fan_count', date=date_collected)
+        self.scrape_current_page(query='name,fan_count')
         return([
             self.current_data['name'],
             # self.current_data['fan_count'],
             # self.current_data['id'],
-            date_collected
+            strftime("%d/%m/%Y")
         ])
-
-    def get_new_token(self):
-        pass

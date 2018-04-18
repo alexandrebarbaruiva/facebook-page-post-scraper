@@ -17,7 +17,7 @@ def retrieve_token(file='config.ini'):
             if ('token' in config['DEFAULT'].keys()):
                 return(config['DEFAULT']['token'])
         return 'Token with bad structure'
-    except:
+    except Exception as inst:
         return False
 
 
