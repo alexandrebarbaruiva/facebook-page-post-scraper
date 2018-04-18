@@ -6,7 +6,7 @@ from token_manager import retrieve_token
 def collect_all_pages():
     pages = []
     with open('entidades.csv', 'r') as entidades:
-        reader = csv.reader(entidades, delimiter='\n')
+        reader = csv.reader(entidades)
         for row in reader:
             pages.append(row[0])
     scraper = Scraper(retrieve_token())
