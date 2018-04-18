@@ -39,6 +39,8 @@ json:
 clean:
 	rm -f ./*.json
 	rm -f $(JsonDir)*.json
+	rm -rf ./htmlcov
+	rm -f ./.coverage
 
 # Call for *.json clean up
 .PHONY: createconfig
