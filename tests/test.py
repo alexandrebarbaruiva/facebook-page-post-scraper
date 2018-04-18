@@ -2,11 +2,6 @@ import unittest
 import os
 import sys
 from time import strftime
-sys.path.append(
-    os.path.dirname(
-        os.path.dirname(os.path.realpath(__file__))
-    )
-)
 from scraper.post_scraper import Scraper
 from scraper.token_manager import \
     retrieve_token, update_token, generate_token_file

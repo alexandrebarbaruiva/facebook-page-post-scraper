@@ -102,7 +102,7 @@ if __name__ == '__main__':
     cond = "something"
     while (cond != "Y" and cond != "N"):
         print(
-            "\nIs it your first time getting User Access Token?" +
+            "Is it your first time getting User Access Token?" +
             "\nType \"Y\" OR \"N\"")
         cond = input().upper()
     if(cond == "N"):
