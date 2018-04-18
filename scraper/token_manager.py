@@ -96,9 +96,9 @@ if __name__ == '__main__':
     cond = "something"
     while (cond != "Y" and cond != "N"):
         print(
-            "Is this your first time getting User Access Token?" +
-            "\nTipe \"Y\" OR \"N\"")
-        cond = input()
+            "\nIs it your first time getting User Access Token?" +
+            "\nType \"Y\" OR \"N\"")
+        cond = input().upper()
     if(cond == "N"):
         os.system("clear")
         print('Email from your Facebook Account:')
