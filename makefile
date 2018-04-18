@@ -6,7 +6,7 @@ test:
 	green3 . -vvv
 
 run:
-	python3 scraper/post_scraper.py
+	python3 -m scraper/post_scraper.py
 
 install:
 	pip3 install -r requirements.txt
@@ -26,7 +26,7 @@ full:
 
 .PHONY: autotoken
 autotoken:
-	python3 ./scraper/token_manager.py
+	python3 scraper/token_manager.py
 
 # Call for creating a Json dir and moves all json files there
 .PHONY: json

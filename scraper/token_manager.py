@@ -1,10 +1,16 @@
 import os
+import sys
 from configparser import ConfigParser
 import webbrowser
 from time import sleep
 from splinter import Browser
 from time import sleep
 from getpass import getpass
+sys.path.append(
+    os.path.dirname(
+        os.path.dirname(os.path.realpath(__file__))
+    )
+)
 from scraper.post_scraper import Scraper
 
 path = str(os.getcwd())+'/scraper/'
@@ -55,11 +61,12 @@ def generate_token_file(new_token=None, file='config.ini'):
 
 def auto(email, password):
     """
-    Case User already had accepted Facebook Terms and Conditions, this function will login on users
-    Facebook and get his "User Token Acces" and save in config.ini
+    Case User already had accepted Facebook Terms and Conditions,
+    this function will login on user's Facebook and get his
+    "User Token Acces" and save in config.ini
     """
     with Browser('chrome') as browser:
-        #Visit Facebook developers web site
+        # Visit Facebook developers web site
         url = "https://developers.facebook.com/tools/explorer/"
         browser.visit(url)
         # Find and click on login button
@@ -70,28 +77,27 @@ def auto(email, password):
             browser.fill('email', email)
             browser.fill('pass', password)
             Blogin.click()
-        #Request the updated User access token
+        # Request the updated User access token
             Baccess = browser.find_by_text('Obter token')
             Baccess.click()
-        except :
+        except Exception as inst:
             print("\x1b[04;01;31m" + "Wrong User Login" + '\x1b[0m')
         Baccessus = browser.find_by_text('Obter token de acesso do usuário')
         Baccessus.click()
         Btoken = browser.find_by_text('Obter token de acesso')
         Btoken.click()
-        #find and catch the new user acces token
+        # find and catch the new user acces token
         Token = browser.find_by_css('label[class="_2toh _36wp _55r1 _58ak"]')
         Token = Token.first.html
         Token = Token.split("value", 1)[1]
         Token = Token.split("\"", 1)[1]
         Token = Token.split("\"", 1)[0]
-        #update new token into config.ini and print if it worked
+        # update new token into config.ini and print if it worked
         update_token(Token)
         browser.quit()
 
 
 if __name__ == '__main__':
-
     os.system("clear")
     cond = "something"
     while (cond != "Y" and cond != "N"):
@@ -104,11 +110,13 @@ if __name__ == '__main__':
         print('Email from your Facebook Account:')
         email = input()
         password = getpass()
-        try:#tried to get the token
+        try:
+            # tried to get the token
             auto(email, password)
-            print("\x1b[04;01;32m" + "Auto Token function Completed" + '\x1b[0m')  
-        except :#something went wrong getting the token
-            print("\x1b[04;01;31m" + "Auto Token function Failed!" + '\x1b[0m')
+            print("\x1b[04;01;32m"+"Auto Token function Completed"+"\x1b[0m")
+        except Exception as inst:
+            # something went wrong getting the token
+            print("\x1b[04;01;31m"+"Auto Token function Failed!"+"\x1b[0m")
 
     elif(cond == "Y"):
         os.system("clear")
@@ -118,14 +126,14 @@ if __name__ == '__main__':
             "\n\"pages_show_list\" and \"pages_manage_instant_articles\"." +
             "\n3. Finish by clicking on \"Get Access Token\"." +
             "\n\nNow paste your user Access Token here:"
-        ) #wait enough time so the user can read the menu
+        )  # wait enough time so the user can read the menu
         sleep(5.0)
         webbrowser.open('https://developers.facebook.com/tools/explorer')
         sleep(2.0)
-        #update token and print if it worked
+        # update token and print if it worked
         token = input()
         update_token(token)
-        #checks if the User has pasted correctly the user acces token
+        # checks if the User has pasted correctly the user acces token
         Token_is_valid = Scraper(token)
         if(Token_is_valid.check_valid_token()):
             print("\x1b[04;01;32m" + "Set Token Is Valid" + '\x1b[0m\n')
