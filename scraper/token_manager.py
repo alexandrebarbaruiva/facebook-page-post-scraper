@@ -59,7 +59,7 @@ def generate_token_file(new_token=None, file='config.ini'):
         return [False, 'File already exists']
 
 
-def auto(email, password):
+def auto_no(email, password):
     """
     Case User already had accepted Facebook Terms and Conditions,
     this function will login on user's Facebook and get his
@@ -96,6 +96,16 @@ def auto(email, password):
         update_token(Token)
         browser.quit()
 
+def auto_yes():
+    sleep(5.0)
+    webbrowser.open('https://developers.facebook.com/tools/explorer')
+    sleep(2.0)
+    # update token and print if it worked
+    token = input()
+    update_token(token)
+    # checks if the User has pasted correctly the user acces token
+    Token_is_valid = Scraper(token)
+    return Token_is_valid
 
 if __name__ == '__main__':
     os.system("clear")
@@ -112,7 +122,7 @@ if __name__ == '__main__':
         password = getpass()
         try:
             # tried to get the token
-            auto(email, password)
+            auto_no(email, password)
             print("\x1b[04;01;32m"+"Auto Token function Completed"+"\x1b[0m")
         except Exception as inst:
             # something went wrong getting the token
@@ -127,17 +137,10 @@ if __name__ == '__main__':
             "\n3. Finish by clicking on \"Get Access Token\"." +
             "\n\nNow paste your user Access Token here:"
         )  # wait enough time so the user can read the menu
-        sleep(5.0)
-        webbrowser.open('https://developers.facebook.com/tools/explorer')
-        sleep(2.0)
-        # update token and print if it worked
-        token = input()
-        update_token(token)
-        # checks if the User has pasted correctly the user acces token
-        Token_is_valid = Scraper(token)
+        Token_is_valid = auto_yes()
         if(Token_is_valid.check_valid_token()):
             print("\x1b[04;01;32m" + "Set Token Is Valid" + '\x1b[0m\n')
         else:
             print("\x1b[04;01;31m" + "Set Token is not Valid" + '\x1b[0m\n')
         print("\x1b[04;01;32m" + "Auto Token function Completed" + '\x1b[0m')
-        sleep(3.0)
+        sleep(2.0)
