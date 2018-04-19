@@ -6,7 +6,7 @@ test:
 	green3 . -vvv
 
 run:
-	python3 scraper/post_scraper.py
+	python3 -m scraper/post_scraper.py
 
 collect:
 	python3 scraper/collector.py
@@ -30,7 +30,7 @@ full:
 
 .PHONY: autotoken
 autotoken:
-	python3 ./scraper/token_manager.py
+	python3 scraper/token_manager.py
 
 # Call for creating a Json dir and moves all json files there
 .PHONY: json
@@ -43,6 +43,8 @@ json:
 clean:
 	rm -f ./*.json
 	rm -f $(JsonDir)*.json
+	rm -rf ./htmlcov
+	rm -f ./.coverage
 
 # Call for *.json clean up
 .PHONY: createconfig

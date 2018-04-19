@@ -1,5 +1,6 @@
 import unittest
 import os
+import sys
 from time import strftime
 from scraper.post_scraper import Scraper
 from scraper.token_manager import \

@@ -25,11 +25,12 @@ pip install -r requirements.txt
 ```
 
 Uma vez instalados todos os módulos, é necessário configurar o token.
-Por enquanto é preciso ir à Graph API do Facebook pegar o token
-([link](https://developers.facebook.com/tools/explorer/)). Uma vez em posse do
-token, deve-se criar um arquivo chamado `config.ini` dentro da pasta `scraper`.
-
-
+Para isso devemos baixar o ChromeDriver seguindo as instruções do Splinter para cada sistema operacional:([Instruções para baixar ChromeDriver](https://splinter.readthedocs.io/en/latest/drivers/chrome.html)).
+Uma vez com o ChromeDriver instalado corretamente,para a aquisição do Token basta digitar
+```
+make autotoken
+```
+e seguir as instruções do programa.
 
 ## Modelo para arquivo Token
 
