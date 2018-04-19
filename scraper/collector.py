@@ -16,6 +16,7 @@ def collect_all_pages():
             print(scraper.page)
             scraper.get_page_name_and_like()
             scraper.write_file()
+            scraper.convert_to_csv()
     else:
         print('Please renew token')
 

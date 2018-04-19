@@ -116,7 +116,9 @@ class TestPostScraper(unittest.TestCase):
         self.scraper.set_page('262588213843476')
         test_query = 'message,comments.summary(true){likes}'
         self.scraper.scrape_current_page(feed=True, query=test_query)
-        self.assertTrue(self.scraper.write_file(), True)
+        self.assertTrue(self.scraper.write_file())
+        self.assertTrue(os.path.exists('json/262588213843476.json'))
+        os.remove(str(os.getcwd())+'/json/262588213843476.json')
 
     def test_scraping_name_and_likes(self):
         """
@@ -128,6 +130,35 @@ class TestPostScraper(unittest.TestCase):
             self.scraper.get_page_name_and_like(),
             ['GitHub', strftime("%d/%m/%Y")]
         )
+
+    def test_if_csv_without_content_returns_nothing(self):
+        self.scraper.set_page('20531316728')
+        self.assertEqual(self.scraper.convert_to_csv(), 'No content found.')
+
+    def test_if_conversion_to_csv_happens(self):
+        self.scraper.set_page('262588213843476')
+        self.scraper.get_page_name_and_like()
+        day_scraped = strftime("%Y%m%d")
+        self.assertTrue(self.scraper.convert_to_csv())
+        self.assertTrue(
+            os.path.exists('csv/scraped_' + day_scraped + '.csv')
+        )
+        os.remove(str(os.getcwd())+'/csv/scraped_' + day_scraped + '.csv')
+
+    def test_if_multiple_conversions_generate_one_file(self):
+        # TODO: Make test identify if multiple pages are collected
+        self.scraper.set_page('262588213843476')
+        self.scraper.get_page_name_and_like()
+        self.scraper.convert_to_csv()
+        self.scraper.set_page('20531316728')
+        self.scraper.get_page_name_and_like()
+        self.scraper.convert_to_csv()
+        self.assertTrue(self.scraper.convert_to_csv())
+        day_scraped = strftime("%Y%m%d")
+        self.assertTrue(
+            os.path.exists('csv/scraped_' + day_scraped + '.csv')
+        )
+        os.remove(str(os.getcwd())+'/csv/scraped_' + day_scraped + '.csv')
 
 
 if __name__ == '__main__':
