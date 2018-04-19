@@ -96,6 +96,7 @@ def auto_no(email, password):
         update_token(Token)
         browser.quit()
 
+
 def auto_yes():
     sleep(5.0)
     webbrowser.open('https://developers.facebook.com/tools/explorer')
@@ -106,6 +107,7 @@ def auto_yes():
     # checks if the User has pasted correctly the user acces token
     Token_is_valid = Scraper(token)
     return Token_is_valid
+
 
 if __name__ == '__main__':
     os.system("clear")
