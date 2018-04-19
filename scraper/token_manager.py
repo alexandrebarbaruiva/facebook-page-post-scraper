@@ -26,7 +26,7 @@ def retrieve_token(file='config.ini'):
             if ('token' in config['DEFAULT'].keys()):
                 return(config['DEFAULT']['token'])
         return 'Token with bad structure'
-    except:
+    except Exception as inst:
         return False
 
 
@@ -69,12 +69,13 @@ def auto_no(email, password):
         try:
             url = "https://developers.facebook.com/tools/explorer/"
             browser.visit(url)
-            # Find the login button, if not found means erro on conectiviy with the site
+            # Find the login button, if not found means error
+            # conecting with the Facebook
             browser.click_link_by_partial_href('login')
         except Exception as inst:
-            print("\x1b[04;01;31m" + "Couldn't open Facebook Developers site" + '\x1b[0m')
+            print("\x1b[04;01;31mCouldn't open Facebook Dev site\x1b[0m")
             raise Exception
-        #click on login button
+        # Click on login button
         Blogin = browser.find_by_name('login')
         # Login with email and password from the user
         try:
@@ -141,7 +142,7 @@ def Automate():
             if(Token_is_valid.check_valid_token()):
                 print("\x1b[04;01;32m" + "Set Token Is Valid" + '\x1b[0m\n')
             else:
-                print("\x1b[04;01;31m" + "Set Token is not Valid" + '\x1b[0m\n')
+                print("\x1b[04;01;31mSet Token is not Valid\x1b[0m\n")
             print("\x1b[04;01;32m"+"Auto Token function Completed"+"\x1b[0m")
         except Exception as inst:
             # something went wrong getting the token
