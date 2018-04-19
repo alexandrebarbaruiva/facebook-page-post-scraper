@@ -1,4 +1,5 @@
-JsonDir =./json/
+JsonDir = ./json/
+UNAME := $(shell uname)
 
 default: test
 
@@ -27,6 +28,22 @@ full:
 .PHONY: autotoken
 autotoken:
 	python3 scraper/token_manager.py
+
+.PHONY: chromedriver
+chromedriver:
+ifeq ($(UNAME), Linux)
+	cd $(HOME)/Downloads
+	wget https://chromedriver.storage.googleapis.com/2.37/chromedriver_linux64.zip
+	unzip chromedriver_linux64.zip
+	mkdir -p $(HOME)/bin
+	mv chromedriver $(HOME)/bin
+	echo "export PATH=$(PATH):$(HOME)/bin" >> $(HOME)/.bash_profile
+	rm -f chromedriver_linux64.zip
+else 
+	ifeq ($(UNAME), Darwin)
+		brew install chromedriver
+	endif
+endif
 
 # Call for creating a Json dir and moves all json files there
 .PHONY: json
@@ -65,4 +82,6 @@ help:
 	@echo " make json........= Creates a json dir and moves all .json files there"
 	@echo " make clean.......= Removes all .json files"
 	@echo " make createconfig= Creates config.ini in scraper dir with the expected way to use it"
+	@echo " make chromedrier.= Install chromedriver for get the token automatically, works in" 
+	@echo "                    Linux and MacOS"
 	@echo "\n\t End of Makefile Help\n"
