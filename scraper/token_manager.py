@@ -2,7 +2,6 @@ import os
 import sys
 from configparser import ConfigParser
 import webbrowser
-from time import sleep
 from splinter import Browser
 from time import sleep
 from getpass import getpass
@@ -67,10 +66,14 @@ def auto_no(email, password):
     """
     with Browser('chrome') as browser:
         # Visit Facebook developers web site
-        url = "https://developers.facebook.com/tools/explorer/"
-        browser.visit(url)
-        # Find and click on login button
-        browser.click_link_by_partial_href('login')
+        try:
+            url = "https://developers.facebook.com/tools/explorer/"
+            browser.visit(url)
+            # Find and click on login button
+            browser.click_link_by_partial_href('login')
+        except Exception as inst:
+            print("\x1b[04;01;31m" + "Couldn't open Facebook Developers site" + '\x1b[0m')
+            raise Exception
         Blogin = browser.find_by_name('login')
         # Login with email and password from the user
         try:
@@ -82,6 +85,7 @@ def auto_no(email, password):
             Baccess.click()
         except Exception as inst:
             print("\x1b[04;01;31m" + "Wrong User Login" + '\x1b[0m')
+            raise Exception
         Baccessus = browser.find_by_text('Obter token de acesso do usuário')
         Baccessus.click()
         Btoken = browser.find_by_text('Obter token de acesso')
