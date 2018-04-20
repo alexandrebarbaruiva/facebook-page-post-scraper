@@ -3,6 +3,7 @@ import os
 import requests
 import sys
 import json
+import csv
 from time import strftime
 
 
@@ -14,6 +15,10 @@ class Scraper:
         self.token = token
         self.status_code = 400
         self.current_data = ''
+        if not os.path.exists('csv/'):
+            os.makedirs('csv/')
+        if not os.path.exists('json/'):
+            os.makedirs('json/')
 
     def check_valid_token(self):
         """
@@ -66,8 +71,6 @@ class Scraper:
     def write_file(self, file=None):
         if file is None:
             file = self.file_name
-        if not os.path.exists('json/'):
-            os.makedirs('json/')
         with open('json/'+file, 'w', encoding='utf8') as data_file:
             data_file.write(
                 json.dumps(self.current_data, indent=2, ensure_ascii=False)
@@ -82,3 +85,41 @@ class Scraper:
             # self.current_data['id'],
             strftime("%d/%m/%Y")
         ])
+
+    def convert_to_csv(self, file_name='scraped'):
+        def dict_to_list():
+            content = []
+            for column in column_names:
+                content.append(str(self.current_data[column]))
+            return content
+        try:
+            column_names = self.current_data.keys()
+        except Exception as inst:
+            return ('No content found.')
+        today = strftime("%Y%m%d")
+
+        # Check if file already exists to append instead of create
+        if os.path.exists('csv/{}_{}.csv'.format(file_name, today)):
+            content = dict_to_list()
+            # Check if content already exists in csv
+            with open(
+                    'csv/{}_{}.csv'.format(file_name, today), 'r') as csvfile:
+                reader = csv.reader(csvfile)
+                reader_list = list(reader)
+                for row in reader_list:
+                    if row == content:
+                        return True
+            # Write content on CSV because it's not duplicated
+            with open(
+                    'csv/{}_{}.csv'.format(file_name, today), 'a') as csvfile:
+                info = csv.writer(csvfile)
+                info.writerow(content)
+            return True
+
+        # Create file because file doesn't exist
+        with open('csv/{}_{}.csv'.format(file_name, today), 'w') as csvfile:
+            info = csv.writer(csvfile)
+            content = dict_to_list()
+            info.writerow(column_names)
+            info.writerow(content)
+        return True
