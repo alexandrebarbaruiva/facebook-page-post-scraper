@@ -2,7 +2,6 @@ import os
 import sys
 from configparser import ConfigParser
 import webbrowser
-from time import sleep
 from splinter import Browser
 from time import sleep
 from getpass import getpass
@@ -67,10 +66,16 @@ def auto_no(email, password):
     """
     with Browser('chrome') as browser:
         # Visit Facebook developers web site
-        url = "https://developers.facebook.com/tools/explorer/"
-        browser.visit(url)
-        # Find and click on login button
-        browser.click_link_by_partial_href('login')
+        try:
+            url = "https://developers.facebook.com/tools/explorer/"
+            browser.visit(url)
+            # Find the login button, if not found means error
+            # conecting with the Facebook
+            browser.click_link_by_partial_href('login')
+        except Exception as inst:
+            print("\x1b[04;01;31mCouldn't open Facebook Dev site\x1b[0m")
+            raise Exception
+        # Click on login button
         Blogin = browser.find_by_name('login')
         # Login with email and password from the user
         try:
@@ -82,6 +87,7 @@ def auto_no(email, password):
             Baccess.click()
         except Exception as inst:
             print("\x1b[04;01;31m" + "Wrong User Login" + '\x1b[0m')
+            raise Exception
         Baccessus = browser.find_by_text('Obter token de acesso do usuário')
         Baccessus.click()
         Btoken = browser.find_by_text('Obter token de acesso')
@@ -95,21 +101,29 @@ def auto_no(email, password):
         # update new token into config.ini and print if it worked
         update_token(Token)
         browser.quit()
+    Token_is_valid = Scraper(Token)
+    return Token_is_valid
 
 
 def auto_yes():
+    """
+    Case is the first time the User try to get the Token, User
+    will have to accept Facebook Terms and Conditions,
+    this function will open facebook page so he can login on user's Facebook,
+    get his "User Token Acces", paste on the terminal so we save in config.ini
+    """
     sleep(5.0)
     webbrowser.open('https://developers.facebook.com/tools/explorer')
     sleep(2.0)
     # update token and print if it worked
-    token = input()
-    update_token(token)
+    Token = input()
+    update_token(Token)
     # checks if the User has pasted correctly the user acces token
-    Token_is_valid = Scraper(token)
+    Token_is_valid = Scraper(Token)
     return Token_is_valid
 
 
-if __name__ == '__main__':
+def Automate():
     os.system("clear")
     cond = "something"
     while (cond != "Y" and cond != "N"):
@@ -124,7 +138,11 @@ if __name__ == '__main__':
         password = getpass()
         try:
             # tried to get the token
-            auto_no(email, password)
+            Token_is_valid = auto_no(email, password)
+            if(Token_is_valid.check_valid_token()):
+                print("\x1b[04;01;32m" + "Set Token Is Valid" + '\x1b[0m\n')
+            else:
+                print("\x1b[04;01;31mSet Token is not Valid\x1b[0m\n")
             print("\x1b[04;01;32m"+"Auto Token function Completed"+"\x1b[0m")
         except Exception as inst:
             # something went wrong getting the token
@@ -133,10 +151,11 @@ if __name__ == '__main__':
     elif(cond == "Y"):
         os.system("clear")
         print(
-            "1. Click on \"Get token\" then \"Get User Access Token\"." +
-            "\n2. Then select \"manage_pages\",\"publish_pages\"," +
+            "1. Login on your Facebook Account" +
+            "\n2. Click on \"Get token\" then \"Get User Access Token\"." +
+            "\n3. Then select \"manage_pages\",\"publish_pages\"," +
             "\n\"pages_show_list\" and \"pages_manage_instant_articles\"." +
-            "\n3. Finish by clicking on \"Get Access Token\"." +
+            "\n4. Finish by clicking on \"Get Access Token\"." +
             "\n\nNow paste your user Access Token here:"
         )  # wait enough time so the user can read the menu
         Token_is_valid = auto_yes()
@@ -146,3 +165,7 @@ if __name__ == '__main__':
             print("\x1b[04;01;31m" + "Set Token is not Valid" + '\x1b[0m\n')
         print("\x1b[04;01;32m" + "Auto Token function Completed" + '\x1b[0m')
         sleep(2.0)
+
+
+if __name__ == '__main__':
+    Automate()

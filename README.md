@@ -25,7 +25,11 @@ pip install -r requirements.txt
 ```
 
 Uma vez instalados todos os módulos, é necessário configurar o token.
-Para isso devemos baixar o ChromeDriver seguindo as instruções do Splinter para cada sistema operacional:([Instruções para baixar ChromeDriver](https://splinter.readthedocs.io/en/latest/drivers/chrome.html)).
+Para isso devemos baixar o ChromeDriver. Para Linux e MacOS basta utilizar o comando
+```
+make chromedriver
+```
+Para Windows, é necessário seguir as instruções do Splinter para Windows:([Instruções para baixar ChromeDriver](https://splinter.readthedocs.io/en/latest/drivers/chrome.html)).
 Uma vez com o ChromeDriver instalado corretamente,para a aquisição do Token basta digitar
 ```
 make autotoken
