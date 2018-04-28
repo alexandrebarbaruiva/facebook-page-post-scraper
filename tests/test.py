@@ -5,7 +5,7 @@ import csv
 from time import strftime
 from scraper.post_scraper import Scraper
 from scraper.token_manager import \
-    retrieve_token_file, update_token, generate_token_file
+    retrieve_token_file, update_token_file, generate_token_file
 
 
 class TestTokenFunctions(unittest.TestCase):
@@ -33,11 +33,11 @@ class TestTokenFunctions(unittest.TestCase):
         """
         generate_token_file(file='default.ini')
         self.assertEqual(
-            update_token(file='default.ini'),
+            update_token_file(file='default.ini'),
             'Token not updated.'
         )
         self.assertEqual(
-            update_token('TestTokenNotValid', file='default.ini'),
+            update_token_file('TestTokenNotValid', file='default.ini'),
             'New token written successfuly.'
         )
         os.remove(str(os.getcwd())+'/scraper/default.ini')
@@ -115,8 +115,10 @@ class TestPostScraper(unittest.TestCase):
         """
         Check if scraping with queries is correct and working correctly
         """
-        self.scraper.set_page(self.github)
-        self.assertEqual(self.scraper.scrape_current_page(feed=True), True)
+        self.assertEqual(
+            self.scraper.scrape_current_page(page=self.github, feed=True),
+            True
+        )
         test_query = 'message,comments.summary(true){likes}'
         self.assertEqual(
             self.scraper.scrape_current_page
@@ -127,9 +129,10 @@ class TestPostScraper(unittest.TestCase):
         """
         Check if scraping generates a JSON file in correct output file
         """
-        self.scraper.set_page(self.github)
         test_query = 'message,comments.summary(true){likes}'
-        self.scraper.scrape_current_page(feed=True, query=test_query)
+        self.scraper.scrape_current_page(
+            page=self.github, feed=True, query=test_query
+        )
         self.assertTrue(self.scraper.write_file())
         self.assertTrue(os.path.exists('json/262588213843476.json'))
         os.remove(str(os.getcwd())+'/json/262588213843476.json')
@@ -139,9 +142,8 @@ class TestPostScraper(unittest.TestCase):
         Check if it's possible to collect name and like from
         facebook page with date of collection
         """
-        self.scraper.set_page('262588213843476')
         self.assertEqual(
-            self.scraper.get_page_name_and_like(),
+            self.scraper.get_page_name_and_like('262588213843476'),
             ['GitHub', strftime("%d/%m/%Y")]
         )
 
@@ -150,7 +152,6 @@ class TestPostScraper(unittest.TestCase):
         Chech if when presented with no content, csv converter returns a
         'No content found' instead of an empty csv
         """
-        self.scraper.set_page('20531316728')
         self.assertEqual(self.scraper.convert_to_csv(), 'No content found.')
 
     def test_if_conversion_to_csv_happens(self):
@@ -158,8 +159,7 @@ class TestPostScraper(unittest.TestCase):
         Check if when presented with a page content, csv converter generates
         a csv file with the proper content
         """
-        self.scraper.set_page(self.github)
-        self.scraper.get_page_name_and_like()
+        self.scraper.get_page_name_and_like(self.github)
         day_scraped = strftime("%Y%m%d")
         self.assertTrue(self.scraper.convert_to_csv())
         self.assertTrue(
@@ -184,11 +184,9 @@ class TestPostScraper(unittest.TestCase):
         Check if when presented with multiple page contents, csv converter
         generates only one csv file with the proper content of all pages
         """
-        self.scraper.set_page('262588213843476')
-        self.scraper.get_page_name_and_like()
+        self.scraper.get_page_name_and_like('262588213843476')
         self.scraper.convert_to_csv()
-        self.scraper.set_page('20531316728')
-        self.scraper.get_page_name_and_like()
+        self.scraper.get_page_name_and_like('20531316728')
         self.scraper.convert_to_csv()
         self.assertTrue(self.scraper.convert_to_csv())
         day_scraped = strftime("%Y%m%d")
