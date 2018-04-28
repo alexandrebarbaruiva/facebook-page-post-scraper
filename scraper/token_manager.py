@@ -15,7 +15,7 @@ from scraper.post_scraper import Scraper
 path = str(os.getcwd())+'/scraper/'
 
 
-def retrieve_token(file='config.ini'):
+def retrieve_token_file(file='config.ini'):
     """
     Retrieves token from config.ini file on scraper folder
     """
@@ -49,7 +49,7 @@ def generate_token_file(new_token=None, file='config.ini'):
     Generate empty token file with token provided, else returns
     that token already exists
     """
-    if(not retrieve_token(file)):
+    if(not retrieve_token_file(file)):
         token_data = '[DEFAULT]\ntoken = \'' + str(new_token) + '\''
         with open(path+file, 'w') as token_file:
             token_file.write(token_data)

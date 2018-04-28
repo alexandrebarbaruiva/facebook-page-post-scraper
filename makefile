@@ -43,7 +43,7 @@ ifeq ($(UNAME), Linux)
 	mv chromedriver $(HOME)/bin
 	echo "export PATH=$(PATH):$(HOME)/bin" >> $(HOME)/.bash_profile
 	rm -f chromedriver_linux64.zip
-else 
+else
 	ifeq ($(UNAME), Darwin)
 		brew install chromedriver
 	endif
@@ -86,6 +86,6 @@ help:
 	@echo " make json........= Creates a json dir and moves all .json files there"
 	@echo " make clean.......= Removes all .json files"
 	@echo " make createconfig= Creates config.ini in scraper dir with the expected way to use it"
-	@echo " make chromedriver.= Install chromedriver for get the token automatically, works in" 
+	@echo " make chromedriver.= Install chromedriver for get the token automatically, works in"
 	@echo "                    Linux and MacOS"
 	@echo "\n\t End of Makefile Help\n"

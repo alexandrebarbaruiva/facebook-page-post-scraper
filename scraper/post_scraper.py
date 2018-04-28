@@ -27,7 +27,7 @@ class Scraper:
         url = 'https://graph.facebook.com/v2.12/me?access_token=' \
             + str(self.token)
         r = requests.get(url)
-        return(r.status_code == 200)
+        return(r.status_code)
 
     def check_status_code(self):
         """
