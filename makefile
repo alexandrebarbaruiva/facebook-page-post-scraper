@@ -43,10 +43,6 @@ ifeq ($(UNAME), Linux)
 	mv chromedriver $(HOME)/bin
 	echo "export PATH=$(PATH):$(HOME)/bin" >> $(HOME)/.bash_profile
 	rm -f chromedriver_linux64.zip
-else 
-	ifeq ($(UNAME), Darwin)
-		brew install chromedriver
-	endif
 endif
 
 # Call for creating a Json dir and moves all json files there
@@ -74,18 +70,20 @@ createconfig:
 help:
 	@echo "\n\t Makefile of Facebook scrapper from UnB\n"
 	@echo " make.............= Runs the tests using green3"
-	@echo " make test........= Also run the tests using green3"
-	@echo " make run.........= Run post_scrapper.py"
-	@echo " make install.....= Install the requirements necessary for this project"
-	@echo " make style.......= Cheks if your code is our pattern of coding for this project"
+	@echo " make test........= Also runs the tests using green3"
+	@echo " make run.........= Collects all pages in entidades.csv"
+	@echo " make install.....= Installs the requirements necessary for this project"
+	@echo " make style.......= Checks if your code is our pattern of coding for this "
+	@echo "                    project"
 	@echo " make json........= Creates a json dir and moves all .json files there"
-	@echo " make cov.........= Checks how much our program is coverage"
+	@echo " make cov.........= Checks test's coverage"
 	@echo " make full........= Runs make test, cov and style"
 	@echo " make autotoken...= Open Facebook Developers web page so that the user can "
 	@echo "                    take a new token and update config.ini file"
 	@echo " make json........= Creates a json dir and moves all .json files there"
 	@echo " make clean.......= Removes all .json files"
-	@echo " make createconfig= Creates config.ini in scraper dir with the expected way to use it"
-	@echo " make chromedriver.= Install chromedriver for get the token automatically, works in" 
-	@echo "                    Linux and MacOS"
+	@echo " make createconfig= Creates config.ini in scraper dir with the expected way"
+	@echo "                    to use it"
+	@echo " make chromedriver= Install chromedriver for get the token automatically, "
+	@echo "                    works in Linux"
 	@echo "\n\t End of Makefile Help\n"

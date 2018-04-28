@@ -27,7 +27,7 @@ class Scraper:
         url = 'https://graph.facebook.com/v2.12/me?access_token=' \
             + str(self.token)
         r = requests.get(url)
-        return(r.status_code == 200)
+        return(r.status_code)
 
     def check_status_code(self):
         """
@@ -50,11 +50,14 @@ class Scraper:
         except Exception as inst:
             return 'Page not set'
 
-    def scrape_current_page(self, feed=False, query=''):
+    def scrape_current_page(self, page=None, feed=False, query=''):
+        if page is not None:
+            self.set_page(page)
         graph = facebook.GraphAPI(access_token=self.token, version="2.12")
         feed_statement = '/feed' if feed else ''
         try:
             post = graph.get_object(
+
                     id=str(self.page)+feed_statement,
                     fields=query
             )
@@ -77,8 +80,8 @@ class Scraper:
             )  # pretty json
             return True
 
-    def get_page_name_and_like(self):
-        self.scrape_current_page(query='name,fan_count')
+    def get_page_name_and_like(self, page=None):
+        self.scrape_current_page(page, query='name,fan_count')
         return([
             self.current_data['name'],
             # self.current_data['fan_count'],
