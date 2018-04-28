@@ -5,7 +5,8 @@ import csv
 from time import strftime
 from scraper.post_scraper import Scraper
 from scraper.token_manager import \
-    retrieve_token_file, update_token_file, generate_token_file
+    retrieve_token_file, update_token_file, generate_token_file,\
+    retrieve_password_file, encrypt_user_password
 
 
 class TestTokenFunctions(unittest.TestCase):
@@ -63,6 +64,18 @@ class TestTokenFunctions(unittest.TestCase):
             [True, new_token]
         )
         os.remove(str(os.getcwd())+'/scraper/empty.ini')
+
+    def test_if_token_has_password(self):
+        self.assertFalse(retrieve_password_file('test.txt'))
+        if not retrieve_password_file():
+            print("No user/password informed.")
+            pass
+
+    def test_encrypt_user_password(self):
+        user = 'teste'
+        password = '1234'
+        self.assertEqual(type(encrypt_user_password(user, password)), type([]))
+        self.assertEqual(len(encrypt_user_password(user, password)), 3)
 
 
 class TestPostScraper(unittest.TestCase):

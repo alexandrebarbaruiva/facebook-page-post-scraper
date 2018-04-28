@@ -4,6 +4,7 @@ from configparser import ConfigParser
 import webbrowser
 from splinter import Browser
 from time import sleep
+from cryptography.fernet import Fernet
 from getpass import getpass
 sys.path.append(
     os.path.dirname(
@@ -26,6 +27,27 @@ def retrieve_token_file(file='config.ini'):
             if ('token' in config['DEFAULT'].keys()):
                 return(config['DEFAULT']['token'])
         return 'Token with bad structure'
+    except Exception as inst:
+        return False
+
+
+def retrieve_password_file(file='config.ini'):
+    """
+    Retrieves user and password from config.ini file on scraper folder
+    """
+    try:
+        config = ConfigParser()
+        config.read_file(open(path+file))
+        if ('DEFAULT' in config.keys()):
+            if ('token' in config['DEFAULT'].keys()):
+                return(
+                    [
+                        config['DEFAULT']['user'],
+                        config['DEFAULT']['password'],
+                        config['DEFAULT']['utoken']
+                    ]
+                )
+        return 'Token with bad user/password structure'
     except Exception as inst:
         return False
 
@@ -170,6 +192,16 @@ def automate_token_collection():
             print("\x1b[04;01;31m" + "Set Token is not Valid" + '\x1b[0m\n')
         print("\x1b[04;01;32m" + "Auto Token function Completed" + '\x1b[0m')
         sleep(2.0)
+
+
+def encrypt_user_password(user, password):
+    key = Fernet.generate_key()
+    cipher_suite = Fernet(key)
+    user_byte = str.encode(user)
+    pass_byte = str.encode(password)
+    encrypted_user = cipher_suite.encrypt(user_byte)
+    encrypted_pass = cipher_suite.encrypt(pass_byte)
+    return([encrypted_user, encrypted_pass, key])
 
 
 if __name__ == '__main__':
