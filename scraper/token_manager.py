@@ -11,7 +11,7 @@ sys.path.append(
         os.path.dirname(os.path.realpath(__file__))
     )
 )
-from scraper.post_scraper import Scraper
+from scraper.page_scraper import Scraper
 
 path = str(os.getcwd())+'/scraper/'
 
@@ -38,13 +38,13 @@ def retrieve_password_file(file='config.ini'):
     try:
         config = ConfigParser()
         config.read_file(open(path+file))
-        if ('DEFAULT' in config.keys()):
-            if ('token' in config['DEFAULT'].keys()):
+        if ('USER' in config.keys()):
+            if {'user','password','utoken'} <= set(config['USER']):
                 return(
                     [
-                        config['DEFAULT']['user'],
-                        config['DEFAULT']['password'],
-                        config['DEFAULT']['utoken']
+                        config['USER']['user'],
+                        config['USER']['password'],
+                        config['USER']['utoken']
                     ]
                 )
         return 'Token with bad user/password structure'
@@ -52,18 +52,26 @@ def retrieve_password_file(file='config.ini'):
         return False
 
 
-def update_token_file(new_token=None, file='config.ini'):
+def update_token_file(file='config.ini', **kwargs):
     """
     Update token from config.ini file on scraper folder
     """
-    if new_token is not None:
-        config = ConfigParser()
-        config['DEFAULT'] = {'token': new_token}
-        with open(path+file, 'w') as configfile:
-            config.write(configfile)
-        return 'New token written successfuly.'
-    else:
-        return 'Token not updated.'
+    config = ConfigParser()
+    config.read(path+file)
+
+    if len(kwargs.keys()) > 0:
+        if {'user','password','utoken'} == set(kwargs):
+            config['USER'] = kwargs
+            with open(path+file, 'w') as configfile:
+                config.write(configfile)
+            return 'User and password updated.'
+
+        if ('token' in kwargs.keys()):
+            config['DEFAULT'] = {'token': kwargs['token']}
+            with open(path+file, 'w') as configfile:
+                config.write(configfile)
+            return 'New token written successfuly.'
+    return 'File not updated.'
 
 
 def generate_token_file(new_token=None, file='config.ini'):
@@ -82,7 +90,7 @@ def generate_token_file(new_token=None, file='config.ini'):
 
 def collect_token(email, password):
     """
-    Case User already had accepted Facebook Terms and Conditions,
+    When user has already accepted Facebook Terms and Conditions,
     this function will login on user's Facebook and get his
     "User Token Acces" and save in config.ini
     """
@@ -99,7 +107,6 @@ def collect_token(email, password):
             raise Exception
         # Click on login button
         browser_login = browser.find_by_name('login')
-        print(browser_login)
         # Login with email and password from the user
         try:
             browser.fill('email', email)
@@ -201,7 +208,7 @@ def encrypt_user_password(user, password):
     pass_byte = str.encode(password)
     encrypted_user = cipher_suite.encrypt(user_byte)
     encrypted_pass = cipher_suite.encrypt(pass_byte)
-    return([encrypted_user, encrypted_pass, key])
+    return({'user':encrypted_user, 'password':encrypted_pass, 'utoken':key})
 
 
 if __name__ == '__main__':

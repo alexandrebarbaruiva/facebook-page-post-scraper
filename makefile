@@ -1,16 +1,16 @@
 JsonDir = ./json/
 UNAME := $(shell uname)
 
-default: test
+default: tm
 
 test:
 	green3 . -vvv
 
 run:
-	python3 -m scraper/post_scraper.py
-
-collect:
 	python3 scraper/collector.py
+
+tm:
+	green3 tests/test_token_manager.py -vvv
 
 install:
 	pip3 install -r requirements.txt
