@@ -9,13 +9,14 @@ from scraper.token_manager import \
     retrieve_password_file, encrypt_user_password
 
 
-class TestPostScraper(unittest.TestCase):
+class TestPageScraper(unittest.TestCase):
 
     def setUp(self):
         self.scraper = Scraper(retrieve_token_file())
         self.github = '262588213843476'
-        # if not self.scraper.check_valid_token():
-        #     self.fail('Token has expired, please renew it.')
+        self.day_scraped = strftime("%Y%m%d%H%M")
+        if not self.scraper.check_valid_token():
+            self.fail('Token has expired, please renew it.')
 
     def tearDown(self):
         self.scraper = None
@@ -25,12 +26,6 @@ class TestPostScraper(unittest.TestCase):
         Check if token provided by user hasn't expired
         """
         self.assertTrue(self.scraper.check_valid_token())
-
-    def test_if_status_is_400(self):
-        """
-        Check if when no page is provided, status is 400
-        """
-        self.assertTrue(self.scraper.check_status_code(), 400)
 
     def test_if_page_is_as_provided_by_user(self):
         """
@@ -86,7 +81,7 @@ class TestPostScraper(unittest.TestCase):
     def test_scraping_name_and_likes(self):
         """
         Check if it's possible to collect name and like from
-        facebook page with date of collection
+        LearnPython page with date of collection
         """
         self.assertEqual(
             self.scraper.get_page_name_and_like('262588213843476'),
@@ -106,13 +101,12 @@ class TestPostScraper(unittest.TestCase):
         a csv file with the proper content
         """
         self.scraper.get_page_name_and_like(self.github)
-        day_scraped = strftime("%Y%m%d")
         self.assertTrue(self.scraper.convert_to_csv())
         self.assertTrue(
-            os.path.exists('csv/scraped_' + day_scraped + '.csv')
+            os.path.exists('csv/scraped_' + self.day_scraped + '.csv')
         )
         # Check if csv header is as expected
-        with open('csv/scraped_' + day_scraped + '.csv') as file:
+        with open('csv/scraped_' + self.day_scraped + '.csv') as file:
             reader = csv.reader(file)
             self.assertEqual(
                 next(reader),
@@ -123,24 +117,26 @@ class TestPostScraper(unittest.TestCase):
             for row in reader:
                 pages += 1
             self.assertEqual(pages, 1)
-        os.remove(str(os.getcwd())+'/csv/scraped_' + day_scraped + '.csv')
+        os.remove(str(os.getcwd())+'/csv/scraped_' + self.day_scraped + '.csv')
 
     def test_if_multiple_conversions_generate_one_file(self):
         """
         Check if when presented with multiple page contents, csv converter
-        generates only one csv file with the proper content of all pages
+        generates only one csv file with the proper content of all pages and
+        without duplicated pages
         """
         self.scraper.get_page_name_and_like('262588213843476')
-        self.scraper.convert_to_csv()
-        self.scraper.get_page_name_and_like('20531316728')
-        self.scraper.convert_to_csv()
-        self.assertTrue(self.scraper.convert_to_csv())
-        day_scraped = strftime("%Y%m%d")
+        self.scraper.convert_to_csv('test')
+        self.scraper.get_page_name_and_like('135117696663585')
+        self.scraper.convert_to_csv('test')
+        self.scraper.get_page_name_and_like('135117696663585')
+        self.scraper.convert_to_csv('test')
+        self.assertTrue(self.scraper.convert_to_csv('test'))
         self.assertTrue(
-            os.path.exists('csv/scraped_' + day_scraped + '.csv')
+            os.path.exists('csv/test_' + self.day_scraped + '.csv')
         )
         # Check if csv header is as expected
-        with open('csv/scraped_' + day_scraped + '.csv') as file:
+        with open('csv/test_' + self.day_scraped + '.csv') as file:
             reader = csv.reader(file)
             self.assertEqual(
                 next(reader),
@@ -151,7 +147,7 @@ class TestPostScraper(unittest.TestCase):
             for row in reader:
                 pages += 1
             self.assertEqual(pages, 2)
-        os.remove(str(os.getcwd())+'/csv/scraped_' + day_scraped + '.csv')
+        os.remove(str(os.getcwd())+'/csv/test_' + self.day_scraped + '.csv')
 
 
 if __name__ == '__main__':

@@ -1,7 +1,7 @@
 JsonDir = ./json/
 UNAME := $(shell uname)
 
-default: tm
+default: test
 
 test:
 	green3 . -vvv
@@ -12,6 +12,9 @@ run:
 tm:
 	green3 tests/test_token_manager.py -vvv
 
+ps:
+	green3 tests/test_page_scraper.py -vvv
+
 install:
 	pip3 install -r requirements.txt
 
@@ -20,9 +23,9 @@ style:
 
 cov:
 	coverage run -m py.test tests/test.py
-	coverage report -m scraper/post_scraper.py
+	coverage report -m scraper/page_scraper.py
 	coverage report -m scraper/token_manager.py
-	coverage html scraper/post_scraper.py
+	coverage html scraper/page_scraper.py
 
 full:
 	make test
