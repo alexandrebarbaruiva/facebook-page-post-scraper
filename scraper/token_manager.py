@@ -1,5 +1,6 @@
 import os
 import sys
+import base64
 from configparser import ConfigParser
 import webbrowser
 from splinter import Browser
@@ -39,13 +40,13 @@ def retrieve_password_file(file='config.ini'):
         config = ConfigParser()
         config.read_file(open(path+file))
         if ('USER' in config.keys()):
-            if {'user','password','utoken'} <= set(config['USER']):
+            if {'user', 'password', 'utoken'} <= set(config['USER']):
                 return(
-                    [
-                        config['USER']['user'],
-                        config['USER']['password'],
-                        config['USER']['utoken']
-                    ]
+                    {
+                        'user': config['USER']['user'],
+                        'password': config['USER']['password'],
+                        'utoken': config['USER']['utoken']
+                    }
                 )
         return 'Token with bad user/password structure'
     except Exception as inst:
@@ -60,12 +61,14 @@ def update_token_file(file='config.ini', **kwargs):
     config.read(path+file)
 
     if len(kwargs.keys()) > 0:
-        if {'user','password','utoken'} == set(kwargs):
+        # if kwargs has all info for password
+        if {'user', 'password', 'utoken'} == set(kwargs):
             config['USER'] = kwargs
             with open(path+file, 'w') as configfile:
                 config.write(configfile)
             return 'User and password updated.'
 
+        # if kwargs has token info
         if ('token' in kwargs.keys()):
             config['DEFAULT'] = {'token': kwargs['token']}
             with open(path+file, 'w') as configfile:
@@ -88,7 +91,7 @@ def generate_token_file(new_token=None, file='config.ini'):
         return [False, 'File already exists']
 
 
-def collect_token(email, password):
+def collect_token_automatically(email, password):
     """
     When user has already accepted Facebook Terms and Conditions,
     this function will login on user's Facebook and get his
@@ -117,7 +120,7 @@ def collect_token(email, password):
             browser_access.click()
         except Exception as inst:
             print("\x1b[04;01;31m" + "Wrong User Login" + '\x1b[0m')
-            raise Exception
+            return 'Wrong Facebook user or password'
         browser_accessus = browser.find_by_text(
             'Obter token de acesso do usuário'
         )
@@ -133,7 +136,7 @@ def collect_token(email, password):
         browser_token = browser_token.split("\"", 1)[1]
         browser_token = browser_token.split("\"", 1)[0]
         # update new token into config.ini and print if it worked
-        update_token_file(browser_token)
+        update_token_file(**{'token': browser_token})
         browser.quit()
     valid_token = Scraper(browser_token)
     return valid_token
@@ -157,22 +160,26 @@ def collect_token_manually():
     return token_is_valid
 
 
-def automate_token_collection():
+def collect_token(file='config.ini'):
+    """
+    Function for collecting token manually if it's the first time or
+    automatically if user has done the process at least once.
+    """
     os.system("clear")
     cond = "something"
-    while (cond != "Y" and cond != "N"):
-        print(
-            "Is it your first time getting User Access Token?" +
-            "\nType \"Y\" OR \"N\"")
-        cond = input().upper()
-    if(cond == "N"):
-        os.system("clear")
-        print('Email from your Facebook Account:')
-        email = input()
-        password = getpass()
+
+    if retrieve_password_file(file):
         try:
             # tried to get the token
-            token_is_valid = collect_token(email, password)
+            print(
+                "\x1b[04;01;32m" +
+                "Getting credentials and collecting token" +
+                "\x1b[0m\n"
+            )
+            email, password = decrypt_user_password(
+                **retrieve_password_file(file)
+            )
+            token_is_valid = collect_token_automatically(email, password)
             if(token_is_valid.check_valid_token()):
                 print("\x1b[04;01;32m" + "Set Token Is Valid" + '\x1b[0m\n')
             else:
@@ -182,23 +189,71 @@ def automate_token_collection():
             # something went wrong getting the token
             print("\x1b[04;01;31m"+"Auto Token function Failed!"+"\x1b[0m")
 
-    elif(cond == "Y"):
-        os.system("clear")
-        print(
-            "1. Login on your Facebook Account" +
-            "\n2. Click on \"Get token\" then \"Get User Access Token\"." +
-            "\n3. Then select \"manage_pages\",\"publish_pages\"," +
-            "\n\"pages_show_list\" and \"pages_manage_instant_articles\"." +
-            "\n4. Finish by clicking on \"Get Access Token\"." +
-            "\n\nNow paste your user Access Token here:"
-        )  # wait enough time so the user can read the menu
-        token_is_valid = collect_token_manually()
-        if(token_is_valid.check_valid_token()):
-            print("\x1b[04;01;32m" + "Set Token Is Valid" + '\x1b[0m\n')
-        else:
-            print("\x1b[04;01;31m" + "Set Token is not Valid" + '\x1b[0m\n')
-        print("\x1b[04;01;32m" + "Auto Token function Completed" + '\x1b[0m')
-        sleep(2.0)
+    else:
+        while (cond != "Y" and cond != "N"):
+            print(
+                "Is it your first time getting User Access Token?" +
+                "\nType \"Y\" OR \"N\"")
+            cond = input().upper()
+        if(cond == "N"):
+            os.system("clear")
+            print('Email from your Facebook Account:')
+            email = input()
+            password = getpass()
+            update_token_file(**encrypt_user_password(email, password))
+            try:
+                # tried to get the token
+                token_is_valid = collect_token_automatically(email, password)
+                if(token_is_valid.check_valid_token()):
+                    print(
+                        "\x1b[04;01;32m" +
+                        "Set Token Is Valid" +
+                        "\x1b[0m\n"
+                    )
+                else:
+                    print("\x1b[04;01;31mSet Token is not Valid\x1b[0m\n")
+                print(
+                    "\x1b[04;01;32m" +
+                    "Auto Token function Completed" +
+                    "\x1b[0m"
+                )
+            except Exception as inst:
+                # something went wrong getting the token
+                print("\x1b[04;01;31m"+"Auto Token function Failed!"+"\x1b[0m")
+
+        elif(cond == "Y"):
+            os.system("clear")
+            print(
+                "1. Login on your Facebook Account" +
+                "\n2. Click on \"Get token\" then \"Get User Access Token\"." +
+                "\n3. Then select \"manage_pages\",\"publish_pages\"," +
+                "\n\"pages_show_list\" and \"pages_manage_instant_articles\"." +
+                "\n4. Finish by clicking on \"Get Access Token\"." +
+                "\n\nNow paste your user Access Token here:"
+            )  # wait enough time so the user can read the menu
+            token_is_valid = collect_token_manually()
+            if(token_is_valid.check_valid_token()):
+                print("\x1b[04;01;32m" + "Set Token Is Valid" + "\x1b[0m\n")
+                print(
+                    "\x1b[04;01;32m" +
+                    "Auto Token function Completed" +
+                    "\x1b[0m"
+                )
+                sleep(2.0)
+                return True
+            else:
+                print(
+                    "\x1b[04;01;31m" +
+                    "Set Token is not Valid" +
+                    "\x1b[0m\n"
+                )
+                print(
+                    "\x1b[04;01;32m" +
+                    "Auto Token function Completed" +
+                    "\x1b[0m"
+                )
+                sleep(2.0)
+                return False
 
 
 def encrypt_user_password(user, password):
@@ -208,8 +263,23 @@ def encrypt_user_password(user, password):
     pass_byte = str.encode(password)
     encrypted_user = cipher_suite.encrypt(user_byte)
     encrypted_pass = cipher_suite.encrypt(pass_byte)
-    return({'user':encrypted_user, 'password':encrypted_pass, 'utoken':key})
+    return({'user': encrypted_user, 'password': encrypted_pass, 'utoken': key})
+
+
+def decrypt_user_password(**kwargs):
+    if {'user', 'password', 'utoken'} <= set(kwargs):
+        try:
+            kwargs['utoken'] = kwargs['utoken'][2:-1].encode()
+            kwargs['user'] = kwargs['user'][2:-1].encode()
+            kwargs['password'] = kwargs['password'][2:-1].encode()
+        except Exception as inst:
+            pass
+        key = Fernet.generate_key()
+        cipher_suite = Fernet((kwargs['utoken']))
+        user_d = str(cipher_suite.decrypt(kwargs['user']), 'utf-8')
+        pass_d = str(cipher_suite.decrypt(kwargs['password']), 'utf-8')
+        return [user_d, pass_d]
 
 
 if __name__ == '__main__':
-    automate_token_collection()
+    collect_token()
