@@ -107,7 +107,7 @@ def collect_token_automatically(email, password):
             browser.click_link_by_partial_href('login')
         except Exception as inst:
             print("\x1b[04;01;31mCouldn't open Facebook Dev site\x1b[0m")
-            raise Exception
+            return 'Não foi possível abrir o Facebook. Você está online?'
         # Click on login button
         browser_login = browser.find_by_name('login')
         # Login with email and password from the user
@@ -160,6 +160,28 @@ def collect_token_manually():
     return token_is_valid
 
 
+def check_automatic_collection(file):
+    try:
+        # tried to get the token
+        print(
+            "\x1b[04;01;32m" +
+            "Getting credentials and collecting token" +
+            "\x1b[0m\n"
+        )
+        email, password = decrypt_user_password(**retrieve_password_file(file))
+        token_is_valid = collect_token_automatically(email, password)
+        if(token_is_valid.check_valid_token()):
+            print("\x1b[04;01;32m" + "Set Token Is Valid" + '\x1b[0m\n')
+            print("\x1b[04;01;32m"+"Auto Token function Completed"+"\x1b[0m")
+            return True
+        print("\x1b[04;01;31mSet Token is not Valid\x1b[0m\n")
+        return False
+    except Exception as inst:
+        # something went wrong getting the token
+        print("\x1b[04;01;31m"+"Auto Token function Failed!"+"\x1b[0m")
+        return 'Wrong user or password.'
+
+
 def collect_token(file='config.ini'):
     """
     Function for collecting token manually if it's the first time or
@@ -169,25 +191,7 @@ def collect_token(file='config.ini'):
     cond = "something"
 
     if retrieve_password_file(file):
-        try:
-            # tried to get the token
-            print(
-                "\x1b[04;01;32m" +
-                "Getting credentials and collecting token" +
-                "\x1b[0m\n"
-            )
-            email, password = decrypt_user_password(
-                **retrieve_password_file(file)
-            )
-            token_is_valid = collect_token_automatically(email, password)
-            if(token_is_valid.check_valid_token()):
-                print("\x1b[04;01;32m" + "Set Token Is Valid" + '\x1b[0m\n')
-            else:
-                print("\x1b[04;01;31mSet Token is not Valid\x1b[0m\n")
-            print("\x1b[04;01;32m"+"Auto Token function Completed"+"\x1b[0m")
-        except Exception as inst:
-            # something went wrong getting the token
-            print("\x1b[04;01;31m"+"Auto Token function Failed!"+"\x1b[0m")
+        check_automatic_collection(file)
 
     else:
         while (cond != "Y" and cond != "N"):
@@ -226,8 +230,8 @@ def collect_token(file='config.ini'):
             print(
                 "1. Login on your Facebook Account" +
                 "\n2. Click on \"Get token\" then \"Get User Access Token\"." +
-                "\n3. Then select \"manage_pages\",\"publish_pages\"," +
-                "\n\"pages_show_list\" and \"pages_manage_instant_articles\"." +
+                "\n3. Then select \"manage_pages\",\"publish_pages\",\n" +
+                "\"pages_show_list\" and \"pages_manage_instant_articles\"." +
                 "\n4. Finish by clicking on \"Get Access Token\"." +
                 "\n\nNow paste your user Access Token here:"
             )  # wait enough time so the user can read the menu
@@ -279,6 +283,7 @@ def decrypt_user_password(**kwargs):
         user_d = str(cipher_suite.decrypt(kwargs['user']), 'utf-8')
         pass_d = str(cipher_suite.decrypt(kwargs['password']), 'utf-8')
         return [user_d, pass_d]
+    return False
 
 
 if __name__ == '__main__':
