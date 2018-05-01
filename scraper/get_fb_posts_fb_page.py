@@ -2,6 +2,7 @@ import json
 import datetime
 import csv
 import time
+from time import strftime
 try:
     from urllib.request import urlopen, Request
 except ImportError:
@@ -10,10 +11,10 @@ except ImportError:
 page_id = "419702371406944"
 
 # input date formatted as YYYY-MM-DD
-since_date = "2018-04-28"
-until_date = "2018-05-01"
+since_date = "2018-04-20"
+until_date = strftime("%Y-%m-%d")
 
-access_token = "colocar token aqui"
+access_token = ""
 
 
 
@@ -47,42 +48,14 @@ def getFacebookPageFeedUrl(base_url):
 
     # Construct the URL string; see http://stackoverflow.com/a/37239851 for
     # Reactions parameters
-    fields = "&fields=message,link,created_time,type,name,id," + \
+    fields = "&fields=message,created_time,type,id," + \
         "comments.limit(0).summary(true),shares,reactions" + \
         ".limit(0).summary(true)"
 
     return base_url + fields
 
 
-def getReactionsForStatuses(base_url):
-
-    reaction_types = ['none']
-    reactions_dict = {}   # dict of {status_id: tuple<6>}
-
-    for reaction_type in reaction_types:
-        fields = "&fields=reactions.type({}).limit(0).summary(total_count)".format(
-            reaction_type.upper())
-
-        url = base_url + fields
-
-        data = json.loads(request_until_succeed(url))['data']
-
-        data_processed = set()  # set() removes rare duplicates in statuses
-        for status in data:
-            id = status['id']
-            count = status['reactions']['summary']['total_count']
-            data_processed.add((id, count))
-
-        for id, count in data_processed:
-            if id in reactions_dict:
-                reactions_dict[id] = reactions_dict[id] + (count,)
-            else:
-                reactions_dict[id] = (count,)
-
-    return reactions_dict
-
-
-def processFacebookPageFeedStatus(status):
+def processFacebookPageFeedStatus(status,t_reaction,t_comments,t_shares):
 
     # The status is now a Python dictionary, so for top-level items,
     # we can simply call the key.
@@ -91,7 +64,6 @@ def processFacebookPageFeedStatus(status):
     # so must check for existence first
 
     status_id = status['id']
-    status_type = status['type']
 
     status_message = '' if 'message' not in status else \
         unicode_decode(status['message'])
@@ -117,18 +89,21 @@ def processFacebookPageFeedStatus(status):
     num_comments = 0 if 'comments' not in status else \
         status['comments']['summary']['total_count']
     num_shares = 0 if 'shares' not in status else status['shares']['count']
+    t_reaction = t_reaction + num_reactions
+    t_comments = t_comments + num_comments
+    t_shares = t_shares + num_shares
 
-    return (status_id, status_message, link_name, status_type, status_link,
-            status_published, num_reactions, num_comments, num_shares)
+    return (status_id,status_published, num_reactions, num_comments, num_shares, t_reaction,t_comments,t_shares)
 
 
 def scrapeFacebookPageFeedStatus(page_id, access_token, since_date, until_date):
-    with open('{}_facebook_statuses.csv'.format(page_id), 'w') as file:
+    with open(strftime("%Y-%m-%d.csv"), 'w') as file:
         w = csv.writer(file)
-        w.writerow(["status_id", "status_message", "link_name", "status_type",
-                    "status_link", "status_published", "num_reactions",
-                    "num_comments", "num_shares", "num_likes"])
-
+        w.writerow(["status_id", "status_published", "num_reactions",
+                    "num_comments", "num_shares","total reaction","total comments","total shares"])
+        t_reaction = 0
+        t_comments = 0
+        t_shares = 0
         has_next_page = True
         num_processed = 0
         scrape_starttime = datetime.datetime.now()
@@ -149,18 +124,16 @@ def scrapeFacebookPageFeedStatus(page_id, access_token, since_date, until_date):
 
             url = getFacebookPageFeedUrl(base_url)
             statuses = json.loads(request_until_succeed(url))
-            reactions = getReactionsForStatuses(base_url)
 
             for status in statuses['data']:
 
                 # Ensure it is a status with the expected metadata
                 if 'reactions' in status:
-                    status_data = processFacebookPageFeedStatus(status)
-                    reactions_data = reactions[status_data[0]]
-
-                    # calculate thankful/pride through algebra
-                    num_special = status_data[6] - sum(reactions_data)
-                    w.writerow(status_data + reactions_data + (num_special,))
+                    status_data = processFacebookPageFeedStatus(status,t_reaction,t_comments,t_shares)
+                    t_reaction = status_data[5]
+                    t_comments = status_data[6]
+                    t_shares =  status_data[7]
+                    w.writerow(status_data)
 
                 num_processed += 1
                 if num_processed % 100 == 0:
