@@ -1,5 +1,5 @@
 import csv
-from post_scraper import Scraper
+from page_scraper import Scraper
 from token_manager import retrieve_token_file
 
 

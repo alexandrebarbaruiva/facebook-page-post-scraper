@@ -24,17 +24,11 @@ class Scraper:
         """
         Checks if token provided is valid
         """
-        url = 'https://graph.facebook.com/v2.12/me?access_token=' \
-            + str(self.token)
-        r = requests.get(url)
-        return(r.status_code)
-
-    def check_status_code(self):
-        """
-        Checks for page status code, good for testing if page and query are
-        adequate. There's room for improvement here.
-        """
-        return self.status_code
+        if (self.status_code is not 200):
+            url = 'https://graph.facebook.com/v2.12/me?access_token=' \
+                + str(self.token)
+            self.status_code = requests.get(url).status_code
+        return(self.status_code == 200)
 
     def set_page(self, page):
         """
@@ -97,9 +91,11 @@ class Scraper:
             return content
         try:
             column_names = self.current_data.keys()
+            if set(column_names) == {'name', 'fan_count', 'id', 'date'}:
+                column_names = ['name', 'id', 'fan_count', 'date']
         except Exception as inst:
             return ('No content found.')
-        today = strftime("%Y%m%d")
+        today = strftime("%Y-%m-%d_%Hh")
 
         # Check if file already exists to append instead of create
         if os.path.exists('csv/{}_{}.csv'.format(file_name, today)):
