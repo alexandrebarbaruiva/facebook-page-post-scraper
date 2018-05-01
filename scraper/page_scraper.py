@@ -91,6 +91,8 @@ class Scraper:
             return content
         try:
             column_names = self.current_data.keys()
+            if set(column_names) == {'name', 'fan_count', 'id', 'date'}:
+                column_names = ['name', 'id', 'fan_count', 'date']
         except Exception as inst:
             return ('No content found.')
         today = strftime("%Y%m%d%H%M")

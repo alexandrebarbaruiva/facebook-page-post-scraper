@@ -195,7 +195,6 @@ def collect_token(file='config.ini'):
 
     if retrieve_password_file(file):
         check_automatic_collection(file)
-
     else:
         while (cond != "Y" and cond != "N"):
             print(

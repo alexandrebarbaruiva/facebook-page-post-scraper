@@ -110,7 +110,7 @@ class TestPageScraper(unittest.TestCase):
             reader = csv.reader(file)
             self.assertEqual(
                 next(reader),
-                ['name', 'fan_count', 'id', 'date']
+                ['name', 'id', 'fan_count', 'date']
             )
             # Check for amount of pages scraped is correct
             pages = 0
@@ -140,7 +140,7 @@ class TestPageScraper(unittest.TestCase):
             reader = csv.reader(file)
             self.assertEqual(
                 next(reader),
-                ['name', 'fan_count', 'id', 'date']
+                ['name', 'id', 'fan_count', 'date']
             )
             # Check for amount of pages scraped is correct
             pages = 0

@@ -1,4 +1,5 @@
 JsonDir = ./json/
+CsvDir = ./csv/
 UNAME := $(shell uname)
 face_file1 = venv/src/facebook-sdk/facebook/__init__.py
 face_file2 = venv/src/facebook-sdk/facebook/version.py
@@ -60,6 +61,7 @@ json:
 clean:
 	rm -f ./*.json
 	rm -f $(JsonDir)*.json
+	rm -f $(CsvDir)*.csv
 	rm -rf ./htmlcov
 	rm -f ./.coverage
 
