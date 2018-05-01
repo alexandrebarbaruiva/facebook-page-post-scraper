@@ -95,7 +95,7 @@ class Scraper:
                 column_names = ['name', 'id', 'fan_count', 'date']
         except Exception as inst:
             return ('No content found.')
-        today = strftime("%Y%m%d%H%M")
+        today = strftime("%Y-%m-%d_%Hh")
 
         # Check if file already exists to append instead of create
         if os.path.exists('csv/{}_{}.csv'.format(file_name, today)):
