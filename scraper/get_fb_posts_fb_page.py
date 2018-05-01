@@ -14,7 +14,7 @@ page_id = "419702371406944"
 since_date = "2018-04-20"
 until_date = strftime("%Y-%m-%d")
 
-access_token = ""
+access_token = "EAACEdEose0cBALPatogjv2jE7zrMS3Sm7awVaU14kZC0SbiBLJVVlZAWGS07q5CjdEjkIrXRZCknvkE4yDXkIiLBZBk3ZAjehOjsw5kRvGuXQVIQeTI1KwJyS5z9p4yUqwG1dA6hOp6Jcn4VGZB6SlptjNxVtVRVCLMOobStQ5OnZCjJSh4snIWOf2UDesdShdGDXfkosVRyAZDZD"
 
 
 
@@ -35,15 +35,6 @@ def request_until_succeed(url):
 
     return response.read()
 
-
-# Needed to write tricky unicode correctly to csv
-def unicode_decode(text):
-    try:
-        return text.encode('utf-8').decode()
-    except UnicodeDecodeError:
-        return text.encode('utf-8')
-
-
 def getFacebookPageFeedUrl(base_url):
 
     # Construct the URL string; see http://stackoverflow.com/a/37239851 for
@@ -63,24 +54,16 @@ def processFacebookPageFeedStatus(status,t_reaction,t_comments,t_shares):
     # Additionally, some items may not always exist,
     # so must check for existence first
 
-    status_id = status['id']
-
-    status_message = '' if 'message' not in status else \
-        unicode_decode(status['message'])
-    link_name = '' if 'name' not in status else \
-        unicode_decode(status['name'])
-    status_link = '' if 'link' not in status else \
-        unicode_decode(status['link'])
-
     # Time needs special care since a) it's in UTC and
     # b) it's not easy to use in statistical programs.
-
+    status_id = status['id']
+    
     status_published = datetime.datetime.strptime(
         status['created_time'], '%Y-%m-%dT%H:%M:%S+0000')
     status_published = status_published + \
-        datetime.timedelta(hours=-5)  # EST
+        datetime.timedelta(hours=-3)  # Brasilia time
     status_published = status_published.strftime(
-        '%Y-%m-%d %H:%M:%S')  # best time format for spreadsheet programs
+        '%Y-%m-%d %H:%M:%S')  # Converting from the way facebook gives us the created time to a more readable
 
     # Nested items require chaining dictionary keys.
 
@@ -97,7 +80,7 @@ def processFacebookPageFeedStatus(status,t_reaction,t_comments,t_shares):
 
 
 def scrapeFacebookPageFeedStatus(page_id, access_token, since_date, until_date):
-    with open(strftime("%Y-%m-%d.csv"), 'w') as file:
+    with open(strftime("%Y-%m-%d--%H-%M.csv"), 'w') as file:
         w = csv.writer(file)
         w.writerow(["status_id", "status_published", "num_reactions",
                     "num_comments", "num_shares","total reaction","total comments","total shares"])
@@ -124,7 +107,7 @@ def scrapeFacebookPageFeedStatus(page_id, access_token, since_date, until_date):
 
             url = getFacebookPageFeedUrl(base_url)
             statuses = json.loads(request_until_succeed(url))
-
+            
             for status in statuses['data']:
 
                 # Ensure it is a status with the expected metadata
@@ -145,7 +128,8 @@ def scrapeFacebookPageFeedStatus(page_id, access_token, since_date, until_date):
                 after = statuses['paging']['cursors']['after']
             else:
                 has_next_page = False
-
+        w.writerow(["total de posts","total reactions","total comentarios","total shares"])
+        w.writerow([num_processed,t_reaction,t_comments,t_shares])
         print("\nDone!\n{} Statuses Processed in {}".format(
               num_processed, datetime.datetime.now() - scrape_starttime))
 
