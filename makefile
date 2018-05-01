@@ -1,5 +1,7 @@
 JsonDir = ./json/
 UNAME := $(shell uname)
+face_file1 = venv/src/facebook-sdk/facebook/__init__.py
+face_file2 = venv/src/facebook-sdk/facebook/version.py
 
 default: test
 
@@ -27,8 +29,8 @@ cov:
 	coverage html scraper/page_scraper.py scraper/token_manager.py
 
 full:
-	make test
-	make cov
+	green3 -vvv --run-coverage -o $(face_file1),$(face_file2)
+	coverage report -m scraper/page_scraper.py scraper/token_manager.py
 	make style
 
 .PHONY: autotoken
