@@ -78,7 +78,7 @@ class TestTokenSecurity(unittest.TestCase):
     def test_if_token_has_password(self):
         self.assertFalse(retrieve_password_file('test.txt'))
         if not retrieve_password_file():
-            self.fail('No user/password informed.')
+            self.fail('No user/password informed. Use autotoken.')
 
     def test_encrypt_user_password(self):
         user = 'teste'
@@ -128,7 +128,7 @@ class TestTokenCollection(unittest.TestCase):
                 type(Scraper(''))
             )
         else:
-            pass
+            self.fail('No user/password informed. Use autotoken.')
 
     def test_collect_token_automatically_without_internet(self):
         url = 'https://www.google.com/'
@@ -142,6 +142,9 @@ class TestTokenCollection(unittest.TestCase):
             pass
 
     def test_check_function_for_automatic_token(self):
-        self.assertEqual(check_automatic_collection('config.ini'), True)
+        if retrieve_password_file():
+            self.assertEqual(check_automatic_collection('config.ini'), True)
+        else:
+            self.fail('No user/password informed. Use autotoken.')
 
     # def test_check_function_for_manual_token(self):

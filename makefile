@@ -27,8 +27,7 @@ cov:
 	coverage html scraper/page_scraper.py scraper/token_manager.py
 
 full:
-	make test
-	make cov
+	green3 -vvv --run-coverage
 	make style
 
 .PHONY: autotoken

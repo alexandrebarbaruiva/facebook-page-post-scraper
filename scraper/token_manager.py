@@ -48,7 +48,7 @@ def retrieve_password_file(file='config.ini'):
                         'utoken': config['USER']['utoken']
                     }
                 )
-        return 'Token with bad user/password structure'
+        return False
     except Exception as inst:
         return False
 
@@ -73,7 +73,9 @@ def update_token_file(file='config.ini', **kwargs):
             config['DEFAULT'] = {'token': kwargs['token']}
             with open(path+file, 'w') as configfile:
                 config.write(configfile)
+            print('\x1b[04;01;32mNew token written successfuly.\x1b[0m\n')
             return 'New token written successfuly.'
+    print('\x1b[04;01;31mFile not updated.\x1b[0m')
     return 'File not updated.'
 
 
@@ -154,7 +156,7 @@ def collect_token_manually():
     sleep(2.0)
     # update token and print if it worked
     manually_get_token = input()
-    update_token_file(manually_get_token)
+    update_token_file(**{'token': manually_get_token})
     # checks if the User has pasted correctly the user acces token
     token_is_valid = Scraper(manually_get_token)
     return token_is_valid
@@ -179,6 +181,7 @@ def check_automatic_collection(file):
     except Exception as inst:
         # something went wrong getting the token
         print("\x1b[04;01;31m"+"Auto Token function Failed!"+"\x1b[0m")
+        os.remove(str(os.getcwd())+'/scraper/config.ini')
         return 'Wrong user or password.'
 
 
