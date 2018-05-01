@@ -14,7 +14,7 @@ page_id = "419702371406944"
 since_date = "2018-04-20"
 until_date = strftime("%Y-%m-%d")
 
-access_token = "EAACEdEose0cBALPatogjv2jE7zrMS3Sm7awVaU14kZC0SbiBLJVVlZAWGS07q5CjdEjkIrXRZCknvkE4yDXkIiLBZBk3ZAjehOjsw5kRvGuXQVIQeTI1KwJyS5z9p4yUqwG1dA6hOp6Jcn4VGZB6SlptjNxVtVRVCLMOobStQ5OnZCjJSh4snIWOf2UDesdShdGDXfkosVRyAZDZD"
+access_token = ""
 
 
 
@@ -57,7 +57,7 @@ def processFacebookPageFeedStatus(status,t_reaction,t_comments,t_shares):
     # Time needs special care since a) it's in UTC and
     # b) it's not easy to use in statistical programs.
     status_id = status['id']
-    
+
     status_published = datetime.datetime.strptime(
         status['created_time'], '%Y-%m-%dT%H:%M:%S+0000')
     status_published = status_published + \
@@ -107,7 +107,7 @@ def scrapeFacebookPageFeedStatus(page_id, access_token, since_date, until_date):
 
             url = getFacebookPageFeedUrl(base_url)
             statuses = json.loads(request_until_succeed(url))
-            
+
             for status in statuses['data']:
 
                 # Ensure it is a status with the expected metadata
