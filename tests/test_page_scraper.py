@@ -14,7 +14,7 @@ class TestPageScraper(unittest.TestCase):
     def setUp(self):
         self.scraper = Scraper(retrieve_token_file())
         self.github = '262588213843476'
-        self.day_scraped = strftime("%Y%m%d%H%M")
+        self.day_scraped = strftime("%Y-%m-%d_%Hh")
         if not self.scraper.check_valid_token():
             self.fail('Token has expired, please renew it.')
 
@@ -103,7 +103,8 @@ class TestPageScraper(unittest.TestCase):
         self.scraper.get_page_name_and_like(self.github)
         self.assertTrue(self.scraper.convert_to_csv())
         self.assertTrue(
-            os.path.exists('csv/scraped_' + self.day_scraped + '.csv')
+            os.path.exists('csv/scraped_' + self.day_scraped + '.csv'),
+            msg='File not found'
         )
         # Check if csv header is as expected
         with open('csv/scraped_' + self.day_scraped + '.csv') as file:
@@ -133,7 +134,8 @@ class TestPageScraper(unittest.TestCase):
         self.scraper.convert_to_csv('test')
         self.assertTrue(self.scraper.convert_to_csv('test'))
         self.assertTrue(
-            os.path.exists('csv/test_' + self.day_scraped + '.csv')
+            os.path.exists('csv/test_' + self.day_scraped + '.csv'),
+            msg='File not found'
         )
         # Check if csv header is as expected
         with open('csv/test_' + self.day_scraped + '.csv') as file:
