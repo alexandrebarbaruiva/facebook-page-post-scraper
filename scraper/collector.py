@@ -2,8 +2,9 @@ import csv
 from page_scraper import Scraper
 from token_manager import retrieve_token_file
 from get_fb_posts_fb_page import \
-    request_until_succeed, getFacebookPageFeedUrl, processFacebookPageFeedStatus,\
-    scrapeFacebookPageFeedStatus, scrapAll, write_json
+    request_until_succeed, getFacebookPageFeedUrl, \
+    processFacebookPageFeedStatus, scrapeFacebookPageFeedStatus, \
+    scrapAll, write_json
 
 
 def collect_all_pages():
@@ -24,6 +25,7 @@ def collect_all_pages():
     else:
         print('Please renew token')
 
+
 def collect():
     pages = []
     access_token = str(retrieve_token_file())
@@ -34,7 +36,7 @@ def collect():
     scraper = Scraper(retrieve_token_file())
     if scraper.check_valid_token():
         for page in pages:
-            scrapAll(access_token,page)
+            scrapAll(access_token, page)
     else:
         print('Please renew token')
 
@@ -44,4 +46,3 @@ if __name__ == '__main__':
     # collect()
     # access_token = str(retrieve_token_file())
     # scrapAll(access_token)
-
