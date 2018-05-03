@@ -30,8 +30,9 @@ cov:
 	coverage html scraper/page_scraper.py scraper/token_manager.py
 
 full:
+	make clean
 	green3 -vvv --run-coverage -o $(face_file1),$(face_file2)
-	coverage report -m scraper/page_scraper.py scraper/token_manager.py
+	coverage html scraper/page_scraper.py scraper/token_manager.py
 	make style
 
 .PHONY: autotoken
