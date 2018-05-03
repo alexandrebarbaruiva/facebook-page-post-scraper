@@ -4,8 +4,13 @@ import requests
 import sys
 import json
 import csv
+import datetime
+import time
 from time import strftime
-
+try:
+    from urllib.request import urlopen, Request
+except ImportError:
+    from urllib2 import urlopen, Request
 
 class Scraper:
     """
@@ -91,8 +96,8 @@ class Scraper:
             return content
         try:
             column_names = self.current_data.keys()
-            if set(column_names) == {'name', 'fan_count', 'id', 'date'}:
-                column_names = ['name', 'id', 'fan_count', 'date']
+            if set(column_names) == {'name', 'fan_count', 'id', 'date', 'total_reactions', 'total_comments', 'total_shares'}:
+                column_names = ['name', 'id', 'fan_count', 'date' , 'total_reactions' , 'total_comments' , 'total_shares']
         except Exception as inst:
             return ('No content found.')
         today = strftime("%Y-%m-%d_%Hh")
@@ -122,3 +127,109 @@ class Scraper:
             info.writerow(column_names)
             info.writerow(content)
         return True
+    
+    def request_until_succeed(self, url):
+        req = Request(url)
+        success = False
+        while success is False:
+            try:
+                response = urlopen(req)
+                if response.getcode() == 200:
+                    success = True
+            except Exception as e:
+                print(e)
+                time.sleep(5)
+
+                print("Error for URL {}: {}".format(url, datetime.datetime.now()))
+                print("Retrying.")
+
+        return response.read()
+
+    def processFacebookPageFeedStatus(self, status,t_reaction,t_comments,t_shares):
+
+        # The status is now a Python dictionary, so for top-level items,
+        # we can simply call the key.
+
+        # Additionally, some items may not always exist,
+        # so must check for existence first
+
+        # Time needs special care since a) it's in UTC and
+        # b) it's not easy to use in statistical programs.
+        status_id = status['id']
+
+        status_published = datetime.datetime.strptime(
+            status['created_time'], '%Y-%m-%dT%H:%M:%S+0000')
+        status_published = status_published + \
+            datetime.timedelta(hours=-3)  # Brasilia time
+        status_published = status_published.strftime(
+            '%Y-%m-%d %H:%M:%S')  # Converting from the way facebook gives us the created time to a more readable
+
+        # Nested items require chaining dictionary keys.
+
+        num_reactions = 0 if 'reactions' not in status else \
+            status['reactions']['summary']['total_count']
+        num_comments = 0 if 'comments' not in status else \
+            status['comments']['summary']['total_count']
+        num_shares = 0 if 'shares' not in status else status['shares']['count']
+        t_reaction = t_reaction + num_reactions
+        t_comments = t_comments + num_comments
+        t_shares = t_shares + num_shares
+
+        return (status_id,status_published, num_reactions, num_comments, num_shares, t_reaction,t_comments,t_shares)
+    
+    def get_reactions(self, page= None, file=None):
+        #if file is None:
+         #   file = self.file_name
+        #with open('json/'+file, 'w', encoding='utf8') as data_file:
+           # data_file.write(
+            #    json.dumps(self.current_data, indent=2, ensure_ascii=False)
+            #)  # pretty json
+            #data_file.write("status_id , status_published , num_reactions ," + \
+            #        "num_comments, num_shares , total reaction , total comments , total shares")
+            # input date formatted as YYYY-MM-DD
+            since_date = "2018-04-20"
+            until_date = strftime("%Y-%m-%d")
+            t_reaction = 0
+            t_comments = 0
+            t_shares = 0
+            has_next_page = True
+            num_processed = 0
+            after = ''
+            base = "https://graph.facebook.com/v2.12"
+            node = "/{}/posts".format(self.page)
+            parameters = "/?limit={}&access_token={}".format(100, self.token)
+            since = "&since={}".format(since_date) if since_date \
+                is not '' else ''
+            until = "&until={}".format(until_date) if until_date \
+                is not '' else ''
+            while has_next_page:
+                after = '' if after is '' else "&after={}".format(after)
+                base_url = base + node + parameters + after + since + until
+                fields = "&fields=message,created_time,type,id," + \
+                    "comments.limit(0).summary(true),shares,reactions" + \
+                    ".limit(0).summary(true)"
+                url1 = base_url + fields
+                statuses = json.loads(self.request_until_succeed(url1))
+
+                for status in statuses['data']:
+                    # Ensure it is a status with the expected metadata
+                    if 'reactions' in status:
+                        status_data = self.processFacebookPageFeedStatus(status,t_reaction,t_comments,t_shares)
+                        t_reaction += status_data[5]
+                        t_comments += status_data[6]
+                        t_shares +=  status_data[7]
+
+                    num_processed += 1
+                    if num_processed % 100 == 0:
+                        print("{} Statuses Processed: {}".format
+                            (num_processed, datetime.datetime.now()))
+
+                # if there is no next page, we're done.
+                if 'paging' in statuses:
+                    after = statuses['paging']['cursors']['after']
+                else:
+                    has_next_page = False
+            
+            self.current_data['total_reactions'] = t_reaction
+            self.current_data['total_comments'] = t_comments
+            self.current_data['total_shares'] = t_shares

@@ -15,6 +15,7 @@ def collect_all_pages():
             scraper.set_page(page)
             print(scraper.page)
             scraper.get_page_name_and_like()
+            scraper.get_reactions()
             scraper.write_file()
             scraper.convert_to_csv()
     else:
