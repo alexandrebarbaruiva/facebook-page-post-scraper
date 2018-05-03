@@ -39,8 +39,8 @@ def collect():
 
 
 if __name__ == '__main__':
-    #collect_all_pages()
-    collect()
-    access_token = str(retrieve_token_file())
-    scrapAll(access_token)
+    collect_all_pages()
+    # collect()
+    # access_token = str(retrieve_token_file())
+    # scrapAll(access_token)
 
