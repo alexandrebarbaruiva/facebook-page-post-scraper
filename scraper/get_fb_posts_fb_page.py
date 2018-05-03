@@ -108,7 +108,7 @@ def scrapeFacebookPageFeedStatus(page_id, access_token, since_date, until_date):
             base_url = base + node + parameters + after + since + until
 
             url = getFacebookPageFeedUrl(base_url)
-            statuses = json.loads(request_until_succeed(url))
+            statuses = json.loads(request_until_succeed(url).decode('utf-8'))
             for status in statuses['data']:
 
                 # Ensure it is a status with the expected metadata
