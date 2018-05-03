@@ -93,7 +93,7 @@ def generate_token_file(new_token=None, file='config.ini'):
         return [False, 'File already exists']
 
 
-def collect_token_automatically(email, password):
+def collect_token_automatically(email, password, file='config.ini'):
     """
     When user has already accepted Facebook Terms and Conditions,
     this function will login on user's Facebook and get his
@@ -121,6 +121,10 @@ def collect_token_automatically(email, password):
             browser_access = browser.find_by_text('Obter token')
             browser_access.click()
         except Exception as inst:
+            try:
+                os.remove(str(os.getcwd())+'/scraper/'+file)
+            except Exception as inst:
+                pass
             print("\x1b[04;01;31m" + "Wrong User Login" + '\x1b[0m')
             return 'Wrong Facebook user or password'
         browser_accessus = browser.find_by_text(
@@ -138,13 +142,13 @@ def collect_token_automatically(email, password):
         browser_token = browser_token.split("\"", 1)[1]
         browser_token = browser_token.split("\"", 1)[0]
         # update new token into config.ini and print if it worked
-        update_token_file(**{'token': browser_token})
+        update_token_file(file, **{'token': browser_token})
         browser.quit()
     valid_token = Scraper(browser_token)
     return valid_token
 
 
-def collect_token_manually():
+def collect_token_manually(file='config.ini'):
     """
     Case is the first time the User try to get the Token, User
     will have to accept Facebook Terms and Conditions,
@@ -156,7 +160,7 @@ def collect_token_manually():
     sleep(2.0)
     # update token and print if it worked
     manually_get_token = input()
-    update_token_file(**{'token': manually_get_token})
+    update_token_file(file, **{'token': manually_get_token})
     # checks if the User has pasted correctly the user acces token
     token_is_valid = Scraper(manually_get_token)
     return token_is_valid
@@ -181,7 +185,10 @@ def check_automatic_collection(file):
     except Exception as inst:
         # something went wrong getting the token
         print("\x1b[04;01;31m"+"Auto Token function Failed!"+"\x1b[0m")
-        os.remove(str(os.getcwd())+'/scraper/config.ini')
+        try:
+            os.remove(str(os.getcwd())+'/scraper/'+file)
+        except Exception as inst:
+            pass
         return 'Wrong user or password.'
 
 
@@ -206,7 +213,7 @@ def collect_token(file='config.ini'):
             print('Email from your Facebook Account:')
             email = input()
             password = getpass()
-            update_token_file(**encrypt_user_password(email, password))
+            update_token_file(file, **encrypt_user_password(email, password))
             try:
                 # tried to get the token
                 token_is_valid = collect_token_automatically(email, password)

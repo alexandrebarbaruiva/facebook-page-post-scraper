@@ -112,11 +112,16 @@ class TestTokenCollection(unittest.TestCase):
     def test_collect_token_manually(self):
         user_input = 'EDA0EdEloEse0cB'
         with patch('builtins.input', return_value=user_input):
-            self.assertEqual(type(collect_token_manually()), type(Scraper('')))
+            self.assertEqual(
+                type(collect_token_manually(file='default.ini')),
+                type(Scraper(''))
+            )
 
     def test_collect_token_automatically_with_wrong_id(self):
         self.assertEqual(
-            collect_token_automatically('user', 'hugepasswordwithnumbers123'),
+            collect_token_automatically(
+                'user', 'hugepasswordwithnumbers123', file='default.ini'
+            ),
             'Wrong Facebook user or password'
         )
 
@@ -135,7 +140,9 @@ class TestTokenCollection(unittest.TestCase):
         if requests.get(url).status_code != 200:
             user, password = decrypt_user_password(**retrieve_password_file())
             self.assertEqual(
-                collect_token_automatically('user', 'hugepassword'),
+                collect_token_automatically(
+                    'user', 'hugepassword', 'default.ini'
+                ),
                 'Não foi possível abrir o Facebook. Você está online?'
             )
         else:
@@ -146,5 +153,3 @@ class TestTokenCollection(unittest.TestCase):
             self.assertEqual(check_automatic_collection('config.ini'), True)
         else:
             self.fail('No user/password informed. Use autotoken.')
-
-    # def test_check_function_for_manual_token(self):
