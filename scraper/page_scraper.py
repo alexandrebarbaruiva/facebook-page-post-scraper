@@ -96,8 +96,10 @@ class Scraper:
             return content
         try:
             column_names = self.current_data.keys()
-            if set(column_names) == {'name', 'fan_count', 'id', 'date', 'total_reactions', 'total_comments', 'total_shares'}:
-                column_names = ['name', 'id', 'fan_count', 'date' , 'total_reactions' , 'total_comments' , 'total_shares']
+            if set(column_names) == {'name', 'fan_count', 'id', 'date', 'total_reactions',
+                 'total_comments', 'total_shares' , 'total_posts' , 'media_reactions' , 'media_comments'}:
+                column_names = ['name', 'id', 'fan_count', 'date' , 'total_reactions' , 
+                'total_comments' , 'total_shares' , 'total_posts', 'media_reactions' , 'media_comments']
         except Exception as inst:
             return ('No content found.')
         today = strftime("%Y-%m-%d_%Hh")
@@ -192,6 +194,7 @@ class Scraper:
             t_reaction = 0
             t_comments = 0
             t_shares = 0
+            t_posts = 0
             has_next_page = True
             num_processed = 0
             after = ''
@@ -215,10 +218,10 @@ class Scraper:
                     # Ensure it is a status with the expected metadata
                     if 'reactions' in status:
                         status_data = self.processFacebookPageFeedStatus(status,t_reaction,t_comments,t_shares)
-                        t_reaction += status_data[5]
-                        t_comments += status_data[6]
-                        t_shares +=  status_data[7]
-
+                        t_reaction = status_data[5]
+                        t_comments = status_data[6]
+                        t_shares =  status_data[7]
+                        t_posts += 1
                     num_processed += 1
                     if num_processed % 100 == 0:
                         print("{} Statuses Processed: {}".format
@@ -229,7 +232,15 @@ class Scraper:
                     after = statuses['paging']['cursors']['after']
                 else:
                     has_next_page = False
-            
+            if t_posts != 0:
+                m_reaction = t_reaction // t_posts
+                m_comments = t_comments // t_posts
+            else:
+                m_reaction = t_reaction
+                m_comments = t_comments
             self.current_data['total_reactions'] = t_reaction
             self.current_data['total_comments'] = t_comments
             self.current_data['total_shares'] = t_shares
+            self.current_data['total_posts'] = t_posts
+            self.current_data['media_reactions'] = m_reaction
+            self.current_data['media_comments'] = m_comments
