@@ -7,22 +7,42 @@ face_file2 = venv/src/facebook-sdk/facebook/version.py
 default: test
 
 test:
+ifeq ($(UNAME), Windows_NT)
 	green -vv
+else
+	green3 -vvv
+endif
 
 run:
-	python scraper\collector.py
+ifeq ($(UNAME), Windows_NT)
+	python scraper/collector.py
+else
+	python scraper/collector.py
+endif
 
 tm:
-	green3 tests\test_token_manager.py -vvv
+ifeq ($(UNAME), Windows_NT)
+	green3 tests\test_token_manager.py -vv
+else
+	green3 tests/test_token_manager.py -vvv
+endif
 
 ps:
+ifeq ($(UNAME), Windows_NT)
+	green3 tests\test_page_scraper.py -vv
+else
 	green3 tests/test_page_scraper.py -vvv
+endif
 
 install:
 	pip3 install -r requirements.txt
 
 style:
+ifeq ($(UNAME), Windows_NT)
+	pycodestyle scraper\ tests\
+else
 	pycodestyle scraper/ tests/
+endif
 
 cov:
 	coverage run -m py.test tests/test_page_scraper.py tests/test_token_manager.py
