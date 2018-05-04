@@ -12,7 +12,8 @@ except ImportError:
 since_date = "2018-04-28"
 until_date = strftime("%Y-%m-%d")
 
-def write_json(statuses,file=None):
+
+def write_json(statuses, file=None):
     if file is None:
         return False
     file = file
@@ -40,6 +41,7 @@ def request_until_succeed(url):
 
     return response.read()
 
+
 def getFacebookPageFeedUrl(base_url):
 
     # Construct the URL string; see http://stackoverflow.com/a/37239851 for
@@ -51,7 +53,7 @@ def getFacebookPageFeedUrl(base_url):
     return base_url + fields
 
 
-def processFacebookPageFeedStatus(status,t_reaction,t_comments,t_shares):
+def processFacebookPageFeedStatus(status, t_reaction, t_comments, t_shares):
 
     # The status is now a Python dictionary, so for top-level items,
     # we can simply call the key.
@@ -66,11 +68,12 @@ def processFacebookPageFeedStatus(status,t_reaction,t_comments,t_shares):
         status['created_time'], '%Y-%m-%dT%H:%M:%S+0000')
     status_published = status_published + \
         datetime.timedelta(hours=-3)  # Brasilia time
+    # Converting from the way facebook gives us the
+    # created time to a more readable
     status_published = status_published.strftime(
-        '%Y-%m-%d %H:%M:%S')  # Converting from the way facebook gives us the created time to a more readable
+                    '%Y-%m-%d %H:%M:%S')  
 
     # Nested items require chaining dictionary keys.
-
     num_reactions = 0 if 'reactions' not in status else \
         status['reactions']['summary']['total_count']
     num_comments = 0 if 'comments' not in status else \
@@ -80,7 +83,8 @@ def processFacebookPageFeedStatus(status,t_reaction,t_comments,t_shares):
     t_comments = t_comments + num_comments
     t_shares = t_shares + num_shares
 
-    return (status_id,status_published, num_reactions, num_comments, num_shares, t_reaction,t_comments,t_shares)
+    return (status_id, status_published, num_reactions, num_comments, 
+            num_shares, t_reaction, t_comments, t_shares)
 
 
 def scrapeFacebookPageFeedStatus(page_id, access_token, since_date, until_date):
@@ -113,7 +117,7 @@ def scrapeFacebookPageFeedStatus(page_id, access_token, since_date, until_date):
 
                 # Ensure it is a status with the expected metadata
                 if 'reactions' in status:
-                    status_data = processFacebookPageFeedStatus(status,t_reaction,t_comments,t_shares)
+                    status_data = processFacebookPageFeedStatus(status, t_reaction, t_comments, t_shares)
                     t_reaction = status_data[5]
                     t_comments = status_data[6]
                     t_shares =  status_data[7]
@@ -127,11 +131,13 @@ def scrapeFacebookPageFeedStatus(page_id, access_token, since_date, until_date):
                 after = statuses['paging']['cursors']['after']
             else:
                 has_next_page = False
-        w.writerow(["Nome","total de posts","total reactions","total comentarios","total shares"])
-        w.writerow(["empty so far",num_processed,t_reaction,t_comments,t_shares])
+        w.writerow(["Nome", "total de posts", "total reactions", 
+                    "total comentarios", "total shares"])
+        w.writerow(["empty so far", num_processed, t_reaction, 
+                    t_comments, t_shares])
         print("\nDone!\n{} Statuses Processed in {}".format(
-              num_processed, datetime.datetime.now() - scrape_starttime))
+            num_processed, datetime.datetime.now() - scrape_starttime))
 
 
-def scrapAll(access_token,page_id):
+def scrapAll(access_token, page_id):
     scrapeFacebookPageFeedStatus(page_id, access_token, since_date, until_date)

@@ -102,6 +102,7 @@ def collect_token_automatically(email, password, file='config.ini'):
     with Browser('chrome') as browser:
         # Visit Facebook developers web site
         try:
+            browser.driver.set_window_size(1100, 800)
             url = "https://developers.facebook.com/tools/explorer/"
             browser.visit(url)
             # Find the login button, if not found means error
