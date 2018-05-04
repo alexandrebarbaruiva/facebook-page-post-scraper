@@ -7,13 +7,13 @@ face_file2 = venv/src/facebook-sdk/facebook/version.py
 default: test
 
 test:
-	green3 . -vvv
+	green -vv
 
 run:
-	python3 scraper/collector.py
+	python scraper\collector.py
 
 tm:
-	green3 tests/test_token_manager.py -vvv
+	green3 tests\test_token_manager.py -vvv
 
 ps:
 	green3 tests/test_page_scraper.py -vvv

@@ -26,19 +26,19 @@ def collect_all_pages():
         print('Please renew token')
 
 
-def collect():
-    pages = []
-    access_token = str(retrieve_token_file())
-    with open('entidades.csv', 'r') as entidades:
-        reader = csv.reader(entidades)
-        for row in reader:
-            pages.append(row[0])
-    scraper = Scraper(retrieve_token_file())
-    if scraper.check_valid_token():
-        for page in pages:
-            scrapAll(access_token, page)
-    else:
-        print('Please renew token')
+# def collect():
+#     pages = []
+#     access_token = str(retrieve_token_file())
+#     with open('entidades.csv', 'r') as entidades:
+#         reader = csv.reader(entidades)
+#         for row in reader:
+#             pages.append(row[0])
+#     scraper = Scraper(retrieve_token_file())
+#     if scraper.check_valid_token():
+#         for page in pages:
+#             scrapAll(access_token, page)
+#     else:
+#         print('Please renew token')
 
 
 if __name__ == '__main__':
