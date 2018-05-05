@@ -169,5 +169,33 @@ class TestPageScraper(unittest.TestCase):
             self.assertEqual(pages, 3)
         os.remove(str(os.getcwd())+'/csv/react_' + self.day_scraped + '.csv')
 
+    def test_if_get_reactions_works_with_more_pages(self):
+        self.scraper.get_page_name_and_like('262588213843476')
+        self.scraper.get_reactions()
+        self.scraper.convert_to_csv('react')
+        self.scraper.get_page_name_and_like('135117696663585')
+        self.scraper.get_reactions()
+        self.scraper.convert_to_csv('react')
+        self.scraper.get_page_name_and_like('135117696663585')
+        self.scraper.get_reactions()
+        self.scraper.convert_to_csv('react')
+        self.assertTrue(
+            os.path.exists('csv/react_' + self.day_scraped + '.csv'),
+            msg='File not found'
+        )
+        with open('csv/react_' + self.day_scraped + '.csv') as file:
+            reader = csv.reader(file)
+            self.assertEqual(
+                next(reader),
+                ['name', 'id', 'fan_count', 'date', 'total_reactions',
+                'total_comments', 'total_shares', 'total_posts',
+                'media_reactions', 'media_comments']
+            )
+            pages = 0
+            for row in reader:
+                pages += 1
+            self.assertEqual(pages, 5)
+        os.remove(str(os.getcwd())+'/csv/react_' + self.day_scraped + '.csv')
+
 if __name__ == '__main__':
     unittest.main()
