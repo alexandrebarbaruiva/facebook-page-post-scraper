@@ -118,7 +118,9 @@ ifeq ($(OS), Windows_NT)
 	@echo                     to use it
 	@echo  make chromedriver= Install chromedriver for get the token automatically,
 	@echo                     works in Linux
-	@echo  End of Makefile Help
+	@echo.
+	@echo      End of Makefile Help
+	@echo.
 else
 	@echo "\n\t Makefile of Facebook scrapper from UnB\n"
 	@echo " make.............= Runs the default function"
