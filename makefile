@@ -15,7 +15,7 @@ endif
 
 run:
 ifeq ($(OS),Windows_NT)
-	python scraper/collector.py
+	python scraper\collector.py
 else
 	python3 scraper/collector.py
 endif
@@ -45,9 +45,9 @@ else
 endif
 
 cov:
-	coverage run -m py.test tests/test_page_scraper.py
-	coverage report -m scraper/page_scraper.py
-	coverage html scraper/page_scraper.py
+	coverage run -m py.test tests/test_page_scraper.py tests/test_token_manager.py
+	coverage report -m scraper/page_scraper.py scraper/token_manager.py
+	coverage html scraper/page_scraper.py scraper/token_manager.py
 
 full:
 	make clean
@@ -95,6 +95,31 @@ createconfig:
 # Call for help with this makefile's commands
 .PHONY: help
 help:
+ifeq ($(OS), Windows_NT)
+	@echo.
+	@echo     Makefile of Facebook scrapper from UnB
+	@echo.
+	@echo  make.............= Runs the default function
+	@echo  make test........= Runs the tests using green3
+	@echo  make tm..........= Runs only the tests on token management
+	@echo  make ps..........= Runs only the tests on page scraping
+	@echo  make run.........= Collects all pages in entidades.csv
+	@echo  make install.....= Installs the requirements necessary for this project
+	@echo  make style.......= Checks if your code is our pattern of coding for this
+	@echo                     project
+	@echo  make json........= Creates a json dir and moves all .json files there
+	@echo  make cov.........= Checks tests coverage
+	@echo  make full........= Runs make test, cov and style
+	@echo  make autotoken...= Open Facebook Developers web page so that the user can
+	@echo                     take a new token and update config.ini file
+	@echo  make json........= Creates a json dir and moves all .json files there
+	@echo  make clean.......= Removes all .json files
+	@echo  make createconfig= Creates config.ini in scraper dir with the expected way
+	@echo                     to use it
+	@echo  make chromedriver= Install chromedriver for get the token automatically,
+	@echo                     works in Linux
+	@echo  End of Makefile Help
+else
 	@echo "\n\t Makefile of Facebook scrapper from UnB\n"
 	@echo " make.............= Runs the default function"
 	@echo " make test........= Runs the tests using green3"
@@ -116,3 +141,4 @@ help:
 	@echo " make chromedriver= Install chromedriver for get the token automatically, "
 	@echo "                    works in Linux"
 	@echo "\n\t End of Makefile Help\n"
+endif
