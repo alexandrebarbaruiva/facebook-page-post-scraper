@@ -117,7 +117,7 @@ class TestPageScraper(unittest.TestCase):
             pages = 0
             for row in reader:
                 pages += 1
-            self.assertEqual(pages, 1)
+            self.assertEqual(pages, 3)
         os.remove(str(os.getcwd())+'/csv/scraped_' + self.day_scraped + '.csv')
 
     def test_if_multiple_conversions_generate_one_file(self):
@@ -148,9 +148,26 @@ class TestPageScraper(unittest.TestCase):
             pages = 0
             for row in reader:
                 pages += 1
-            self.assertEqual(pages, 2)
+            self.assertEqual(pages, 5)
         os.remove(str(os.getcwd())+'/csv/test_' + self.day_scraped + '.csv')
 
+    def test_if_get_reactions_works(self):
+        self.scraper.get_page_name_and_like('262588213843476')
+        self.scraper.get_reactions()
+        self.scraper.convert_to_csv('react')
+        with open('csv/react_' + self.day_scraped + '.csv') as file:
+            reader = csv.reader(file)
+            self.assertEqual(
+                next(reader),
+                ['name', 'id', 'fan_count', 'date', 'total_reactions',
+                'total_comments', 'total_shares', 'total_posts',
+                'media_reactions', 'media_comments']
+            )
+            pages = 0
+            for row in reader:
+                pages += 1
+            self.assertEqual(pages, 3)
+        os.remove(str(os.getcwd())+'/csv/react_' + self.day_scraped + '.csv')
 
 if __name__ == '__main__':
     unittest.main()

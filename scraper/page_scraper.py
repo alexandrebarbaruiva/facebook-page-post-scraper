@@ -177,7 +177,7 @@ class Scraper:
         )
 
     def get_reactions(self, page=None, file=None):
-        # input date formatted as YYYY-MM-DD
+
         graph = facebook.GraphAPI(access_token=self.token, version="2.12")
 
         t_reaction = 0

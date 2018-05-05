@@ -1,6 +1,7 @@
 # User addition
 .DS_Store
 config.ini
+makefile
 *.json
 ./json/*.json
 /csv/*.csv
