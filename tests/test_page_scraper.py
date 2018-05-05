@@ -101,13 +101,13 @@ class TestPageScraper(unittest.TestCase):
         a csv file with the proper content
         """
         self.scraper.get_page_name_and_like(self.github)
-        self.assertTrue(self.scraper.convert_to_csv())
+        self.assertTrue(self.scraper.convert_to_csv('nome'))
         self.assertTrue(
-            os.path.exists('csv/scraped_' + self.day_scraped + '.csv'),
+            os.path.exists('csv/nome_' + self.day_scraped + '.csv'),
             msg='File not found'
         )
         # Check if csv header is as expected
-        with open('csv/scraped_' + self.day_scraped + '.csv') as file:
+        with open('csv/nome_' + self.day_scraped + '.csv') as file:
             reader = csv.reader(file)
             self.assertEqual(
                 next(reader),
@@ -118,7 +118,7 @@ class TestPageScraper(unittest.TestCase):
             for row in reader:
                 pages += 1
             self.assertEqual(pages, 3)
-        os.remove(str(os.getcwd())+'/csv/scraped_' + self.day_scraped + '.csv')
+        os.remove(str(os.getcwd())+'/csv/nome_' + self.day_scraped + '.csv')
 
     def test_if_multiple_conversions_generate_one_file(self):
         """

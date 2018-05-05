@@ -180,6 +180,8 @@ class Scraper:
 
         graph = facebook.GraphAPI(access_token=self.token, version="2.12")
 
+        since_date = "2018-04-20"
+        until_date = strftime("%Y-%m-%d")
         t_reaction = 0
         t_comments = 0
         t_shares = 0
@@ -188,6 +190,11 @@ class Scraper:
         num_processed = 0
         after = ''
 
+        since = "&since={}".format(since_date) if since_date \
+            is not '' else ''
+        until = "&until={}".format(until_date) if until_date \
+            is not '' else ''
+
         while has_next_page:
             after = '' if after is '' else "&after={}".format(after)
             fields = "fields=message,created_time,type,id," + \
@@ -195,7 +202,7 @@ class Scraper:
                  ".limit(0).summary(true)"
 
             statuses = graph.get_object(
-                id=str(self.page)+'/posts?'+after+'&limit=100',
+                id=str(self.page)+'/posts?'+after+'&limit=100'+since+until,
                     fields=fields
             )
             for status in statuses['data']:
