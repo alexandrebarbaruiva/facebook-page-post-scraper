@@ -50,6 +50,13 @@ class Scraper:
         except Exception as inst:
             return 'Page not set'
 
+    def valid_page(self, page=None):
+        if page is None:
+            page = self.page
+        valid_url = 'https://www.facebook.com/' + str(page)
+        valid_status_code = requests.get(valid_url).status_code
+        return(valid_status_code == 200)
+
     def scrape_current_page(self, page=None, feed=False, query=''):
         if page is not None:
             self.set_page(page)
@@ -197,6 +204,11 @@ class Scraper:
 
     def get_reactions(self, page=None, file=None):
         # input date formatted as YYYY-MM-DD
+        if page is None:
+            page = self.page
+        if not self.valid_page(page):
+            return ("Page is not valid.")
+
         since_date = "2018-04-20"
         until_date = strftime("%Y-%m-%d")
         total_reaction = 0
@@ -207,7 +219,7 @@ class Scraper:
         num_processed = 0
         after = ''
         base = "https://graph.facebook.com/v2.12"
-        node = "/{}/posts".format(self.page)
+        node = "/{}/posts".format(page)
         parameters = "/?limit={}&access_token={}".format(100, self.token)
         since = "&since={}".format(since_date) if since_date \
             is not '' else ''
