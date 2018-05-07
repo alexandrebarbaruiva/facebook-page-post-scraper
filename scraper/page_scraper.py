@@ -64,7 +64,6 @@ class Scraper:
         feed_statement = '/feed' if feed else ''
         try:
             post = graph.get_object(
-
                     id=str(self.page)+feed_statement,
                     fields=query
             )
@@ -146,24 +145,6 @@ class Scraper:
             info.writerow(content)
         return True
 
-    def request_until_succeed(self, url):
-        req = Request(url)
-        success = False
-        while success is False:
-            try:
-                response = urlopen(req)
-                if response.getcode() == 200:
-                    success = True
-            except Exception as e:
-                print(e)
-                time.sleep(5)
-
-                print(
-                    "Error for URL {}: {}".format(url, datetime.datetime.now())
-                )
-                print("Retrying.")
-        return response.read()
-
     def processFacebookPageFeedStatus(
         self, status, total_reaction, total_comments, total_shares
     ):
@@ -202,15 +183,21 @@ class Scraper:
             num_shares, total_reaction, total_comments, total_shares
         )
 
-    def get_reactions(self, page=None, file=None):
-        # input date formatted as YYYY-MM-DD
+    def get_reactions(
+        self, page=None, file=None, since_date=None, until_date=strftime("%Y-%m-%d")
+    ):
+
+        graph = facebook.GraphAPI(access_token=self.token, version="2.12")
+
         if page is None:
             page = self.page
         if not self.valid_page(page):
             return ("Page is not valid.")
 
-        since_date = "2018-04-20"
-        until_date = strftime("%Y-%m-%d")
+        if since_date is None:
+            month = str(int(strftime("%m"))-1)
+            since_date = strftime("%Y-") + month + strftime("-%d")
+
         total_reaction = 0
         total_comments = 0
         total_shares = 0
@@ -218,22 +205,22 @@ class Scraper:
         has_next_page = True
         num_processed = 0
         after = ''
-        base = "https://graph.facebook.com/v2.12"
-        node = "/{}/posts".format(page)
-        parameters = "/?limit={}&access_token={}".format(100, self.token)
+
         since = "&since={}".format(since_date) if since_date \
             is not '' else ''
         until = "&until={}".format(until_date) if until_date \
             is not '' else ''
+
         while has_next_page:
             after = '' if after is '' else "&after={}".format(after)
-            base_url = base + node + parameters + after + since + until
-            fields = "&fields=message,created_time,type,id," + \
-                "comments.limit(0).summary(true),shares,reactions" + \
-                ".limit(0).summary(true)"
-            url1 = base_url + fields
-            statuses = json.loads(self.request_until_succeed(url1))
+            fields = "fields=message,created_time,type,id," + \
+                 "comments.limit(0).summary(true),shares,reactions" + \
+                 ".limit(0).summary(true)"
 
+            statuses = graph.get_object(
+                id=str(self.page)+'/posts?'+after+'&limit=100'+since+until,
+                    fields=fields
+            )
             for status in statuses['data']:
                 # Ensure it is a status with the expected metadata
                 if 'reactions' in status:
