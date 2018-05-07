@@ -50,6 +50,13 @@ class Scraper:
         except Exception as inst:
             return 'Page not set'
 
+    def valid_page(self, page=None):
+        if page is None:
+            page = self.page
+        valid_url = 'https://www.facebook.com/' + str(page)
+        valid_status_code = requests.get(valid_url).status_code
+        return(valid_status_code == 200)
+
     def scrape_current_page(self, page=None, feed=False, query=''):
         if page is not None:
             self.set_page(page)
@@ -155,11 +162,10 @@ class Scraper:
                     "Error for URL {}: {}".format(url, datetime.datetime.now())
                 )
                 print("Retrying.")
-
         return response.read()
 
     def processFacebookPageFeedStatus(
-        self, status, t_reaction, t_comments, t_shares
+        self, status, total_reaction, total_comments, total_shares
     ):
 
         # The status is now a Python dictionary, so for top-level items,
@@ -187,28 +193,33 @@ class Scraper:
         num_comments = 0 if 'comments' not in status else \
             status['comments']['summary']['total_count']
         num_shares = 0 if 'shares' not in status else status['shares']['count']
-        t_reaction = t_reaction + num_reactions
-        t_comments = t_comments + num_comments
-        t_shares = t_shares + num_shares
+        total_reaction = total_reaction + num_reactions
+        total_comments = total_comments + num_comments
+        total_shares = total_shares + num_shares
 
         return (
             status_id, status_published, num_reactions, num_comments,
-            num_shares, t_reaction, t_comments, t_shares
+            num_shares, total_reaction, total_comments, total_shares
         )
 
     def get_reactions(self, page=None, file=None):
         # input date formatted as YYYY-MM-DD
+        if page is None:
+            page = self.page
+        if not self.valid_page(page):
+            return ("Page is not valid.")
+
         since_date = "2018-04-20"
         until_date = strftime("%Y-%m-%d")
-        t_reaction = 0
-        t_comments = 0
-        t_shares = 0
-        t_posts = 0
+        total_reaction = 0
+        total_comments = 0
+        total_shares = 0
+        total_posts = 0
         has_next_page = True
         num_processed = 0
         after = ''
         base = "https://graph.facebook.com/v2.12"
-        node = "/{}/posts".format(self.page)
+        node = "/{}/posts".format(page)
         parameters = "/?limit={}&access_token={}".format(100, self.token)
         since = "&since={}".format(since_date) if since_date \
             is not '' else ''
@@ -227,12 +238,12 @@ class Scraper:
                 # Ensure it is a status with the expected metadata
                 if 'reactions' in status:
                     status_data = self.processFacebookPageFeedStatus(
-                        status, t_reaction, t_comments, t_shares
+                        status, total_reaction, total_comments, total_shares
                     )
-                    t_reaction = status_data[5]
-                    t_comments = status_data[6]
-                    t_shares = status_data[7]
-                    t_posts += 1
+                    total_reaction = status_data[5]
+                    total_comments = status_data[6]
+                    total_shares = status_data[7]
+                    total_posts += 1
                 num_processed += 1
                 if num_processed % 100 == 0:
                     print(
@@ -246,15 +257,15 @@ class Scraper:
                 after = statuses['paging']['cursors']['after']
             else:
                 has_next_page = False
-        if t_posts != 0:
-            m_reaction = t_reaction // t_posts
-            m_comments = t_comments // t_posts
+        if total_posts != 0:
+            average_reaction = total_reaction // total_posts
+            average_comments = total_comments // total_posts
         else:
-            m_reaction = t_reaction
-            m_comments = t_comments
-        self.current_data['total_reactions'] = t_reaction
-        self.current_data['total_comments'] = t_comments
-        self.current_data['total_shares'] = t_shares
-        self.current_data['total_posts'] = t_posts
-        self.current_data['media_reactions'] = m_reaction
-        self.current_data['media_comments'] = m_comments
+            average_reaction = total_reaction
+            average_comments = total_comments
+        self.current_data['total_reactions'] = total_reaction
+        self.current_data['total_comments'] = total_comments
+        self.current_data['total_shares'] = total_shares
+        self.current_data['total_posts'] = total_posts
+        self.current_data['media_reactions'] = average_reaction
+        self.current_data['media_comments'] = average_comments
