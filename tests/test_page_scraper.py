@@ -117,7 +117,7 @@ class TestPageScraper(unittest.TestCase):
             pages = 0
             for row in reader:
                 pages += 1
-            self.assertEqual(pages, 3)
+            self.assertEqual(pages, 1)
         os.remove(str(os.getcwd())+'/csv/nome_' + self.day_scraped + '.csv')
 
     def test_if_multiple_conversions_generate_one_file(self):
@@ -148,7 +148,7 @@ class TestPageScraper(unittest.TestCase):
             pages = 0
             for row in reader:
                 pages += 1
-            self.assertEqual(pages, 5)
+            self.assertEqual(pages, 2)
         os.remove(str(os.getcwd())+'/csv/test_' + self.day_scraped + '.csv')
 
     def test_if_get_reactions_works(self):
@@ -166,7 +166,7 @@ class TestPageScraper(unittest.TestCase):
             pages = 0
             for row in reader:
                 pages += 1
-            self.assertEqual(pages, 3)
+            self.assertEqual(pages, 1)
         os.remove(str(os.getcwd())+'/csv/react_' + self.day_scraped + '.csv')
 
     def test_if_get_reactions_works_with_more_pages(self):
@@ -194,7 +194,7 @@ class TestPageScraper(unittest.TestCase):
             pages = 0
             for row in reader:
                 pages += 1
-            self.assertEqual(pages, 5)
+            self.assertEqual(pages, 2)
         os.remove(str(os.getcwd())+'/csv/react_' + self.day_scraped + '.csv')
 
     def test_if_valid_page_works(self):

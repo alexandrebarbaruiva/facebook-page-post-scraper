@@ -183,18 +183,21 @@ class Scraper:
             num_shares, total_reaction, total_comments, total_shares
         )
 
-    def get_reactions(self, page=None, file=None):
+    def get_reactions(
+        self, page=None, file=None, since_date=None, until_date=strftime("%Y-%m-%d")
+    ):
 
         graph = facebook.GraphAPI(access_token=self.token, version="2.12")
 
-        # input date formatted as YYYY-MM-DD
         if page is None:
             page = self.page
         if not self.valid_page(page):
             return ("Page is not valid.")
 
-        since_date = "2018-04-20"
-        until_date = strftime("%Y-%m-%d")
+        if since_date is None:
+            month = str(int(strftime("%m"))-1)
+            since_date = strftime("%Y-") + month + strftime("-%d")
+
         total_reaction = 0
         total_comments = 0
         total_shares = 0
