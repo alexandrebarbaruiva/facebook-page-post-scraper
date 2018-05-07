@@ -45,9 +45,9 @@ else
 endif
 
 cov:
-	coverage run -m py.test tests/test_page_scraper.py tests/test_token_manager.py
-	coverage report -m scraper/page_scraper.py scraper/token_manager.py
-	coverage html scraper/page_scraper.py scraper/token_manager.py
+	coverage run -m py.test tests/test_page_scraper.py
+	coverage report -m scraper/page_scraper.py
+	coverage html scraper/page_scraper.py
 
 full:
 	make clean

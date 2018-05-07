@@ -197,5 +197,24 @@ class TestPageScraper(unittest.TestCase):
             self.assertEqual(pages, 5)
         os.remove(str(os.getcwd())+'/csv/react_' + self.day_scraped + '.csv')
 
+    def test_if_valid_page_works(self):
+        """
+        Check if the page validation is working
+        """
+        self.assertFalse(self.scraper.valid_page("FrenteBrasilPopula"))
+        self.assertTrue(self.scraper.valid_page(self.github))
+        self.scraper.set_page(self.github)
+        self.assertTrue(self.scraper.valid_page())
+
+    def test_get_reactions_with_invalid_page(self):
+        """
+        Check if when presented with a invalid page get_reactions returns an
+        error message
+        """
+        self.assertEqual(
+            self.scraper.get_reactions('FrenteBrasilPopula'),
+            "Page is not valid."
+        )
+
 if __name__ == '__main__':
     unittest.main()
