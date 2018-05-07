@@ -45,15 +45,28 @@ else
 endif
 
 cov:
+ifeq ($(OS), Windows_NT)
+	coverage run -m py.test tests\test_page_scraper.py
+	coverage report -m scraper\page_scraper.py
+	coverage html scraper\page_scraper.py
+else
 	coverage run -m py.test tests/test_page_scraper.py
 	coverage report -m scraper/page_scraper.py
 	coverage html scraper/page_scraper.py
+endif
 
 full:
+ifeq ($(OS), Windows_NT)
+	make clean
+	green3 -vvv --run-coverage -o $(face_file1),$(face_file2)
+	coverage html scraper\page_scraper.py scraper\token_manager.py
+	make style
+else
 	make clean
 	green3 -vvv --run-coverage -o $(face_file1),$(face_file2)
 	coverage html scraper/page_scraper.py scraper/token_manager.py
 	make style
+endif
 
 .PHONY: autotoken
 autotoken:
@@ -80,11 +93,19 @@ json:
 # Call for *.json clean up
 .PHONY: clean
 clean:
+ifeq ($(OS), Windows_NT)
+	rm -f .\*.json
+	rm -f .\json\*.json
+	rm -f .\csv\*.csv
+	rm -rf .\htmlcov
+	rm -f .\.coverage
+else
 	rm -f ./*.json
 	rm -f $(JsonDir)*.json
 	rm -f $(CsvDir)*.csv
 	rm -rf ./htmlcov
 	rm -f ./.coverage
+endif
 
 # Call for *.json clean up
 .PHONY: createconfig
