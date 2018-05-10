@@ -184,7 +184,8 @@ class Scraper:
         )
 
     def get_reactions(
-        self, page=None, file=None, since_date=None, until_date=strftime("%Y-%m-%d")
+        self, page=None, file=None, since_date=None,
+        until_date=strftime("%Y-%m-%d")
     ):
 
         graph = facebook.GraphAPI(access_token=self.token, version="2.12")
@@ -214,12 +215,12 @@ class Scraper:
         while has_next_page:
             after = '' if after is '' else "&after={}".format(after)
             fields = "fields=message,created_time,type,id," + \
-                 "comments.limit(0).summary(true),shares,reactions" + \
-                 ".limit(0).summary(true)"
+                "comments.limit(0).summary(true),shares,reactions" + \
+                ".limit(0).summary(true)"
 
             statuses = graph.get_object(
                 id=str(self.page)+'/posts?'+after+'&limit=100'+since+until,
-                    fields=fields
+                fields=fields
             )
             for status in statuses['data']:
                 # Ensure it is a status with the expected metadata

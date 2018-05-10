@@ -143,10 +143,12 @@ def collect_token_automatically(email, password, file='config.ini'):
         browser_token = browser_token.split("\"", 1)[1]
         browser_token = browser_token.split("\"", 1)[0]
         # update new token into config.ini and print if it worked
-        update_token_file(file, **{'token': browser_token})
+        if Scraper(browser_token).check_valid_token():
+            update_token_file(file, **{'token': browser_token})
+        else:
+            print('Token not valid')
         browser.quit()
-    valid_token = Scraper(browser_token)
-    return valid_token
+    return Scraper(browser_token)
 
 
 def collect_token_manually(file='config.ini'):

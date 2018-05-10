@@ -7,41 +7,38 @@ face_file2 = venv/src/facebook-sdk/facebook/version.py
 default: test
 
 test:
-ifeq ($(OS),Windows_NT)
+ifeq ($(OS), Windows_NT)
 	green3 -vv
 else
 	green3 -vvv
 endif
 
 run:
-ifeq ($(OS),Windows_NT)
+ifeq ($(OS), Windows_NT)
 	python scraper\collector.py
 else
 	python3 scraper/collector.py
 endif
 
 tm:
-ifeq ($(OS),Windows_NT)
+ifeq ($(OS), Windows_NT)
 	green3 tests\test_token_manager.py -vv
 else
 	green3 tests/test_token_manager.py -vvv
 endif
 
 ps:
-ifeq ($(OS),Windows_NT)
+ifeq ($(OS), Windows_NT)
 	green3 tests\test_page_scraper.py -vv
 else
 	green3 tests/test_page_scraper.py -vvv
 endif
 
-install:
-	pip3 install -r requirements.txt
-
 style:
 ifeq ($(OS), Windows_NT)
-	pycodestyle scraper\ tests\
+	pycodestyle tests\. scraper\.
 else
-	pycodestyle scraper/ tests/
+	pycodestyle tests/. scraper/.
 endif
 
 cov:
@@ -67,6 +64,9 @@ else
 	coverage html scraper/page_scraper.py scraper/token_manager.py
 	make style
 endif
+
+install:
+	pip3 install -r requirements.txt
 
 .PHONY: autotoken
 autotoken:

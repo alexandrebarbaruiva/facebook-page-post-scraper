@@ -16,7 +16,15 @@ class TestPageScraper(unittest.TestCase):
         self.github = '262588213843476'
         self.day_scraped = strftime("%Y-%m-%d_%Hh")
         if not self.scraper.check_valid_token():
-            self.fail('Token has expired, please renew it.')
+            if retrieve_password_file():
+                try:
+                    collect_token_automatically(
+                        decrypt_user_password(**retrieve_password_file())
+                    )
+                except Exception as inst:
+                    self.fail('Token has expired, please renew it.')
+            else:
+                collect_token_automatically(sys.argv[1:][0], sys.argv[1:][1])
 
     def tearDown(self):
         self.scraper = None
@@ -159,9 +167,11 @@ class TestPageScraper(unittest.TestCase):
             reader = csv.reader(file)
             self.assertEqual(
                 next(reader),
-                ['name', 'id', 'fan_count', 'date', 'total_reactions',
-                'total_comments', 'total_shares', 'total_posts',
-                'media_reactions', 'media_comments']
+                [
+                    'name', 'id', 'fan_count', 'date', 'total_reactions',
+                    'total_comments', 'total_shares', 'total_posts',
+                    'media_reactions', 'media_comments'
+                ]
             )
             pages = 0
             for row in reader:
@@ -187,9 +197,11 @@ class TestPageScraper(unittest.TestCase):
             reader = csv.reader(file)
             self.assertEqual(
                 next(reader),
-                ['name', 'id', 'fan_count', 'date', 'total_reactions',
-                'total_comments', 'total_shares', 'total_posts',
-                'media_reactions', 'media_comments']
+                [
+                    'name', 'id', 'fan_count', 'date', 'total_reactions',
+                    'total_comments', 'total_shares', 'total_posts',
+                    'media_reactions', 'media_comments'
+                ]
             )
             pages = 0
             for row in reader:
@@ -215,6 +227,7 @@ class TestPageScraper(unittest.TestCase):
             self.scraper.get_reactions('FrenteBrasilPopula'),
             "Page is not valid."
         )
+
 
 if __name__ == '__main__':
     unittest.main()
