@@ -6,11 +6,10 @@ from time import strftime
 from scraper.page_scraper import Scraper
 from scraper.token_manager import \
     retrieve_token_file, update_token_file, generate_token_file,\
-    retrieve_password_file, encrypt_user_password, \
-    collect_token_automatically, decrypt_user_password
+    retrieve_password_file, encrypt_user_password
 
 
-class TestPageScraperBasics(unittest.TestCase):
+class TestPageScraper(unittest.TestCase):
 
     def setUp(self):
         self.scraper = Scraper(retrieve_token_file())
@@ -20,13 +19,12 @@ class TestPageScraperBasics(unittest.TestCase):
             if retrieve_password_file():
                 try:
                     collect_token_automatically(
-                        *decrypt_user_password(**retrieve_password_file())
+                        decrypt_user_password(**retrieve_password_file())
                     )
                 except Exception as inst:
-                    print(inst)
                     self.fail('Token has expired, please renew it.')
             else:
-                self.fail('There is no token.')
+                collect_token_automatically(sys.argv[1:][0], sys.argv[1:][1])
 
     def tearDown(self):
         self.scraper = None
@@ -44,25 +42,6 @@ class TestPageScraperBasics(unittest.TestCase):
         """
         self.scraper.set_page(self.github)
         self.assertEqual(self.scraper.get_current_page(), '262588213843476')
-
-
-class TestPageScraping(unittest.TestCase):
-
-    def setUp(self):
-        self.scraper = Scraper(retrieve_token_file())
-        self.github = '262588213843476'
-        self.day_scraped = strftime("%Y-%m-%d_%Hh")
-        if not self.scraper.check_valid_token():
-            if retrieve_password_file():
-                try:
-                    collect_token_automatically(
-                        *decrypt_user_password(**retrieve_password_file())
-                    )
-                except Exception as inst:
-                    print(inst)
-                    self.fail('Token has expired, please renew it.')
-            else:
-                self.fail('There is no token.')
 
     def test_if_scraping_page(self):
         """

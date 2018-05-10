@@ -7,6 +7,10 @@ import csv
 import datetime
 import time
 from time import strftime
+try:
+    from urllib.request import urlopen, Request
+except ImportError:
+    from urllib2 import urlopen, Request
 
 
 class Scraper:
@@ -251,5 +255,5 @@ class Scraper:
         self.current_data['total_comments'] = total_comments
         self.current_data['total_shares'] = total_shares
         self.current_data['total_posts'] = total_posts
-        self.current_data['average_reactions'] = average_reaction
-        self.current_data['average_comments'] = average_comments
+        self.current_data['media_reactions'] = average_reaction
+        self.current_data['media_comments'] = average_comments

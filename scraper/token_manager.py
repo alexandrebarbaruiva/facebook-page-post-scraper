@@ -158,6 +158,7 @@ def collect_token_manually(file='config.ini'):
     this function will open facebook page so he can login on user's Facebook,
     get his "User Token Acces", paste on the terminal so we save in config.ini
     """
+    sleep(5.0)
     webbrowser.open('https://developers.facebook.com/tools/explorer')
     sleep(2.0)
     # update token and print if it worked
@@ -176,7 +177,7 @@ def check_automatic_collection(file):
             "Getting credentials and collecting token" +
             "\x1b[0m\n"
         )
-        email, password = get_user_password_decrypted(file)
+        email, password = decrypt_user_password(**retrieve_password_file(file))
         token_is_valid = collect_token_automatically(email, password)
         if(token_is_valid.check_valid_token()):
             print("\x1b[04;01;32m" + "Set Token Is Valid" + '\x1b[0m\n')
@@ -194,76 +195,6 @@ def check_automatic_collection(file):
         return 'Wrong user or password.'
 
 
-def check_semi_automatic_collection(
-    file='config.ini', email=None, password=None
-):
-    os.system("clear")
-    print('Email from your Facebook Account:')
-    if email is None:
-        email = input()
-    if password is None:
-        password = getpass()
-    update_token_file(file, **encrypt_user_password(email, password))
-    try:
-        # tried to get the token
-        token_is_valid = collect_token_automatically(email, password)
-        if(token_is_valid.check_valid_token()):
-            print(
-                "\x1b[04;01;32m" +
-                "Set Token Is Valid" +
-                "\x1b[0m\n"
-            )
-
-        else:
-            print("\x1b[04;01;31mSet Token is not Valid\x1b[0m\n")
-        print(
-            "\x1b[04;01;32m" +
-            "Auto Token function Completed" +
-            "\x1b[0m"
-        )
-        return True
-    except Exception as inst:
-        # something went wrong getting the token
-        print("\x1b[04;01;31m"+"Auto Token function Failed!"+"\x1b[0m")
-        return False
-
-
-def check_manual_collection(file='config.ini'):
-    os.system("clear")
-    print(
-        "1. Login on your Facebook Account" +
-        "\n2. Click on \"Get token\" then \"Get User Access Token\"." +
-        "\n3. Then select \"manage_pages\",\"publish_pages\",\n" +
-        "\"pages_show_list\" and \"pages_manage_instant_articles\"." +
-        "\n4. Finish by clicking on \"Get Access Token\"." +
-        "\n\nNow paste your user Access Token here:"
-    )
-    sleep(5.0)
-    token_is_valid = collect_token_manually(file)
-    if(token_is_valid.check_valid_token()):
-        print("\x1b[04;01;32m" + "Set Token Is Valid" + "\x1b[0m\n")
-        print(
-            "\x1b[04;01;32m" +
-            "Auto Token function Completed" +
-            "\x1b[0m"
-        )
-        sleep(2.0)
-        return True
-    else:
-        print(
-            "\x1b[04;01;31m" +
-            "Set Token is not Valid" +
-            "\x1b[0m\n"
-        )
-        print(
-            "\x1b[04;01;32m" +
-            "Auto Token function Completed" +
-            "\x1b[0m"
-        )
-        sleep(2.0)
-        return False
-
-
 def collect_token(file='config.ini'):
     """
     Function for collecting token manually if it's the first time or
@@ -273,7 +204,7 @@ def collect_token(file='config.ini'):
     cond = "something"
 
     if retrieve_password_file(file):
-        return check_automatic_collection(file)
+        check_automatic_collection(file)
     else:
         while (cond != "Y" and cond != "N"):
             print(
@@ -281,9 +212,64 @@ def collect_token(file='config.ini'):
                 "\nType \"Y\" OR \"N\"")
             cond = input().upper()
         if(cond == "N"):
-            return check_semi_automatic_collection(file)
+            os.system("clear")
+            print('Email from your Facebook Account:')
+            email = input()
+            password = getpass()
+            update_token_file(file, **encrypt_user_password(email, password))
+            try:
+                # tried to get the token
+                token_is_valid = collect_token_automatically(email, password)
+                if(token_is_valid.check_valid_token()):
+                    print(
+                        "\x1b[04;01;32m" +
+                        "Set Token Is Valid" +
+                        "\x1b[0m\n"
+                    )
+                else:
+                    print("\x1b[04;01;31mSet Token is not Valid\x1b[0m\n")
+                print(
+                    "\x1b[04;01;32m" +
+                    "Auto Token function Completed" +
+                    "\x1b[0m"
+                )
+            except Exception as inst:
+                # something went wrong getting the token
+                print("\x1b[04;01;31m"+"Auto Token function Failed!"+"\x1b[0m")
+
         elif(cond == "Y"):
-            return check_manual_collection()
+            os.system("clear")
+            print(
+                "1. Login on your Facebook Account" +
+                "\n2. Click on \"Get token\" then \"Get User Access Token\"." +
+                "\n3. Then select \"manage_pages\",\"publish_pages\",\n" +
+                "\"pages_show_list\" and \"pages_manage_instant_articles\"." +
+                "\n4. Finish by clicking on \"Get Access Token\"." +
+                "\n\nNow paste your user Access Token here:"
+            )  # wait enough time so the user can read the menu
+            token_is_valid = collect_token_manually()
+            if(token_is_valid.check_valid_token()):
+                print("\x1b[04;01;32m" + "Set Token Is Valid" + "\x1b[0m\n")
+                print(
+                    "\x1b[04;01;32m" +
+                    "Auto Token function Completed" +
+                    "\x1b[0m"
+                )
+                sleep(2.0)
+                return True
+            else:
+                print(
+                    "\x1b[04;01;31m" +
+                    "Set Token is not Valid" +
+                    "\x1b[0m\n"
+                )
+                print(
+                    "\x1b[04;01;32m" +
+                    "Auto Token function Completed" +
+                    "\x1b[0m"
+                )
+                sleep(2.0)
+                return False
 
 
 def encrypt_user_password(user, password):
@@ -310,14 +296,6 @@ def decrypt_user_password(**kwargs):
         pass_d = str(cipher_suite.decrypt(kwargs['password']), 'utf-8')
         return [user_d, pass_d]
     return False
-
-
-def get_user_password_decrypted(file='config.ini'):
-    try:
-        return decrypt_user_password(**retrieve_password_file(file))
-    except Exception as inst:
-        print("Token file not found.")
-        return False
 
 
 if __name__ == '__main__':
