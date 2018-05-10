@@ -6,6 +6,9 @@ face_file2 = venv/src/facebook-sdk/facebook/version.py
 
 default: test
 
+travis:
+	green3 tests.test_page_scraper.TestPageScraperBasics -vvv
+
 test:
 ifeq ($(OS), Windows_NT)
 	green3 -vv
@@ -24,14 +27,14 @@ tm:
 ifeq ($(OS), Windows_NT)
 	green3 tests\test_token_manager.py -vv
 else
-	green3 tests/test_token_manager.py -vvv
+	green3 tests/test_token_manager.py -vvv -f
 endif
 
 ps:
 ifeq ($(OS), Windows_NT)
 	green3 tests\test_page_scraper.py -vv
 else
-	green3 tests/test_page_scraper.py -vvv
+	green3 tests/test_page_scraper.py -vvv -f
 endif
 
 style:
@@ -60,10 +63,16 @@ ifeq ($(OS), Windows_NT)
 	make style
 else
 	make clean
-	green3 -vvv --run-coverage -o $(face_file1),$(face_file2)
+	green3 -vvv --run-coverage -f -o $(face_file1),$(face_file2)
 	coverage html scraper/page_scraper.py scraper/token_manager.py
 	make style
 endif
+
+cc:
+	radon cc scraper -s
+
+mi:
+	radon mi scraper -s
 
 install:
 	pip3 install -r requirements.txt
