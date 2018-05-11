@@ -7,10 +7,6 @@ import csv
 import datetime
 import time
 from time import strftime
-try:
-    from urllib.request import urlopen, Request
-except ImportError:
-    from urllib2 import urlopen, Request
 
 
 class Scraper:
@@ -106,14 +102,14 @@ class Scraper:
             if set(column_names) == {'name', 'id', 'fan_count', 'date'}:
                 column_names = ['name', 'id', 'fan_count', 'date']
             if set(column_names) == {
-                'name', 'id', 'fan_count', 'date', 'total_reactions',
-                'total_comments', 'total_shares', 'total_posts',
-                'media_reactions', 'media_comments'
+                'name', 'id', 'date', 'fan_count', 'total_posts',
+                'total_reactions', 'total_comments', 'total_shares',
+                'average_reactions', 'average_comments'
             }:
                 column_names = [
-                    'name', 'id', 'fan_count', 'date', 'total_reactions',
-                    'total_comments', 'total_shares', 'total_posts',
-                    'media_reactions', 'media_comments'
+                    'name', 'id', 'date', 'fan_count', 'total_posts',
+                    'total_reactions', 'total_comments', 'total_shares',
+                    'average_reactions', 'average_comments'
                 ]
         except Exception as inst:
             return ('No content found.')
@@ -255,5 +251,5 @@ class Scraper:
         self.current_data['total_comments'] = total_comments
         self.current_data['total_shares'] = total_shares
         self.current_data['total_posts'] = total_posts
-        self.current_data['media_reactions'] = average_reaction
-        self.current_data['media_comments'] = average_comments
+        self.current_data['average_reactions'] = average_reaction
+        self.current_data['average_comments'] = average_comments

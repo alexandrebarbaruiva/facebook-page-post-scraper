@@ -20,7 +20,7 @@ def collect_all_pages():
         if retrieve_password_file():
             try:
                 collect_token_automatically(
-                    decrypt_user_password(**retrieve_password_file())
+                    *decrypt_user_password(**retrieve_password_file())
                 )
             except Exception as inst:
                 self.fail('Token has expired, please renew it.')

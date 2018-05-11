@@ -9,8 +9,9 @@ from scraper.page_scraper import Scraper
 from scraper.token_manager import \
     retrieve_token_file, update_token_file, generate_token_file, \
     retrieve_password_file, encrypt_user_password, decrypt_user_password, \
-    collect_token_manually, collect_token_automatically, \
-    check_automatic_collection
+    collect_token, collect_token_manually, collect_token_automatically, \
+    check_automatic_collection, get_user_password_decrypted, \
+    check_semi_automatic_collection, check_manual_collection
 
 
 class TestTokenFunctions(unittest.TestCase):
@@ -48,7 +49,10 @@ class TestTokenFunctions(unittest.TestCase):
             ),
             'New token written successfuly.'
         )
-        os.remove(str(os.getcwd())+'/scraper/default.ini')
+        try:
+            os.remove(str(os.getcwd())+'/scraper/default.ini')
+        except Exception as i:
+            pass
 
     def test_if_empty_token_file_can_be_generated(self):
         """
@@ -59,7 +63,10 @@ class TestTokenFunctions(unittest.TestCase):
             generate_token_file(file='empty.ini'),
             [False, 'File already exists']
         )
-        os.remove(str(os.getcwd())+'/scraper/empty.ini')
+        try:
+            os.remove(str(os.getcwd())+'/scraper/empty.ini')
+        except Exception as i:
+            pass
 
     def test_if_token_file_can_be_generated(self):
         """
@@ -70,7 +77,10 @@ class TestTokenFunctions(unittest.TestCase):
             generate_token_file(new_token, file='empty.ini'),
             [True, new_token]
         )
-        os.remove(str(os.getcwd())+'/scraper/empty.ini')
+        try:
+            os.remove(str(os.getcwd())+'/scraper/empty.ini')
+        except Exception as i:
+            pass
 
 
 class TestTokenSecurity(unittest.TestCase):
@@ -104,7 +114,23 @@ class TestTokenSecurity(unittest.TestCase):
             ),
             'User and password updated.'
         )
-        os.remove(str(os.getcwd())+'/scraper/default.ini')
+        try:
+            os.remove(str(os.getcwd())+'/scraper/default.ini')
+        except Exception as i:
+            pass
+
+    def test_get_user_password_decrypted_no_token(self):
+        self.assertFalse(get_user_password_decrypted('co.ini'))
+
+    def test_get_user_password_decrypted(self):
+        self.assertEqual(
+            type(get_user_password_decrypted()),
+            type(decrypt_user_password(**retrieve_password_file()))
+        )
+        self.assertEqual(
+            len(get_user_password_decrypted()),
+            len(decrypt_user_password(**retrieve_password_file()))
+        )
 
 
 class TestTokenCollection(unittest.TestCase):
@@ -116,6 +142,10 @@ class TestTokenCollection(unittest.TestCase):
                 type(collect_token_manually(file='default.ini')),
                 type(Scraper(''))
             )
+        try:
+            os.remove(str(os.getcwd())+'/scraper/default.ini')
+        except Exception as i:
+            pass
 
     def test_collect_token_automatically_with_wrong_id(self):
         self.assertEqual(
@@ -124,6 +154,10 @@ class TestTokenCollection(unittest.TestCase):
             ),
             'Wrong Facebook user or password'
         )
+        try:
+            os.remove(str(os.getcwd())+'/scraper/default.ini')
+        except Exception as i:
+            pass
 
     def test_collect_token_automatically_with_correct_id(self):
         if retrieve_password_file():
@@ -150,6 +184,34 @@ class TestTokenCollection(unittest.TestCase):
 
     def test_check_function_for_automatic_token(self):
         if retrieve_password_file():
-            self.assertEqual(check_automatic_collection('config.ini'), True)
+            self.assertTrue(check_automatic_collection())
         else:
             self.fail('No user/password informed. Use autotoken.')
+
+    def test_check_function_for_semi_automatic_token(self):
+        if retrieve_password_file():
+            user, pwd = decrypt_user_password(**retrieve_password_file())
+            self.assertEqual(
+                check_semi_automatic_collection(email=user, password=pwd),
+                True
+            )
+        else:
+            self.fail('No user/password informed. Use autotoken.')
+
+    def test_check_function_for_manual_token(self):
+        user_input = 'EDA0EdEloEse0cB'
+        with patch('builtins.input', return_value=user_input):
+            self.assertEqual(
+                type(check_manual_collection(file='default.ini')),
+                type(False)
+            )
+        try:
+            os.remove(str(os.getcwd())+'/scraper/default.ini')
+        except Exception as i:
+            pass
+
+    def test_collect_token(self):
+        if retrieve_password_file():
+            self.assertEqual(collect_token(), True)
+        else:
+            print('No token detected.')
