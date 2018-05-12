@@ -116,6 +116,9 @@ else
 	rm -f ./.coverage
 endif
 
+pylint:
+	pylint -j 2 scraper/page_scraper.py scraper/token_manager.py --reports=y
+
 # Call for *.json clean up
 .PHONY: createconfig
 createconfig:

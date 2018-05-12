@@ -6,3 +6,4 @@ sphinx
 splinter
 cryptography
 radon
+pylint

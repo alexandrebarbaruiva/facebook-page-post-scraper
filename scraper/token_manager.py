@@ -1,12 +1,11 @@
 import os
 import sys
-import base64
 from configparser import ConfigParser
 import webbrowser
-from splinter import Browser
-from time import sleep
-from cryptography.fernet import Fernet
 from getpass import getpass
+from time import sleep
+from splinter import Browser
+from cryptography.fernet import Fernet
 sys.path.append(
     os.path.dirname(
         os.path.dirname(os.path.realpath(__file__))
@@ -240,28 +239,15 @@ def check_manual_collection(file='config.ini'):
     )
     sleep(5.0)
     token_is_valid = collect_token_manually(file)
-    if(token_is_valid.check_valid_token()):
-        print("\x1b[04;01;32m" + "Set Token Is Valid" + "\x1b[0m\n")
-        print(
-            "\x1b[04;01;32m" +
-            "Auto Token function Completed" +
-            "\x1b[0m"
-        )
+    if token_is_valid.check_valid_token():
+        print("\x1b[04;01;32mSet Token Is Valid\x1b[0m\n")
+        print("\x1b[04;01;32mAuto Token function Completed\x1b[0m")
         sleep(2.0)
         return True
-    else:
-        print(
-            "\x1b[04;01;31m" +
-            "Set Token is not Valid" +
-            "\x1b[0m\n"
-        )
-        print(
-            "\x1b[04;01;32m" +
-            "Auto Token function Completed" +
-            "\x1b[0m"
-        )
-        sleep(2.0)
-        return False
+    print("\x1b[04;01;31mSet Token is not Valid\x1b[0m\n")
+    print("\x1b[04;01;32mAuto Token function Completed\x1b[0m")
+    sleep(2.0)
+    return False
 
 
 def collect_token(file='config.ini'):
@@ -303,8 +289,7 @@ def decrypt_user_password(**kwargs):
             kwargs['user'] = kwargs['user'][2:-1].encode()
             kwargs['password'] = kwargs['password'][2:-1].encode()
         except Exception as inst:
-            pass
-        key = Fernet.generate_key()
+            print(inst)
         cipher_suite = Fernet((kwargs['utoken']))
         user_d = str(cipher_suite.decrypt(kwargs['user']), 'utf-8')
         pass_d = str(cipher_suite.decrypt(kwargs['password']), 'utf-8')
@@ -316,7 +301,7 @@ def get_user_password_decrypted(file='config.ini'):
     try:
         return decrypt_user_password(**retrieve_password_file(file))
     except Exception as inst:
-        print("Token file not found.")
+        print("Token file not found.", inst)
         return False
 
 

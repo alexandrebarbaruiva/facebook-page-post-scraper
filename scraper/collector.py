@@ -1,11 +1,8 @@
 import csv
 import sys
 from page_scraper import Scraper
-from token_manager import retrieve_token_file
-from get_fb_posts_fb_page import \
-    request_until_succeed, getFacebookPageFeedUrl, \
-    processFacebookPageFeedStatus, scrapeFacebookPageFeedStatus, \
-    scrapAll, write_json
+from token_manager import retrieve_token_file, get_user_password_decrypted, \
+    retrieve_password_file
 
 
 def collect_all_pages():
@@ -19,21 +16,19 @@ def collect_all_pages():
     if not scraper.check_valid_token():
         if retrieve_password_file():
             try:
-                collect_token_automatically(
-                    *decrypt_user_password(**retrieve_password_file())
-                )
+                get_user_password_decrypted()
+                scraper = Scraper(retrieve_token_file())
             except Exception as inst:
-                self.fail('Token has expired, please renew it.')
-        else:
-            collect_token_automatically(sys.argv[1:][0], sys.argv[1:][1])
-    else:
-        for page in pages:
-            scraper.set_page(page)
-            print(scraper.page)
-            scraper.get_page_name_and_like()
-            scraper.get_reactions()
-            scraper.write_file()
-            scraper.convert_to_csv()
+                print(inst)
+                raise inst
+
+    for page in pages:
+        scraper.set_page(page)
+        print(scraper.page)
+        scraper.get_page_name_and_like()
+        scraper.get_reactions()
+        scraper.write_file()
+        scraper.convert_to_csv()
 
 
 if __name__ == '__main__':

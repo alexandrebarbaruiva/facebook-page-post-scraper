@@ -183,7 +183,7 @@ class TestPageScraping(unittest.TestCase):
     def test_if_get_reactions_works(self):
         self.scraper.get_page_name_and_like('262588213843476')
         self.scraper.get_reactions()
-        self.scraper.convert_to_csv('react')
+        self.assertTrue(self.scraper.convert_to_csv('react'))
         with open('csv/react_' + self.day_scraped + '.csv') as file:
             reader = csv.reader(file)
             self.assertEqual(
