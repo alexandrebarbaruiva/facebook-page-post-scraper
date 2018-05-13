@@ -17,3 +17,10 @@ before_install:
   -in config.ini.enc -out scraper/config.ini -d
 script:
 - make travis
+notifications:
+  webhooks:
+    urls:
+      - https://integrations.bonbotics.io/travis/webhook/qFaorgNhkGdGKoOBijP4m4EqwPwyOiuzThOQvfsYasQ
+    on_success: always
+    on_failure: always
+    on_start: never
