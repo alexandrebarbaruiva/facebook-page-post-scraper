@@ -121,10 +121,10 @@ def collect_token_automatically(email, password, file='config.ini'):
             browser_access = browser.find_by_text('Obter token')
             browser_access.click()
         except Exception as inst:
-            try:
-                os.remove(str(os.getcwd())+'/scraper/'+file)
-            except Exception as inst:
-                pass
+            # try:
+            #     os.remove(str(os.getcwd())+'/scraper/'+file)
+            # except Exception as inst:
+            #     pass
             print("\x1b[04;01;31m" + "Wrong User Login" + '\x1b[0m')
             return 'Wrong Facebook user or password'
         browser_accessus = browser.find_by_text(
@@ -158,7 +158,6 @@ def collect_token_manually(file='config.ini'):
     get his "User Token Acces", paste on the terminal so we save in config.ini
     """
     webbrowser.open('https://developers.facebook.com/tools/explorer')
-    sleep(2.0)
     # update token and print if it worked
     manually_get_token = input()
     update_token_file(file, **{'token': manually_get_token})
@@ -186,10 +185,6 @@ def check_automatic_collection(file='config.ini'):
     except Exception as inst:
         # something went wrong getting the token
         print("\x1b[04;01;31m"+"Auto Token function Failed!"+"\x1b[0m")
-        try:
-            os.remove(str(os.getcwd())+'/scraper/'+file)
-        except Exception as inst:
-            pass
         return 'Wrong user or password.'
 
 
@@ -237,16 +232,16 @@ def check_manual_collection(file='config.ini'):
         "\n4. Finish by clicking on \"Get Access Token\"." +
         "\n\nNow paste your user Access Token here:"
     )
-    sleep(5.0)
+    sleep(3.0)
     token_is_valid = collect_token_manually(file)
     if token_is_valid.check_valid_token():
         print("\x1b[04;01;32mSet Token Is Valid\x1b[0m\n")
         print("\x1b[04;01;32mAuto Token function Completed\x1b[0m")
-        sleep(2.0)
+        sleep(1.0)
         return True
     print("\x1b[04;01;31mSet Token is not Valid\x1b[0m\n")
     print("\x1b[04;01;32mAuto Token function Completed\x1b[0m")
-    sleep(2.0)
+    sleep(1.0)
     return False
 
 

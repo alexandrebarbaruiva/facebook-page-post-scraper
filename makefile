@@ -7,8 +7,11 @@ face_file2 = venv/src/facebook-sdk/facebook/version.py
 default: test
 
 travis:
-	green3 tests.test_page_scraper.TestPageScraperBasics -vvv
-
+	green3 tests.test_page_scraper
+	green3 tests.test_token_manager.TestTokenFunctions
+	green3 tests.test_token_manager.TestTokenSecurity
+	green3 tests.test_token_manager.TestTokenCollection
+	
 test:
 ifeq ($(OS), Windows_NT)
 	make clean
