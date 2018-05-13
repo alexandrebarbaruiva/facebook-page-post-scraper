@@ -20,7 +20,7 @@ script:
 notifications:
   webhooks:
     urls:
-      - https://integrations.bonbotics.io/travis/webhook/qFaorgNhkGdGKoOBijP4m4EqwPwyOiuzThOQvfsYasQ
+      - https://integrations.bonbotics.io/travis/webhook/n0SFugflXzgKY8Mc7wuQf5vqPj1vPiG8JApYv2YpRqQ
     on_success: always
     on_failure: always
     on_start: never
