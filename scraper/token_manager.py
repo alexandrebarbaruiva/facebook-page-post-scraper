@@ -98,7 +98,7 @@ def collect_token_automatically(email, password, file='config.ini'):
     this function will login on user's Facebook and get his
     "User Token Acces" and save in config.ini
     """
-    with Browser('chrome') as browser:
+    with Browser('chrome', headless=True) as browser:
         # Visit Facebook developers web site
         try:
             browser.driver.set_window_size(1100, 800)
