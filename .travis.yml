@@ -16,4 +16,4 @@ before_install:
 - openssl aes-256-cbc -K $encrypted_72242892b593_key -iv $encrypted_72242892b593_iv
   -in config.ini.enc -out scraper/config.ini -d
 script:
-- make travis
+- make
