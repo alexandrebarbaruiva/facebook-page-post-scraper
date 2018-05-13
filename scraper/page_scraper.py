@@ -15,7 +15,6 @@ class Scraper:
         self.token = token
         self.status_code = 400
         self.current_data = ''
-        self.page = None
         self.file_name = None
         if not os.path.exists('csv/'):
             os.makedirs('csv/')
@@ -44,7 +43,6 @@ class Scraper:
         try:
             return self.page
         except Exception as inst:
-            print(inst)
             return 'Page not set'
 
     def valid_page(self, page=None):

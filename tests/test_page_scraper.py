@@ -7,7 +7,8 @@ from scraper.page_scraper import Scraper
 from scraper.token_manager import \
     retrieve_token_file, update_token_file, generate_token_file,\
     retrieve_password_file, encrypt_user_password, \
-    collect_token_automatically, decrypt_user_password
+    collect_token_automatically, decrypt_user_password, \
+    get_user_password_decrypted
 
 
 class TestPageScraperBasics(unittest.TestCase):
@@ -19,9 +20,7 @@ class TestPageScraperBasics(unittest.TestCase):
         if not self.scraper.check_valid_token():
             if retrieve_password_file():
                 try:
-                    collect_token_automatically(
-                        *decrypt_user_password(**retrieve_password_file())
-                    )
+                    get_user_password_decrypted()
                 except Exception as inst:
                     print(inst)
                     self.fail('Token has expired, please renew it.')
@@ -140,7 +139,7 @@ class TestPageScraping(unittest.TestCase):
             reader = csv.reader(file)
             self.assertEqual(
                 next(reader),
-                ['name', 'id', 'fan_count', 'date']
+                ['name', 'id', 'date', 'fan_count']
             )
             # Check for amount of pages scraped is correct
             pages = 0
@@ -171,7 +170,7 @@ class TestPageScraping(unittest.TestCase):
             reader = csv.reader(file)
             self.assertEqual(
                 next(reader),
-                ['name', 'id', 'fan_count', 'date']
+                ['name', 'id', 'date', 'fan_count']
             )
             # Check for amount of pages scraped is correct
             pages = 0

@@ -11,8 +11,10 @@ travis:
 
 test:
 ifeq ($(OS), Windows_NT)
+	make clean
 	green3 -vv
 else
+	make clean
 	green3 -vvv
 endif
 
@@ -32,8 +34,10 @@ endif
 
 ps:
 ifeq ($(OS), Windows_NT)
+	make clean
 	green3 tests\test_page_scraper.py -vv
 else
+	make clean
 	green3 tests/test_page_scraper.py -vvv -f
 endif
 
