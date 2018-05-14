@@ -1,1 +1,1 @@
-web: python scraper/collector.py 
+clock: python heroku_clock.py

@@ -2,10 +2,6 @@ import csv
 import sys
 from page_scraper import Scraper
 from token_manager import retrieve_token_file
-from get_fb_posts_fb_page import \
-    request_until_succeed, getFacebookPageFeedUrl, \
-    processFacebookPageFeedStatus, scrapeFacebookPageFeedStatus, \
-    scrapAll, write_json
 
 
 def collect_all_pages():
