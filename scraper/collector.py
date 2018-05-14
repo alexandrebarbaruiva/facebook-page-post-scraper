@@ -2,6 +2,7 @@ import csv
 import sys
 from .page_scraper import Scraper
 from .token_manager import retrieve_token_file
+from .token_manager import retrieve_password_file
 
 
 def collect_all_pages():
@@ -19,7 +20,7 @@ def collect_all_pages():
                     *decrypt_user_password(**retrieve_password_file())
                 )
             except Exception as inst:
-                self.fail('Token has expired, please renew it.')
+               raise ValueError('Token has expired, please renew it.')
         else:
             collect_token_automatically(sys.argv[1:][0], sys.argv[1:][1])
     else:
