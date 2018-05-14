@@ -1,7 +1,7 @@
 import csv
 import sys
-from page_scraper import Scraper
-from token_manager import retrieve_token_file
+from .page_scraper import Scraper
+from .token_manager import retrieve_token_file
 
 
 def collect_all_pages():
