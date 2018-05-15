@@ -22,8 +22,8 @@ endif
 
 run: 
 ifeq ($(OS), Windows_NT)
-	python scraper\collector.
 	python scraper\token_manager.py
+	python scraper\collector.py
 else
 	python3 scraper/token_manager.py
 	python3 scraper/collector.py
