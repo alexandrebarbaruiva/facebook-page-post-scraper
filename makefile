@@ -7,12 +7,16 @@ face_file2 = venv/src/facebook-sdk/facebook/version.py
 default: test
 
 travis:
-	green3 tests.test_page_scraper.TestPageScraperBasics -vvv
+	green3 tests.test_page_scraper
+	green3 tests.test_token_manager.TestTokenFunctions
+	green3 tests.test_token_manager.TestTokenSecurity
 
 test:
 ifeq ($(OS), Windows_NT)
+	make clean
 	green3 -vv
 else
+	make clean
 	green3 -vvv
 endif
 
@@ -32,8 +36,10 @@ endif
 
 ps:
 ifeq ($(OS), Windows_NT)
+	make clean
 	green3 tests\test_page_scraper.py -vv
 else
+	make clean
 	green3 tests/test_page_scraper.py -vvv -f
 endif
 
@@ -115,6 +121,9 @@ else
 	rm -rf ./htmlcov
 	rm -f ./.coverage
 endif
+
+pylint:
+	pylint -j 2 scraper/page_scraper.py scraper/token_manager.py --reports=y
 
 # Call for *.json clean up
 .PHONY: createconfig

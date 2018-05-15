@@ -1,12 +1,11 @@
 import os
 import sys
-import base64
 from configparser import ConfigParser
 import webbrowser
-from splinter import Browser
-from time import sleep
-from cryptography.fernet import Fernet
 from getpass import getpass
+from time import sleep
+from splinter import Browser
+from cryptography.fernet import Fernet
 sys.path.append(
     os.path.dirname(
         os.path.dirname(os.path.realpath(__file__))
@@ -99,7 +98,7 @@ def collect_token_automatically(email, password, file='config.ini'):
     this function will login on user's Facebook and get his
     "User Token Acces" and save in config.ini
     """
-    with Browser('chrome') as browser:
+    with Browser('chrome', headless=True) as browser:
         # Visit Facebook developers web site
         try:
             browser.driver.set_window_size(1100, 800)
@@ -122,10 +121,10 @@ def collect_token_automatically(email, password, file='config.ini'):
             browser_access = browser.find_by_text('Obter token')
             browser_access.click()
         except Exception as inst:
-            try:
-                os.remove(str(os.getcwd())+'/scraper/'+file)
-            except Exception as inst:
-                pass
+            # try:
+            #     os.remove(str(os.getcwd())+'/scraper/'+file)
+            # except Exception as inst:
+            #     pass
             print("\x1b[04;01;31m" + "Wrong User Login" + '\x1b[0m')
             return 'Wrong Facebook user or password'
         browser_accessus = browser.find_by_text(
@@ -159,7 +158,6 @@ def collect_token_manually(file='config.ini'):
     get his "User Token Acces", paste on the terminal so we save in config.ini
     """
     webbrowser.open('https://developers.facebook.com/tools/explorer')
-    sleep(2.0)
     # update token and print if it worked
     manually_get_token = input()
     update_token_file(file, **{'token': manually_get_token})
@@ -187,10 +185,6 @@ def check_automatic_collection(file='config.ini'):
     except Exception as inst:
         # something went wrong getting the token
         print("\x1b[04;01;31m"+"Auto Token function Failed!"+"\x1b[0m")
-        try:
-            os.remove(str(os.getcwd())+'/scraper/'+file)
-        except Exception as inst:
-            pass
         return 'Wrong user or password.'
 
 
@@ -238,30 +232,17 @@ def check_manual_collection(file='config.ini'):
         "\n4. Finish by clicking on \"Get Access Token\"." +
         "\n\nNow paste your user Access Token here:"
     )
-    sleep(5.0)
+    sleep(3.0)
     token_is_valid = collect_token_manually(file)
-    if(token_is_valid.check_valid_token()):
-        print("\x1b[04;01;32m" + "Set Token Is Valid" + "\x1b[0m\n")
-        print(
-            "\x1b[04;01;32m" +
-            "Auto Token function Completed" +
-            "\x1b[0m"
-        )
-        sleep(2.0)
+    if token_is_valid.check_valid_token():
+        print("\x1b[04;01;32mSet Token Is Valid\x1b[0m\n")
+        print("\x1b[04;01;32mAuto Token function Completed\x1b[0m")
+        sleep(1.0)
         return True
-    else:
-        print(
-            "\x1b[04;01;31m" +
-            "Set Token is not Valid" +
-            "\x1b[0m\n"
-        )
-        print(
-            "\x1b[04;01;32m" +
-            "Auto Token function Completed" +
-            "\x1b[0m"
-        )
-        sleep(2.0)
-        return False
+    print("\x1b[04;01;31mSet Token is not Valid\x1b[0m\n")
+    print("\x1b[04;01;32mAuto Token function Completed\x1b[0m")
+    sleep(1.0)
+    return False
 
 
 def collect_token(file='config.ini'):
@@ -303,8 +284,7 @@ def decrypt_user_password(**kwargs):
             kwargs['user'] = kwargs['user'][2:-1].encode()
             kwargs['password'] = kwargs['password'][2:-1].encode()
         except Exception as inst:
-            pass
-        key = Fernet.generate_key()
+            print(inst)
         cipher_suite = Fernet((kwargs['utoken']))
         user_d = str(cipher_suite.decrypt(kwargs['user']), 'utf-8')
         pass_d = str(cipher_suite.decrypt(kwargs['password']), 'utf-8')
@@ -316,7 +296,7 @@ def get_user_password_decrypted(file='config.ini'):
     try:
         return decrypt_user_password(**retrieve_password_file(file))
     except Exception as inst:
-        print("Token file not found.")
+        print("Token file not found.", inst)
         return False
 
 

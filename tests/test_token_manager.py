@@ -133,7 +133,7 @@ class TestTokenSecurity(unittest.TestCase):
         )
 
 
-class TestTokenCollection(unittest.TestCase):
+class TestTokenCollectionWithBrowser(unittest.TestCase):
 
     def test_collect_token_manually(self):
         user_input = 'EDA0EdEloEse0cB'
@@ -146,6 +146,22 @@ class TestTokenCollection(unittest.TestCase):
             os.remove(str(os.getcwd())+'/scraper/default.ini')
         except Exception as i:
             pass
+
+
+    def test_check_function_for_manual_token(self):
+        user_input = 'EDA0EdEloEse0cB'
+        with patch('builtins.input', return_value=user_input):
+            self.assertEqual(
+                type(check_manual_collection(file='default.ini')),
+                type(False)
+            )
+        try:
+            os.remove(str(os.getcwd())+'/scraper/default.ini')
+        except Exception as i:
+            pass
+
+
+class TestTokenCollection(unittest.TestCase):
 
     def test_collect_token_automatically_with_wrong_id(self):
         self.assertEqual(
@@ -161,7 +177,7 @@ class TestTokenCollection(unittest.TestCase):
 
     def test_collect_token_automatically_with_correct_id(self):
         if retrieve_password_file():
-            user, password = decrypt_user_password(**retrieve_password_file())
+            user, password = get_user_password_decrypted()
             self.assertEqual(
                 type(collect_token_automatically(user, password)),
                 type(Scraper(''))
@@ -172,7 +188,7 @@ class TestTokenCollection(unittest.TestCase):
     def test_collect_token_automatically_without_internet(self):
         url = 'https://www.google.com/'
         if requests.get(url).status_code != 200:
-            user, password = decrypt_user_password(**retrieve_password_file())
+            user, password = get_user_password_decrypted()
             self.assertEqual(
                 collect_token_automatically(
                     'user', 'hugepassword', 'default.ini'
@@ -190,7 +206,7 @@ class TestTokenCollection(unittest.TestCase):
 
     def test_check_function_for_semi_automatic_token(self):
         if retrieve_password_file():
-            user, pwd = decrypt_user_password(**retrieve_password_file())
+            user, pwd = get_user_password_decrypted()
             self.assertEqual(
                 check_semi_automatic_collection(email=user, password=pwd),
                 True
@@ -198,17 +214,6 @@ class TestTokenCollection(unittest.TestCase):
         else:
             self.fail('No user/password informed. Use autotoken.')
 
-    def test_check_function_for_manual_token(self):
-        user_input = 'EDA0EdEloEse0cB'
-        with patch('builtins.input', return_value=user_input):
-            self.assertEqual(
-                type(check_manual_collection(file='default.ini')),
-                type(False)
-            )
-        try:
-            os.remove(str(os.getcwd())+'/scraper/default.ini')
-        except Exception as i:
-            pass
 
     def test_collect_token(self):
         if retrieve_password_file():

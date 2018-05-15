@@ -1,12 +1,10 @@
-import facebook
 import os
-import requests
-import sys
 import json
 import csv
 import datetime
-import time
 from time import strftime
+import requests
+import facebook
 
 
 class Scraper:
@@ -17,6 +15,7 @@ class Scraper:
         self.token = token
         self.status_code = 400
         self.current_data = ''
+        self.file_name = None
         if not os.path.exists('csv/'):
             os.makedirs('csv/')
         if not os.path.exists('json/'):
@@ -60,8 +59,8 @@ class Scraper:
         feed_statement = '/feed' if feed else ''
         try:
             post = graph.get_object(
-                    id=str(self.page)+feed_statement,
-                    fields=query
+                id=str(self.page)+feed_statement,
+                fields=query
             )
             self.current_data = post
             self.current_data['date'] = strftime("%d/%m/%Y")
@@ -71,6 +70,7 @@ class Scraper:
             elif 'data' in post.keys():
                 return True
         except Exception as inst:
+            print(inst)
             return 'Page not defined or bad query structure'
 
     def write_file(self, file=None):
@@ -99,20 +99,21 @@ class Scraper:
             return content
         try:
             column_names = self.current_data.keys()
-            if set(column_names) == {'name', 'id', 'fan_count', 'date'}:
-                column_names = ['name', 'id', 'fan_count', 'date']
             if set(column_names) == {
-                'name', 'id', 'date', 'fan_count', 'total_posts',
-                'total_reactions', 'total_comments', 'total_shares',
-                'average_reactions', 'average_comments'
+                    'name', 'id', 'date', 'fan_count', 'total_posts',
+                    'total_reactions', 'total_comments', 'total_shares',
+                    'average_reactions', 'average_comments'
             }:
                 column_names = [
                     'name', 'id', 'date', 'fan_count', 'total_posts',
                     'total_reactions', 'total_comments', 'total_shares',
                     'average_reactions', 'average_comments'
                 ]
+            elif set(column_names) == {'name', 'id', 'date', 'fan_count'}:
+                column_names = ['name', 'id', 'date', 'fan_count']
         except Exception as inst:
-            return ('No content found.')
+            print(inst)
+            return 'No content found.'
         today = strftime("%Y-%m-%d_%Hh")
 
         # Check if file already exists to append instead of create
@@ -174,26 +175,23 @@ class Scraper:
         total_comments = total_comments + num_comments
         total_shares = total_shares + num_shares
 
-        return (
-            status_id, status_published, num_reactions, num_comments,
+        return status_id, status_published, num_reactions, num_comments, \
             num_shares, total_reaction, total_comments, total_shares
-        )
 
-    def get_reactions(
-        self, page=None, file=None, since_date=None,
-        until_date=strftime("%Y-%m-%d")
-    ):
+    def get_reactions(self, page=None, since_date=None, until_date=None):
 
         graph = facebook.GraphAPI(access_token=self.token, version="2.12")
 
         if page is None:
             page = self.page
         if not self.valid_page(page):
-            return ("Page is not valid.")
+            return "Page is not valid."
 
         if since_date is None:
             month = str(int(strftime("%m"))-1)
             since_date = strftime("%Y-") + month + strftime("-%d")
+        if until_date is None:
+            until_date = strftime("%Y-%m-%d")
 
         total_reaction = 0
         total_comments = 0
@@ -204,12 +202,12 @@ class Scraper:
         after = ''
 
         since = "&since={}".format(since_date) if since_date \
-            is not '' else ''
+            != '' else ''
         until = "&until={}".format(until_date) if until_date \
-            is not '' else ''
+            != '' else ''
 
         while has_next_page:
-            after = '' if after is '' else "&after={}".format(after)
+            after = '' if after == '' else "&after={}".format(after)
             fields = "fields=message,created_time,type,id," + \
                 "comments.limit(0).summary(true),shares,reactions" + \
                 ".limit(0).summary(true)"
