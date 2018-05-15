@@ -20,10 +20,12 @@ else
 	green3 -vvv
 endif
 
-run:
+run: 
 ifeq ($(OS), Windows_NT)
-	python scraper\collector.py
+	python scraper\collector.
+	python scraper\token_manager.py
 else
+	python3 scraper/token_manager.py
 	python3 scraper/collector.py
 endif
 
