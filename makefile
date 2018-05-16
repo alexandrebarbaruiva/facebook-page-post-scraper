@@ -22,9 +22,9 @@ endif
 
 run:
 ifeq ($(OS), Windows_NT)
-	python -m scraper.collector
+	python scraper\collector
 else
-	python3 -m scraper.collector
+	python3 scraper/collector
 endif
 
 tm:
@@ -85,7 +85,7 @@ install:
 
 .PHONY: autotoken
 autotoken:
-	python3 -m scraper.token_manager
+	python3 scraper.token_manager
 
 .PHONY: chromedriver
 chromedriver:
