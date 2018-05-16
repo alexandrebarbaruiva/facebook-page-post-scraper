@@ -65,4 +65,4 @@ Para verificar se o seu código encontra-se bem indentado e bonito, use o seguin
 ```
 make style
 ```
-Importante usar este comando antes de mandar uma PR para garantir código mais legível.
+Importante usar este comando antes de mandar uma PR para garantir código mais legível..
