@@ -7,4 +7,4 @@ splinter
 cryptography
 radon
 pylint
-apscheduler==3.0.0
+apscheduler
