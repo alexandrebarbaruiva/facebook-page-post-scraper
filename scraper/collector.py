@@ -5,7 +5,6 @@ from token_manager import retrieve_token_file
 from token_manager import retrieve_password_file
 from token_manager import get_user_password_decrypted
 
-
 def collect_all_pages():
 
     pages = []
