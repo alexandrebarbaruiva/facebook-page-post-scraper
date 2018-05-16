@@ -7,4 +7,4 @@ splinter
 cryptography
 radon
 pylint
-APScheduler
+apscheduler
