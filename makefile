@@ -85,7 +85,7 @@ install:
 
 .PHONY: autotoken
 autotoken:
-	python3 scraper.token_manager
+	python3 scraper/token_manager.py
 
 .PHONY: chromedriver
 chromedriver:

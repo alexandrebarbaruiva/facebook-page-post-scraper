@@ -11,7 +11,7 @@ sys.path.append(
         os.path.dirname(os.path.realpath(__file__))
     )
 )
-from .page_scraper import Scraper
+from page_scraper import Scraper
 
 path = str(os.getcwd())+'/scraper/'
 
