@@ -100,6 +100,18 @@ class Scraper:
         try:
             column_names = self.current_data.keys()
             if set(column_names) == {
+                'name', 'id', 'date', 'since_date', 'until_date',
+                'fan_count', 'total_posts', 'total_reactions',
+                'total_comments', 'total_shares', 'average_reactions',
+                'average_comments'
+            }:
+                column_names = [
+                    'name', 'id', 'date', 'since_date', 'until_date',
+                    'fan_count', 'total_posts', 'total_reactions',
+                    'total_comments', 'total_shares', 'average_reactions',
+                    'average_comments'
+                ]
+            elif set(column_names) == {
                     'name', 'id', 'date', 'fan_count', 'total_posts',
                     'total_reactions', 'total_comments', 'total_shares',
                     'average_reactions', 'average_comments'
@@ -245,6 +257,8 @@ class Scraper:
         else:
             average_reaction = total_reaction
             average_comments = total_comments
+        self.current_data['since_date'] = since_date
+        self.current_data['until_date'] = until_date
         self.current_data['total_reactions'] = total_reaction
         self.current_data['total_comments'] = total_comments
         self.current_data['total_shares'] = total_shares

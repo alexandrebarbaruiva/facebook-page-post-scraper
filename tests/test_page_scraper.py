@@ -186,9 +186,10 @@ class TestPageScraping(unittest.TestCase):
             self.assertEqual(
                 next(reader),
                 [
-                    'name', 'id', 'date', 'fan_count', 'total_posts',
-                    'total_reactions', 'total_comments', 'total_shares',
-                    'average_reactions', 'average_comments'
+                    'name', 'id', 'date', 'since_date', 'until_date',
+                    'fan_count', 'total_posts', 'total_reactions',
+                    'total_comments', 'total_shares', 'average_reactions',
+                    'average_comments'
                 ]
             )
             pages = 0
@@ -216,9 +217,10 @@ class TestPageScraping(unittest.TestCase):
             self.assertEqual(
                 next(reader),
                 [
-                    'name', 'id', 'date', 'fan_count', 'total_posts',
-                    'total_reactions', 'total_comments', 'total_shares',
-                    'average_reactions', 'average_comments'
+                    'name', 'id', 'date', 'since_date', 'until_date',
+                    'fan_count', 'total_posts', 'total_reactions',
+                    'total_comments', 'total_shares', 'average_reactions',
+                    'average_comments'
                 ]
             )
             pages = 0
