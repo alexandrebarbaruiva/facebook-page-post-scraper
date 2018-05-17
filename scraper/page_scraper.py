@@ -9,7 +9,6 @@ import facebook
 from pathlib import Path
 home = Path.home()
 
-
 class Scraper:
     """
     Scraper responsible for collecting posts from Facebook
