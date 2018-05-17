@@ -1,10 +1,9 @@
 import csv
 import sys
-from page_scraper import Scraper
-from token_manager import retrieve_token_file
-from token_manager import retrieve_password_file
-from token_manager import get_user_password_decrypted
-
+from scraper.page_scraper import Scraper
+from scraper.token_manager import retrieve_token_file, get_user_password_decrypted, \
+    retrieve_password_file
+    
 def collect_all_pages():
 
     pages = []
