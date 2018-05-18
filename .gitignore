@@ -28,6 +28,7 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+.vscode
 MANIFEST
 
 # PyInstaller
