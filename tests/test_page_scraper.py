@@ -92,6 +92,16 @@ class TestPageScraping(unittest.TestCase):
             (feed=True, query=test_query), True
         )
 
+    def test_scraping_name_and_likes(self):
+        """
+        Check if it's possible to collect name and like from
+        LearnPython page with date of collection
+        """
+        self.assertEqual(
+            self.scraper.get_page_name_and_like('262588213843476'),
+            ['GitHub', strftime("%d-%m-%Y")]
+        )
+
     def test_if_scraping_outputs_file(self):
         """
         Check if scraping generates a JSON file in correct output file
@@ -101,18 +111,9 @@ class TestPageScraping(unittest.TestCase):
             page=self.github, feed=True, query=test_query
         )
         self.assertTrue(self.scraper.write_file())
-        self.assertTrue(os.path.exists('json/262588213843476.json'))
-        os.remove(str(os.getcwd())+'/json/262588213843476.json')
+        self.assertTrue(os.path.exists('json/' + strftime("%d-%m-%Y") + '262588213843476.json'))
+        os.remove(str(os.getcwd())+'json/' + strftime("%d-%m-%Y") + '262588213843476.json')
 
-    def test_scraping_name_and_likes(self):
-        """
-        Check if it's possible to collect name and like from
-        LearnPython page with date of collection
-        """
-        self.assertEqual(
-            self.scraper.get_page_name_and_like('262588213843476'),
-            ['GitHub', strftime("%d/%m/%Y")]
-        )
 
     def test_if_csv_without_content_returns_nothing(self):
         """

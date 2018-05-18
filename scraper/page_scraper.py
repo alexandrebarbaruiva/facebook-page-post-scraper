@@ -16,6 +16,9 @@ class Scraper:
         self.status_code = 400
         self.current_data = ''
         self.file_name = None
+        self.actors_list = []
+        self.date_dict = {'dates': []}
+        self.date_list = []
         if not os.path.exists('csv/'):
             os.makedirs('csv/')
         if not os.path.exists('json/'):
@@ -63,7 +66,7 @@ class Scraper:
                 fields=query
             )
             self.current_data = post
-            self.current_data['date'] = strftime("%d/%m/%Y")
+            self.current_data['date'] = strftime("%d-%m-%Y")
             # print(self.current_data)
             if 'name' in post.keys():
                 return post['name']
@@ -76,11 +79,19 @@ class Scraper:
     def write_file(self, file=None):
         if file is None:
             file = self.file_name
-        with open('json/'+file, 'w', encoding='utf8') as data_file:
-            data_file.write(
-                json.dumps(self.current_data, indent=2, ensure_ascii=False)
-            )  # pretty json
-            return True
+        with open(
+            'json/'+ strftime("%d-%m-%Y") + '/' + file, 'w', encoding='utf8'
+            ) as data_file:
+                data_file.write(
+                    json.dumps(self.current_data, indent=2, ensure_ascii=False)
+                )  # pretty json
+        self.actors_list.append(self.current_data['name'])
+        actors_dict = {'actors' : self.actors_list}
+        with open('json/' + 'actors.json', 'w', encoding='utf8') as actor_file:
+            actor_file.write(
+                json.dumps(actors_dict, indent=2, ensure_ascii=False)
+            )
+        return True
 
     def get_page_name_and_like(self, page=None):
         self.scrape_current_page(page, query='name,fan_count')
@@ -88,7 +99,7 @@ class Scraper:
             self.current_data['name'],
             # self.current_data['fan_count'],
             # self.current_data['id'],
-            strftime("%d/%m/%Y")
+            strftime("%d-%m-%Y")
         ])
 
     def convert_to_csv(self, file_name='scraped'):

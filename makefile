@@ -111,14 +111,10 @@ json:
 .PHONY: clean
 clean:
 ifeq ($(OS), Windows_NT)
-	rm -f .\*.json
-	rm -f .\json\*.json
 	rm -f .\csv\*.csv
 	rm -rf .\htmlcov
 	rm -f .\.coverage
 else
-	rm -f ./*.json
-	rm -f $(JsonDir)*.json
 	rm -f $(CsvDir)*.csv
 	rm -rf ./htmlcov
 	rm -f ./.coverage

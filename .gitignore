@@ -1,8 +1,6 @@
 # User addition
 .DS_Store
 config.ini
-*.json
-./json/*.json
 /csv/*.csv
 
 # Byte-compiled / optimized / DLL files
