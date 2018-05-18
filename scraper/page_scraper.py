@@ -86,11 +86,6 @@ class Scraper:
                     json.dumps(self.current_data, indent=2, ensure_ascii=False)
                 )  # pretty json
         self.actors_list.append(self.current_data['name'])
-        actors_dict = {'actors' : self.actors_list}
-        with open('json/' + 'actors.json', 'w', encoding='utf8') as actor_file:
-            actor_file.write(
-                json.dumps(actors_dict, indent=2, ensure_ascii=False)
-            )
         return True
 
     def get_page_name_and_like(self, page=None):
@@ -262,3 +257,23 @@ class Scraper:
         self.current_data['total_posts'] = total_posts
         self.current_data['average_reactions'] = average_reaction
         self.current_data['average_comments'] = average_comments
+
+    def write_actors_file(self):
+        actors_dict = {'actors' : self.actors_list}
+        with open('json/' + 'actors.json', 'w', encoding='utf8') as actor_file:
+            actor_file.write(
+                json.dumps(actors_dict, indent=2, ensure_ascii=False)
+            )
+        for member in actors_list:
+            #Admitindo que o arquivo existe
+            if os.path.exists('json/actors/{}.json'.format(member)):
+                with open('json/actors/{}.json'.format(member)) as act_file:
+                    actor = json.load(act_file, 'r', encoding='utf8'))
+                    actor['samples'].append(strftime("%Y-%m-%d"))
+                    act_file.write(json.dumps(actor, indent=2, ensure_ascii=False))
+                    continue
+            with open('json/actors/{}.json'.format(member)) as act_file:
+                data = {}
+                data['name'] = member
+                data['samples'] = [strftime("%Y-%m-%d")]
+                act_file.write(json.dumps(data, indent=2, ensure_ascii=False))

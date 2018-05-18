@@ -36,7 +36,8 @@ def collect_all_pages():
         scraper.get_page_name_and_like()
         scraper.get_reactions()
         scraper.write_file()
-        scraper.convert_to_csv()
+        #scraper.convert_to_csv()
+    scraper.write_actors_file()
 
 
 if __name__ == '__main__':
