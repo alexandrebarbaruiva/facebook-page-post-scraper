@@ -1,1 +1,1 @@
-clock: python heroku_clock.py
+clock: python -m heroku_clock
