@@ -21,6 +21,9 @@ else
 	green3 -vvv
 endif
 
+data:
+	python3 scraper/new_data_collector.py
+
 run:
 ifeq ($(OS), Windows_NT)
 	python scraper\token_manager.py
