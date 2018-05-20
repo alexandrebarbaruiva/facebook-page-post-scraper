@@ -9,6 +9,7 @@ import facebook
 from pathlib import Path
 home = Path.home()
 
+
 class Scraper:
     """
     Scraper responsible for collecting posts from Facebook
@@ -79,7 +80,8 @@ class Scraper:
     def write_file(self, file=None):
         if file is None:
             file = self.file_name
-        with open(str(self.json_dir.joinpath(file)), 'w', encoding='utf8') as data_file:
+        with open(str(self.json_dir.joinpath(file)), 'w', encoding='utf8') \
+                as data_file:
             data_file.write(
                 json.dumps(self.current_data, indent=2, ensure_ascii=False)
             )  # pretty json

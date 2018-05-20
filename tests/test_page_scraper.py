@@ -13,6 +13,7 @@ from scraper.token_manager import \
 from pathlib import Path
 home = Path.home()
 
+
 class TestPageScraperBasics(unittest.TestCase):
 
     def setUp(self):
@@ -58,10 +59,18 @@ class TestPageScraping(unittest.TestCase):
         self.nome = 'nome'
         self.test = 'test'
         self.react = 'react'
-        self.csv_dir_file_nome = self.csv_dir.joinpath('{}_{}.csv'.format(self.nome, self.day_scraped))
-        self.csv_dir_file_test = self.csv_dir.joinpath('{}_{}.csv'.format(self.test, self.day_scraped))
-        self.csv_dir_file_react = self.csv_dir.joinpath('{}_{}.csv'.format(self.react, self.day_scraped))
-        self.json_dir_file_nome_json = self.json_dir.joinpath('{}.json'.format(self.github))
+        self.csv_dir_file_nome = self.csv_dir.joinpath(
+            '{}_{}.csv'.format(self.nome, self.day_scraped)
+        )
+        self.csv_dir_file_test = self.csv_dir.joinpath(
+            '{}_{}.csv'.format(self.test, self.day_scraped)
+        )
+        self.csv_dir_file_react = self.csv_dir.joinpath(
+            '{}_{}.csv'.format(self.react, self.day_scraped)
+        )
+        self.json_dir_file_nome_json = self.json_dir.joinpath(
+            '{}.json'.format(self.github)
+        )
         if not self.scraper.check_valid_token():
             if retrieve_password_file():
                 try:
@@ -114,7 +123,9 @@ class TestPageScraping(unittest.TestCase):
             page=self.github, feed=True, query=test_query
         )
         self.assertTrue(self.scraper.write_file())
-        self.assertTrue(self.json_dir_file_nome_json.is_file(), msg='File not found')
+        self.assertTrue(
+            self.json_dir_file_nome_json.is_file(), msg='File not found'
+        )
         # Deletar arqquivo na pasta
         if self.json_dir_file_nome_json.is_file():
             self.json_dir_file_nome_json.unlink()
@@ -230,7 +241,9 @@ class TestPageScraping(unittest.TestCase):
         self.scraper.get_page_name_and_like('135117696663585')
         self.scraper.get_reactions()
         self.scraper.convert_to_csv(self.react)
-        self.assertTrue(self.csv_dir_file_react.is_file(), msg='File not found')
+        self.assertTrue(
+            self.csv_dir_file_react.is_file(), msg='File not found'
+        )
         with open(str(self.csv_dir_file_react)) as file:
             reader = csv.reader(file)
             self.assertEqual(

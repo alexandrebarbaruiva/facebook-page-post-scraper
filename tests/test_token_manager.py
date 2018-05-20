@@ -147,7 +147,6 @@ class TestTokenCollectionWithBrowser(unittest.TestCase):
         except Exception as i:
             pass
 
-
     def test_check_function_for_manual_token(self):
         user_input = 'EDA0EdEloEse0cB'
         with patch('builtins.input', return_value=user_input):
@@ -213,7 +212,6 @@ class TestTokenCollection(unittest.TestCase):
             )
         else:
             self.fail('No user/password informed. Use autotoken.')
-
 
     def test_collect_token(self):
         if retrieve_password_file():
