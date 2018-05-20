@@ -264,15 +264,16 @@ class Scraper:
             actor_file.write(
                 json.dumps(actors_dict, indent=2, ensure_ascii=False)
             )
-        for member in actors_list:
+        for member in self.actors_list:
             #Admitindo que o arquivo existe
             if os.path.exists('json/actors/{}.json'.format(member)):
-                with open('json/actors/{}.json'.format(member)) as act_file:
-                    actor = json.load(act_file, 'r', encoding='utf8'))
+                with open('json/actors/{}.json'.format(member),'r+') as act_file:
+                    actor = json.load(act_file)
+                    act_file.seek(0)
                     actor['samples'].append(strftime("%Y-%m-%d"))
                     act_file.write(json.dumps(actor, indent=2, ensure_ascii=False))
                     continue
-            with open('json/actors/{}.json'.format(member)) as act_file:
+            with open('json/actors/{}.json'.format(member),'w') as act_file:
                 data = {}
                 data['name'] = member
                 data['samples'] = [strftime("%Y-%m-%d")]

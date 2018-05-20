@@ -28,6 +28,7 @@ def collect_all_pages():
     print(strftime("%d-%m-%Y"))
     if not os.path.exists(strftime("%d-%m-%Y")):
         os.mkdir(strftime("%d-%m-%Y"))
+        os.mkdir('actors')
     os.chdir("..")
 
     for page in pages:
@@ -36,7 +37,7 @@ def collect_all_pages():
         scraper.get_page_name_and_like()
         scraper.get_reactions()
         scraper.write_file()
-        #scraper.convert_to_csv()
+        scraper.convert_to_csv()
     scraper.write_actors_file()
 
 
