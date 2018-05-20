@@ -1,7 +1,7 @@
 import csv
 import sys
-from page_scraper import Scraper
-from token_manager import retrieve_token_file, get_user_password_decrypted, \
+from .page_scraper import Scraper
+from .token_manager import retrieve_token_file, get_user_password_decrypted, \
     retrieve_password_file
 
 
