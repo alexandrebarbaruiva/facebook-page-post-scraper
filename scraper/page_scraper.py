@@ -37,7 +37,7 @@ class Scraper:
         to scrape.
         """
         self.page = page
-        self.file_name = (str(self.page)+'.json')
+        self.file_name = (str(self.page))
 
     def get_current_page(self):
         try:
@@ -73,9 +73,9 @@ class Scraper:
             print(inst)
             return 'Page not defined or bad query structure'
 
-    def write_file(self, file=None):
+    def write_json(self, file=None):
         if file is None:
-            file = self.file_name
+            file = self.file_name + '.json'
         with open('json/'+file, 'w', encoding='utf8') as data_file:
             data_file.write(
                 json.dumps(self.current_data, indent=2, ensure_ascii=False)
@@ -91,7 +91,7 @@ class Scraper:
             strftime("%d/%m/%Y")
         ])
 
-    def convert_to_csv(self, file_name='scraped'):
+    def write_csv(self, file_name='scraped'):
         def dict_to_list():
             content = []
             for column in column_names:

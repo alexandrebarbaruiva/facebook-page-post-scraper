@@ -100,7 +100,7 @@ class TestPageScraping(unittest.TestCase):
         self.scraper.scrape_current_page(
             page=self.github, feed=True, query=test_query
         )
-        self.assertTrue(self.scraper.write_file())
+        self.assertTrue(self.scraper.write_json())
         self.assertTrue(os.path.exists('json/262588213843476.json'))
         os.remove(str(os.getcwd())+'/json/262588213843476.json')
 
@@ -119,15 +119,15 @@ class TestPageScraping(unittest.TestCase):
         Check if when presented with no content, csv converter returns a
         'No content found' instead of an empty csv
         """
-        self.assertEqual(self.scraper.convert_to_csv(), 'No content found.')
+        self.assertEqual(self.scraper.write_csv(), 'No content found.')
 
-    def test_if_conversion_to_csv_happens(self):
+    def test_if_writing_to_csv_happens(self):
         """
         Check if when presented with a page content, csv converter generates
         a csv file with the proper content
         """
         self.scraper.get_page_name_and_like(self.github)
-        self.assertTrue(self.scraper.convert_to_csv('nome'))
+        self.assertTrue(self.scraper.write_csv('nome'))
         self.assertTrue(
             os.path.exists('csv/nome_' + self.day_scraped + '.csv'),
             msg='File not found'
@@ -146,19 +146,19 @@ class TestPageScraping(unittest.TestCase):
             self.assertEqual(pages, 1)
         os.remove(str(os.getcwd())+'/csv/nome_' + self.day_scraped + '.csv')
 
-    def test_if_multiple_conversions_generate_one_file(self):
+    def test_if_multiple_writingss_generate_one_file(self):
         """
-        Check if when presented with multiple page contents, csv converter
+        Check if when presented with multiple page contents, csv writer
         generates only one csv file with the proper content of all pages and
         without duplicated pages
         """
         self.scraper.get_page_name_and_like('262588213843476')
-        self.scraper.convert_to_csv('test')
+        self.scraper.write_csv('test')
         self.scraper.get_page_name_and_like('135117696663585')
-        self.scraper.convert_to_csv('test')
+        self.scraper.write_csv('test')
         self.scraper.get_page_name_and_like('135117696663585')
-        self.scraper.convert_to_csv('test')
-        self.assertTrue(self.scraper.convert_to_csv('test'))
+        self.scraper.write_csv('test')
+        self.assertTrue(self.scraper.write_csv('test'))
         self.assertTrue(
             os.path.exists('csv/test_' + self.day_scraped + '.csv'),
             msg='File not found'
@@ -180,7 +180,7 @@ class TestPageScraping(unittest.TestCase):
     def test_if_get_reactions_works(self):
         self.scraper.get_page_name_and_like('262588213843476')
         self.scraper.get_reactions()
-        self.assertTrue(self.scraper.convert_to_csv('react'))
+        self.assertTrue(self.scraper.write_csv('react'))
         with open('csv/react_' + self.day_scraped + '.csv') as file:
             reader = csv.reader(file)
             self.assertEqual(
@@ -201,13 +201,13 @@ class TestPageScraping(unittest.TestCase):
     def test_if_get_reactions_works_with_more_pages(self):
         self.scraper.get_page_name_and_like('262588213843476')
         self.scraper.get_reactions()
-        self.scraper.convert_to_csv('react')
+        self.scraper.write_csv('react')
         self.scraper.get_page_name_and_like('135117696663585')
         self.scraper.get_reactions()
-        self.scraper.convert_to_csv('react')
+        self.scraper.write_csv('react')
         self.scraper.get_page_name_and_like('135117696663585')
         self.scraper.get_reactions()
-        self.scraper.convert_to_csv('react')
+        self.scraper.write_csv('react')
         self.assertTrue(
             os.path.exists('csv/react_' + self.day_scraped + '.csv'),
             msg='File not found'

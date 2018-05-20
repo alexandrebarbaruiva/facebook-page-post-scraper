@@ -28,8 +28,8 @@ def collect_all_pages():
         print(scraper.page)
         scraper.get_page_name_and_like()
         scraper.get_reactions()
-        scraper.write_file()
-        scraper.convert_to_csv()
+        scraper.write_json()
+        scraper.write_csv()
 
 
 def collect_2018():
@@ -79,7 +79,7 @@ def collect_2018():
                         scraper.get_reactions(
                             since_date=since_date, until_date=until_date
                         )
-                        scraper.write_file(file=filename)
+                        scraper.write_json(file=filename)
                     except Exception as inst:
                         print("Day {0} not found.".format(day+1))
                         print(inst)
