@@ -20,7 +20,7 @@ else
 	green3 -vvv
 endif
 
-run:
+run: 
 ifeq ($(OS), Windows_NT)
 	python -m scraper\collector
 else
@@ -29,7 +29,7 @@ endif
 
 heroku:
 ifeq ($(OS), Windows_NT)
-	python -m heroku_clock
+	python3 -m heroku_clock
 else
 	python3 -m heroku_clock
 endif

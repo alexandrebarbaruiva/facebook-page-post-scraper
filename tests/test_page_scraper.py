@@ -23,7 +23,7 @@ class TestPageScraperBasics(unittest.TestCase):
         if not self.scraper.check_valid_token():
             if retrieve_password_file():
                 try:
-                    get_user_password_decrypted()
+                    collect_token_automatically(*get_user_password_decrypted())
                 except Exception as inst:
                     print(inst)
                     self.fail('Token has expired, please renew it.')
@@ -74,9 +74,7 @@ class TestPageScraping(unittest.TestCase):
         if not self.scraper.check_valid_token():
             if retrieve_password_file():
                 try:
-                    collect_token_automatically(
-                        *decrypt_user_password(**retrieve_password_file())
-                    )
+                    collect_token_automatically(*get_user_password_decrypted())
                 except Exception as inst:
                     print(inst)
                     self.fail('Token has expired, please renew it.')
