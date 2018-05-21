@@ -18,7 +18,7 @@ def actor_name(actor_name):
 # def actor_name_json(actor_name):
 #     return jsonify({'actor_name' : actor_name})
 
-port = int(os.environ.get('PORT', 5000))
 
 if __name__ == "__main__":
+    #port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', debug=True)
