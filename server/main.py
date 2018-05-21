@@ -12,7 +12,7 @@ def hello():
 @app.route('/actors', methods=['GET'])
 def actor_name(actor_name):
     with open('json/actors.json') as actors:
-        return jsonify(json.load(actors)) 
+        return jsonify(actors['actors']) 
 
 # @app.route('/actorjson/<actor_name>', methods=['GET'])
 # def actor_name_json(actor_name):
@@ -20,5 +20,5 @@ def actor_name(actor_name):
 
 
 if __name__ == "__main__":
-    #port = int(os.environ.get('PORT', 5000))
+    port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', debug=True)
