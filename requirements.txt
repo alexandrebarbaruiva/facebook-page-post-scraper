@@ -1,9 +1,10 @@
 green
 pytest-cov
-pycodestyle
+pycodestyle==2.4.0
 sphinx
 -e git+https://github.com/mobolic/facebook-sdk.git#egg=facebook-sdk
 splinter
 cryptography
 radon
 pylint
+flask
