@@ -259,22 +259,30 @@ class Scraper:
         self.current_data['average_comments'] = average_comments
 
     def write_actors_file(self):
+        data = {}
         actors_dict = {'actors' : self.actors_list}
         with open('json/' + 'actors.json', 'w', encoding='utf8') as actor_file:
             actor_file.write(
                 json.dumps(actors_dict, indent=2, ensure_ascii=False)
             )
-        for member in self.actors_list:
+        if os.path.exists('json/{}.json'.format('date')):
             #Admitindo que o arquivo existe
-            if os.path.exists('json/actors/{}.json'.format(member)):
-                with open('json/actors/{}.json'.format(member),'r+') as act_file:
-                    actor = json.load(act_file)
-                    act_file.seek(0)
-                    actor['samples'].append(strftime("%Y-%m-%d"))
-                    act_file.write(json.dumps(actor, indent=2, ensure_ascii=False))
-                    continue
-            with open('json/actors/{}.json'.format(member),'w') as act_file:
-                data = {}
-                data['name'] = member
-                data['samples'] = [strftime("%Y-%m-%d")]
+            with open('json/{}.json'.format('date'),'r+') as act_file:
+                data = json.load(act_file)
+                for member in self.actors_list:
+                    if member in data.keys():
+                        if strftime("%Y-%m-%d") not in data[member]['samples']:
+                            data[member]['samples'].append(strftime("%Y-%m-%d"))
+                        continue
+                    else:
+                        data[member]={}
+                        data[member]['samples'] = [strftime("%Y-%m-%d")]
+                        continue
+                act_file.seek(0)
+                act_file.write(json.dumps(data, indent=2, ensure_ascii=False))
+        else:
+            for member in self.actors_list:
+                data[member]={}
+                data[member]['samples'] = [strftime("%Y-%m-%d")]
+            with open('json/{}.json'.format('date'),'w') as act_file:
                 act_file.write(json.dumps(data, indent=2, ensure_ascii=False))

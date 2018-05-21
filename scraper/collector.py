@@ -28,7 +28,6 @@ def collect_all_pages():
     print(strftime("%d-%m-%Y"))
     if not os.path.exists(strftime("%d-%m-%Y")):
         os.mkdir(strftime("%d-%m-%Y"))
-        os.mkdir('actors')
     os.chdir("..")
 
     for page in pages:
