@@ -10,13 +10,20 @@ def hello():
     return "Facebook Scraper."
 
 @app.route('/actors', methods=['GET'])
-def list_actors_collected():
+def show_actors_collected():
     with open('json/actors.json') as actors:
         return jsonify(json.load(actors)) 
 
-# @app.route('/actorjson/<actor_name>', methods=['GET'])
-# def actor_name_json(actor_name):
-#     return jsonify({'actor_name' : actor_name})
+
+@app.route('/date', methods=['GET'])
+def show_date():
+    with open('json/date.json') as date:
+        return jsonify(json.load(date))
+
+@app.route('/<date>/<actor_name>', methods=['GET'])
+def show_data_scraped(date, actor_name):
+    with open('json/' + date + '/' + actor_name + '.json') as scraped_data:
+        return jsonify(json.load(scraped_data))
 
 
 if __name__ == '__main__':
