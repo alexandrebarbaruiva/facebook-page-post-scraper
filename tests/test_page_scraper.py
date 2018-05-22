@@ -111,8 +111,8 @@ class TestPageScraping(unittest.TestCase):
             page=self.github, feed=True, query=test_query
         )
         self.assertTrue(self.scraper.write_file())
-        self.assertTrue(os.path.exists('json/' + strftime("%d-%m-%Y") + '262588213843476.json'))
-        os.remove(str(os.getcwd())+'json/' + strftime("%d-%m-%Y") + '262588213843476.json')
+        self.assertTrue(os.path.exists('json/' + strftime("%d-%m-%Y") + '/262588213843476.json'))
+        os.remove(str(os.getcwd())+'/json/' + strftime("%d-%m-%Y") + '/262588213843476.json')
 
 
     def test_if_csv_without_content_returns_nothing(self):

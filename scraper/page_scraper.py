@@ -75,7 +75,7 @@ class Scraper:
             print(inst)
             return 'Page not defined or bad query structure'
 
-    def write_file(self, actor_name, file=None):
+    def write_file(self, actor_name=None, file=None):
         if file is None:
             file = self.file_name
         with open(
@@ -84,7 +84,8 @@ class Scraper:
                 data_file.write(
                     json.dumps(self.current_data, indent=2, ensure_ascii=False)
                 )  # pretty json
-        self.actors_list.append(actor_name)
+        if actor_name is not None:
+            self.actors_list.append(actor_name)
         return True
 
     def get_page_name_and_like(self, page=None):
