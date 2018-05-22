@@ -7,6 +7,7 @@ face_file2 = venv/src/facebook-sdk/facebook/version.py
 default: test
 
 travis:
+	make autotoken
 	green3 tests.test_page_scraper
 	green3 tests.test_token_manager.TestTokenFunctions
 	green3 tests.test_token_manager.TestTokenSecurity
@@ -20,7 +21,7 @@ else
 	green3 -vvv
 endif
 
-run: 
+run:
 ifeq ($(OS), Windows_NT)
 	python -m scraper\collector
 else
