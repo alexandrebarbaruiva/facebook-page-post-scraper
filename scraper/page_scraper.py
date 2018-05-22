@@ -65,7 +65,7 @@ class Scraper:
                 fields=query
             )
             self.current_data = post
-            self.current_data['date'] = strftime("%d-%m-%Y")
+            self.current_data['date'] = strftime("%Y-%m-%d")
             # print(self.current_data)
             if 'name' in post.keys():
                 return post['name']
@@ -79,7 +79,7 @@ class Scraper:
         if file is None:
             file = self.file_name
         with open(
-            'json/'+ strftime("%d-%m-%Y") + '/' + file, 'w', encoding='utf8'
+            'json/'+ strftime("%Y-%m-%d") + '/' + file, 'w', encoding='utf8'
             ) as data_file:
                 data_file.write(
                     json.dumps(self.current_data, indent=2, ensure_ascii=False)
@@ -94,7 +94,7 @@ class Scraper:
             self.current_data['name'],
             # self.current_data['fan_count'],
             # self.current_data['id'],
-            strftime("%d-%m-%Y")
+            strftime("%Y-%m-%d")
         ])
 
     def convert_to_csv(self, file_name='scraped'):
@@ -259,7 +259,7 @@ class Scraper:
         self.current_data['average_comments'] = average_comments
 
     def write_actors_and_date_file(self):
-        data = {'date': [], 'latest': strftime("%d-%m-%Y")}
+        data = {'date': [], 'latest': strftime("%Y-%m-%d")}
         actors_dict = {'actors' : self.actors_list}
         with open('json/' + 'actors.json', 'w', encoding='utf8') as actor_file:
             actor_file.write(
@@ -270,13 +270,13 @@ class Scraper:
             with open('json/date.json', 'r+', encoding='utf8') as date_file:
                 data = json.load(date_file)
                 date_file.seek(0)
-                if strftime("%d-%m-%Y") not in data['date']:
-                    data['date'].append(strftime("%d-%m-%Y"))
+                if strftime("%Y-%m-%d") not in data['date']:
+                    data['date'].append(strftime("%Y-%m-%d"))
                     date_file.write(
                         json.dumps(data, indent = 2, ensure_ascii = False)
                     )
         else:
-            data['date'].append(strftime("%d-%m-%Y"))
+            data['date'].append(strftime("%Y-%m-%d"))
             with open('json/' + 'date.json', 'w', encoding='utf8') as date_file:
                 date_file.write(
                     json.dumps(data, indent=2, ensure_ascii=False)

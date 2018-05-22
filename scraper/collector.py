@@ -25,9 +25,9 @@ def collect_all_pages():
                 raise inst
 
     os.chdir("json")
-    print(strftime("%d-%m-%Y"))
-    if not os.path.exists(strftime("%d-%m-%Y")):
-        os.mkdir(strftime("%d-%m-%Y"))
+    print(strftime("%Y-%m-%d"))
+    if not os.path.exists(strftime("%Y-%m-%d")):
+        os.mkdir(strftime("%Y-%m-%d"))
     os.chdir("..")
 
     for page in pages:

@@ -99,7 +99,7 @@ class TestPageScraping(unittest.TestCase):
         """
         self.assertEqual(
             self.scraper.get_page_name_and_like('262588213843476'),
-            ['GitHub', strftime("%d-%m-%Y")]
+            ['GitHub', strftime("%Y-%m-%d")]
         )
 
     def test_if_scraping_outputs_file(self):
@@ -111,8 +111,8 @@ class TestPageScraping(unittest.TestCase):
             page=self.github, feed=True, query=test_query
         )
         self.assertTrue(self.scraper.write_file())
-        self.assertTrue(os.path.exists('json/' + strftime("%d-%m-%Y") + '/262588213843476.json'))
-        os.remove(str(os.getcwd())+'/json/' + strftime("%d-%m-%Y") + '/262588213843476.json')
+        self.assertTrue(os.path.exists('json/' + strftime("%Y-%m-%d") + '/262588213843476.json'))
+        os.remove(str(os.getcwd())+'/json/' + strftime("%Y-%m-%d") + '/262588213843476.json')
 
 
     def test_if_csv_without_content_returns_nothing(self):
