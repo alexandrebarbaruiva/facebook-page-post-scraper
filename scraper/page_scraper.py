@@ -75,7 +75,7 @@ class Scraper:
             print(inst)
             return 'Page not defined or bad query structure'
 
-    def write_file(self, file=None):
+    def write_file(self, actor_name, file=None):
         if file is None:
             file = self.file_name
         with open(
@@ -84,7 +84,7 @@ class Scraper:
                 data_file.write(
                     json.dumps(self.current_data, indent=2, ensure_ascii=False)
                 )  # pretty json
-        self.actors_list.append(self.current_data['name'])
+        self.actors_list.append(actor_name)
         return True
 
     def get_page_name_and_like(self, page=None):
@@ -258,7 +258,7 @@ class Scraper:
         self.current_data['average_comments'] = average_comments
 
     def write_actors_and_date_file(self):
-        data = {'date': []}
+        data = {'date': [], 'latest': strftime("%d-%m-%Y")}
         actors_dict = {'actors' : self.actors_list}
         with open('json/' + 'actors.json', 'w', encoding='utf8') as actor_file:
             actor_file.write(
@@ -269,15 +269,16 @@ class Scraper:
             with open('json/date.json', 'r+', encoding='utf8') as date_file:
                 data = json.load(date_file)
                 date_file.seek(0)
-                if strftime("%Y-%m-%d") not in data['date']:
-                    data['date'].append(strftime("%Y-%m-%d"))
+                if strftime("%d-%m-%Y") not in data['date']:
+                    data['date'].append(strftime("%d-%m-%Y"))
                     date_file.write(
                         json.dumps(data, indent = 2, ensure_ascii = False)
                     )
         else:
-            data['date'].append(strftime("%Y-%m-%d"))
+            data['date'].append(strftime("%d-%m-%Y"))
             with open('json/' + 'date.json', 'w', encoding='utf8') as date_file:
                 date_file.write(
                     json.dumps(data, indent=2, ensure_ascii=False)
                 )
+
 
