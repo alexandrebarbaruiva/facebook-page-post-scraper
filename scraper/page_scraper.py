@@ -17,7 +17,6 @@ class Scraper:
         self.current_data = ''
         self.file_name = None
         self.actors_list = []
-        self.date_dict = {'dates': []}
         self.date_list = []
         if not os.path.exists('csv/'):
             os.makedirs('csv/')
@@ -258,31 +257,27 @@ class Scraper:
         self.current_data['average_reactions'] = average_reaction
         self.current_data['average_comments'] = average_comments
 
-    def write_actors_file(self):
-        data = {}
+    def write_actors_and_date_file(self):
+        data = {'date': []}
         actors_dict = {'actors' : self.actors_list}
         with open('json/' + 'actors.json', 'w', encoding='utf8') as actor_file:
             actor_file.write(
                 json.dumps(actors_dict, indent=2, ensure_ascii=False)
             )
-        if os.path.exists('json/{}.json'.format('date')):
+        if os.path.exists('json/date.json'):
             #Admitindo que o arquivo existe
-            with open('json/{}.json'.format('date'),'r+') as act_file:
-                data = json.load(act_file)
-                for member in self.actors_list:
-                    if member in data.keys():
-                        if strftime("%Y-%m-%d") not in data[member]['samples']:
-                            data[member]['samples'].append(strftime("%Y-%m-%d"))
-                        continue
-                    else:
-                        data[member]={}
-                        data[member]['samples'] = [strftime("%Y-%m-%d")]
-                        continue
-                act_file.seek(0)
-                act_file.write(json.dumps(data, indent=2, ensure_ascii=False))
+            with open('json/date.json', 'r+', encoding='utf8') as date_file:
+                data = json.load(date_file)
+                date_file.seek(0)
+                if strftime("%Y-%m-%d") not in data['date']:
+                    data['date'].append(strftime("%Y-%m-%d"))
+                    date_file.write(
+                        json.dumps(data, indent = 2, ensure_ascii = False)
+                    )
         else:
-            for member in self.actors_list:
-                data[member]={}
-                data[member]['samples'] = [strftime("%Y-%m-%d")]
-            with open('json/{}.json'.format('date'),'w') as act_file:
-                act_file.write(json.dumps(data, indent=2, ensure_ascii=False))
+            data['date'].append(strftime("%Y-%m-%d"))
+            with open('json/' + 'date.json', 'w', encoding='utf8') as date_file:
+                date_file.write(
+                    json.dumps(data, indent=2, ensure_ascii=False)
+                )
+

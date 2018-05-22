@@ -2,8 +2,6 @@
 .DS_Store
 config.ini
 /csv/*.csv
-/json/*.json
-/json/actors/*.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
