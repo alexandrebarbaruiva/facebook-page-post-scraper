@@ -23,11 +23,16 @@ endif
 
 run:
 ifeq ($(OS), Windows_NT)
-	python scraper\token_manager.py
-	python scraper\collector.py
+	python -m scraper\collector
 else
-	python3 scraper/token_manager.py
-	python3 scraper/collector.py
+	python3 -m scraper.collector
+endif
+
+heroku:
+ifeq ($(OS), Windows_NT)
+	python3 -m heroku_clock
+else
+	python3 -m heroku_clock
 endif
 
 tm:
@@ -88,7 +93,7 @@ install:
 
 .PHONY: autotoken
 autotoken:
-	python3 scraper/token_manager.py
+	python3 -m scraper.token_manager
 
 .PHONY: chromedriver
 chromedriver:
@@ -160,6 +165,8 @@ ifeq ($(OS), Windows_NT)
 	@echo                     to use it
 	@echo  make chromedriver= Install chromedriver for get the token automatically,
 	@echo                     works in Linux
+	@echo  make heroku......= Realiza o agendamento do serviço de coleta de dados
+	@echo                     diariamente. A configuração é feita no arquivo heroku_clock.
 	@echo.
 	@echo      End of Makefile Help
 	@echo.
@@ -184,5 +191,7 @@ else
 	@echo "                    to use it"
 	@echo " make chromedriver= Install chromedriver for get the token automatically, "
 	@echo "                    works in Linux"
+	@echo " make heroku......= Realiza o agendamento do serviço de coleta de dados"
+	@echo "                    diariamente. A configuração é feita no arquivo heroku_clock."
 	@echo "\n\t End of Makefile Help\n"
 endif

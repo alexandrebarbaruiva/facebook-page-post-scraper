@@ -65,4 +65,41 @@ Para verificar se o seu código encontra-se bem indentado e bonito, use o seguin
 ```
 make style
 ```
-Importante usar este comando antes de mandar uma PR para garantir código mais legível.
+Importante usar este comando antes de mandar uma PR para garantir código mais legível..
+
+## Heroku
+
+O Heroku é uma das mais populares de plataforma como serviço que suporta aplicações escritas em diversas linguagens, dentre elas, Python, java, node, etc. 
+
+Primeiro precisa criar uma conta.
+
+requirements.txt - especifica todas as dependencias que a aplicação precisa para rodar dentro do Heroku.
+
+Procfile - especifica os comandos que serão executados pela aplicação dentro da máquina Dynos. Nossa aplicação é um serviço de coleta de dados que será todos dias da semana em um horário especifico.
+Formato do arquivo:
+clock: python heroku_clock.py
+
+runtime.txt - especifica a versão do python que é suportada pela aplicação.
+python-3.5.2
+
+Link Heroku - ([facebook-page-post-scraper](https://dashboard.heroku.com/apps/facebook-page-post-scraper)).
+
+Clone do repositorio:
+heroku git:clone -a facebook-page-post-scraper
+
+Adicionar um remote:
+heroku login
+git remote add heroku https://git.heroku.com/facebook-page-post-scraper.git
+git pull heroku master
+
+Link Heroku - Git ([Deploying with Git](https://devcenter.heroku.com/articles/git)).
+
+Link Heroku - Agendamento ([Scheduled (Agendamento)](https://devcenter.heroku.com/articles/scheduled-jobs-custom-clock-processes)).
+
+## APScheduled
+
+É uma biblioteca em python que permite realizar agendamento de tarefas (jobs). ([APScheduled](http://apscheduler.readthedocs.io/en/latest/modules/triggers/cron.html)).
+
+## Agendamento
+
+python heroku_clock.py

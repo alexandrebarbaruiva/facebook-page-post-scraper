@@ -6,6 +6,9 @@ from time import strftime
 import requests
 import facebook
 
+from pathlib import Path
+home = Path.home()
+
 
 class Scraper:
     """
@@ -15,11 +18,12 @@ class Scraper:
         self.token = token
         self.status_code = 400
         self.current_data = ''
-        self.file_name = None
-        if not os.path.exists('csv/'):
-            os.makedirs('csv/')
-        if not os.path.exists('json/'):
-            os.makedirs('json/')
+        self.csv_dir = home.joinpath('csv')
+        self.json_dir = home.joinpath('json')
+        if not self.csv_dir.is_dir():
+            self.csv_dir.mkdir()
+        if not self.json_dir.is_dir():
+            self.json_dir.mkdir()
 
     def check_valid_token(self):
         """
@@ -76,7 +80,8 @@ class Scraper:
     def write_file(self, file=None):
         if file is None:
             file = self.file_name
-        with open('json/'+file, 'w', encoding='utf8') as data_file:
+        with open(str(self.json_dir.joinpath(file)), 'w', encoding='utf8') \
+                as data_file:
             data_file.write(
                 json.dumps(self.current_data, indent=2, ensure_ascii=False)
             )  # pretty json
@@ -129,11 +134,12 @@ class Scraper:
         today = strftime("%Y-%m-%d_%Hh")
 
         # Check if file already exists to append instead of create
-        if os.path.exists('csv/{}_{}.csv'.format(file_name, today)):
+        csv_file = self.csv_dir.joinpath('{}_{}.csv'.format(file_name, today))
+        if csv_file.exists():
             content = dict_to_list()
             # Check if content already exists in csv
             with open(
-                    'csv/{}_{}.csv'.format(file_name, today), 'r') as csvfile:
+                    str(csv_file), 'r') as csvfile:
                 reader = csv.reader(csvfile)
                 reader_list = list(reader)
                 for row in reader_list:
@@ -141,13 +147,13 @@ class Scraper:
                         return True
             # Write content on CSV because it's not duplicated
             with open(
-                    'csv/{}_{}.csv'.format(file_name, today), 'a') as csvfile:
+                    str(csv_file), 'a') as csvfile:
                 info = csv.writer(csvfile)
                 info.writerow(content)
             return True
 
         # Create file because file doesn't exist
-        with open('csv/{}_{}.csv'.format(file_name, today), 'w') as csvfile:
+        with open(str(csv_file), 'w') as csvfile:
             info = csv.writer(csvfile)
             content = dict_to_list()
             info.writerow(column_names)
