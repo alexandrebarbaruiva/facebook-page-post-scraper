@@ -17,14 +17,19 @@ ifeq ($(OS), Windows_NT)
 	make clean
 	green3 -vv
 else
-	make clean
-	green3 -vvv
+	@make clean
+	green3 -vv
 endif
+
+data:
+	python3 scraper/new_data_collector.py
 
 run:
 ifeq ($(OS), Windows_NT)
+	python3 scraper\token_manager.py
 	python -m scraper\collector
 else
+	python3 scraper/token_manager.py
 	python3 -m scraper.collector
 endif
 
@@ -76,7 +81,7 @@ ifeq ($(OS), Windows_NT)
 	coverage html scraper\page_scraper.py scraper\token_manager.py
 	make style
 else
-	make clean
+	@make clean
 	green3 -vvv --run-coverage -f -o $(face_file1),$(face_file2)
 	coverage html scraper/page_scraper.py scraper/token_manager.py
 	make style
