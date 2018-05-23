@@ -1,6 +1,7 @@
 # Facebook Scraper
 
 [![Build Status](https://travis-ci.org/unb-cic-esw/facebook-page-post-scraper.svg?branch=master)](https://travis-ci.org/unb-cic-esw/facebook-page-post-scraper)
+[![Maintainability](https://api.codeclimate.com/v1/badges/6d78fb4221b49847ca9c/maintainability)](https://codeclimate.com/github/unb-cic-esw/facebook-page-post-scraper/maintainability)
 
 ## Fazendo tudo rodar
 
@@ -69,7 +70,7 @@ Importante usar este comando antes de mandar uma PR para garantir código mais l
 
 ## Heroku
 
-O Heroku é uma das mais populares de plataforma como serviço que suporta aplicações escritas em diversas linguagens, dentre elas, Python, java, node, etc. 
+O Heroku é uma das mais populares de plataforma como serviço que suporta aplicações escritas em diversas linguagens, dentre elas, Python, java, node, etc.
 
 Primeiro precisa criar uma conta.
 

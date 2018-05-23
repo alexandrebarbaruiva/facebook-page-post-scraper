@@ -191,20 +191,16 @@ class Scraper:
             num_shares, total_reaction, total_comments, total_shares
 
     def get_reactions(self, page=None, since_date=None, until_date=None):
-
         graph = facebook.GraphAPI(access_token=self.token, version="2.12")
-
         if page is None:
             page = self.page
         if not self.valid_page(page):
             return "Page is not valid."
-
         if since_date is None:
             month = str(int(strftime("%m"))-1)
             since_date = strftime("%Y-") + month + strftime("-%d")
         if until_date is None:
             until_date = strftime("%Y-%m-%d")
-
         total_reaction = 0
         total_comments = 0
         total_shares = 0
@@ -212,12 +208,10 @@ class Scraper:
         has_next_page = True
         num_processed = 0
         after = ''
-
         since = "&since={}".format(since_date) if since_date \
             != '' else ''
         until = "&until={}".format(until_date) if until_date \
             != '' else ''
-
         while has_next_page:
             after = '' if after == '' else "&after={}".format(after)
             fields = "fields=message,created_time,type,id," + \
@@ -245,7 +239,6 @@ class Scraper:
                             num_processed, datetime.datetime.now()
                         )
                     )
-
             # if there is no next page, we're done.
             if 'paging' in statuses:
                 after = statuses['paging']['cursors']['after']

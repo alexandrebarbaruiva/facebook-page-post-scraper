@@ -1,0 +1,6 @@
+version: "2"
+plugins:
+ radon:
+  enabled: true
+ markdownlint:
+  enabled: true
