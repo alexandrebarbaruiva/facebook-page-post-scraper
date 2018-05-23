@@ -11,7 +11,6 @@ from scraper.token_manager import \
     get_user_password_decrypted
 
 
-
 class TestPageScraperBasics(unittest.TestCase):
 
     def setUp(self):
@@ -104,7 +103,7 @@ class TestPageScraping(unittest.TestCase):
         self.assertTrue(self.scraper.write_to_json())
         self.assertTrue(
             os.path.exists('json/262588213843476.json'),
-            msg = 'File not found'
+            msg='File not found'
         )
         # Deletar arqquivo na pasta
         try:
@@ -154,8 +153,10 @@ class TestPageScraping(unittest.TestCase):
             self.assertEqual(pages, 1)
         # Deletar arqquivo na pasta
         try:
-            os.remove(str(os.getcwd())+'/csv/nome_' + self.day_scraped + '.csv')
-        except Exception as inst:
+            os.remove(
+                str(os.getcwd())+'/csv/nome_' + self.day_scraped + '.csv'
+            )
+        except FileNotFoundError:
             pass
 
     def test_if_multiple_writings_generate_one_file(self):
@@ -189,7 +190,9 @@ class TestPageScraping(unittest.TestCase):
             self.assertEqual(pages, 2)
         # Deletar arqquivo na pasta
         try:
-            os.remove(str(os.getcwd())+'/csv/test_' + self.day_scraped + '.csv')
+            os.remove(
+                str(os.getcwd())+'/csv/test_' + self.day_scraped + '.csv'
+            )
         except FileNotFoundError:
             pass
 
@@ -213,7 +216,9 @@ class TestPageScraping(unittest.TestCase):
                 pages += 1
             self.assertEqual(pages, 1)
         try:
-            os.remove(str(os.getcwd())+'/csv/react_' + self.day_scraped + '.csv')
+            os.remove(
+                str(os.getcwd())+'/csv/react_' + self.day_scraped + '.csv'
+            )
         except FileNotFoundError:
             pass
 
@@ -248,7 +253,9 @@ class TestPageScraping(unittest.TestCase):
             self.assertEqual(pages, 2)
         # Deletar arqquivo na pasta
         try:
-            os.remove(str(os.getcwd())+'/csv/react_' + self.day_scraped + '.csv')
+            os.remove(
+                str(os.getcwd())+'/csv/react_' + self.day_scraped + '.csv'
+            )
         except FileNotFoundError:
             pass
 
