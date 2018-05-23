@@ -10,8 +10,6 @@ from scraper.token_manager import \
     collect_token_automatically, decrypt_user_password, \
     get_user_password_decrypted
 
-from pathlib import Path
-home = Path.home()
 
 
 class TestPageScraperBasics(unittest.TestCase):
@@ -54,23 +52,6 @@ class TestPageScraping(unittest.TestCase):
         self.scraper = Scraper(retrieve_token_file())
         self.github = '262588213843476'
         self.day_scraped = strftime("%Y-%m-%d_%Hh")
-        self.csv_dir = home.joinpath('csv')
-        self.json_dir = home.joinpath('json')
-        self.nome = 'nome'
-        self.test = 'test'
-        self.react = 'react'
-        self.csv_dir_file_nome = self.csv_dir.joinpath(
-            '{}_{}.csv'.format(self.nome, self.day_scraped)
-        )
-        self.csv_dir_file_test = self.csv_dir.joinpath(
-            '{}_{}.csv'.format(self.test, self.day_scraped)
-        )
-        self.csv_dir_file_react = self.csv_dir.joinpath(
-            '{}_{}.csv'.format(self.react, self.day_scraped)
-        )
-        self.json_dir_file_nome_json = self.json_dir.joinpath(
-            '{}.json'.format(self.github)
-        )
         if not self.scraper.check_valid_token():
             if retrieve_password_file():
                 try:
@@ -120,16 +101,16 @@ class TestPageScraping(unittest.TestCase):
         self.scraper.scrape_current_page(
             page=self.github, feed=True, query=test_query
         )
-        self.assertTrue(self.scraper.write_json())
+        self.assertTrue(self.scraper.write_to_json())
         self.assertTrue(
-            self.json_dir_file_nome_json.is_file(),
-            msg = str(self.json_dir_file_nome_json) + ' not found'
+            os.path.exists('json/262588213843476.json'),
+            msg = 'File not found'
         )
         # Deletar arqquivo na pasta
-        if self.json_dir_file_nome_json.is_file():
-            self.json_dir_file_nome_json.unlink()
-        else:
-            print("Arquivo não existe: " + str(self.json_dir_file_nome_json))
+        try:
+            os.remove(str(os.getcwd())+'/json/262588213843476.json')
+        except FileNotFoundError:
+            pass
 
     def test_scraping_name_and_likes(self):
         """
@@ -146,18 +127,21 @@ class TestPageScraping(unittest.TestCase):
         Check if when presented with no content, csv converter returns a
         'No content found' instead of an empty csv
         """
-        self.assertEqual(self.scraper.write_csv(), 'No content found.')
+        self.assertEqual(self.scraper.write_to_csv(), 'No content found.')
 
     def test_if_writing_to_csv_happens(self):
         """
-        Check if when presented with a page content, csv converter generates
+        Check if when presented with a page content, csv writer generates
         a csv file with the proper content
         """
         self.scraper.get_page_name_and_like(self.github)
-        self.assertTrue(self.scraper.write_csv(self.nome))
-        self.assertTrue(self.csv_dir_file_nome.is_file(), msg='File not found')
+        self.assertTrue(self.scraper.write_to_csv('nome'))
+        self.assertTrue(
+            os.path.exists('csv/nome_' + self.day_scraped + '.csv'),
+            msg='File not found'
+        )
         # Check if csv header is as expected
-        with open(str(self.csv_dir_file_nome)) as file:
+        with open('csv/nome_' + self.day_scraped + '.csv') as file:
             reader = csv.reader(file)
             self.assertEqual(
                 next(reader),
@@ -169,27 +153,30 @@ class TestPageScraping(unittest.TestCase):
                 pages += 1
             self.assertEqual(pages, 1)
         # Deletar arqquivo na pasta
-        if self.csv_dir_file_nome.is_file():
-            self.csv_dir_file_nome.unlink()
-        else:
-            print("Arquivo não existe: " + str(self.csv_dir_file_nome))
+        try:
+            os.remove(str(os.getcwd())+'/csv/nome_' + self.day_scraped + '.csv')
+        except Exception as inst:
+            pass
 
-    def test_if_multiple_writingss_generate_one_file(self):
+    def test_if_multiple_writings_generate_one_file(self):
         """
         Check if when presented with multiple page contents, csv writer
         generates only one csv file with the proper content of all pages and
         without duplicated pages
         """
         self.scraper.get_page_name_and_like('262588213843476')
-        self.scraper.write_csv('test')
+        self.scraper.write_to_csv('test')
         self.scraper.get_page_name_and_like('135117696663585')
-        self.scraper.write_csv('test')
+        self.scraper.write_to_csv('test')
         self.scraper.get_page_name_and_like('135117696663585')
-        self.scraper.write_csv('test')
-        self.assertTrue(self.scraper.write_csv(self.test))
-        self.assertTrue(self.csv_dir_file_test.is_file(), msg='File not found')
+        self.scraper.write_to_csv('test')
+        self.assertTrue(self.scraper.write_to_csv('test'))
+        self.assertTrue(
+            os.path.exists('csv/test_' + self.day_scraped + '.csv'),
+            msg='File not found'
+        )
         # Check if csv header is as expected
-        with open(str(self.csv_dir_file_test)) as file:
+        with open('csv/test_' + self.day_scraped + '.csv') as file:
             reader = csv.reader(file)
             self.assertEqual(
                 next(reader),
@@ -201,16 +188,16 @@ class TestPageScraping(unittest.TestCase):
                 pages += 1
             self.assertEqual(pages, 2)
         # Deletar arqquivo na pasta
-        if self.csv_dir_file_test.is_file():
-            self.csv_dir_file_test.unlink()
-        else:
-            print("Arquivo não existe: " + str(self.csv_dir_file_test))
+        try:
+            os.remove(str(os.getcwd())+'/csv/test_' + self.day_scraped + '.csv')
+        except FileNotFoundError:
+            pass
 
     def test_if_get_reactions_works(self):
         self.scraper.get_page_name_and_like('262588213843476')
         self.scraper.get_reactions()
-        self.assertTrue(self.scraper.write_csv(self.react))
-        with open(str(self.csv_dir_file_react)) as file:
+        self.assertTrue(self.scraper.write_to_csv('react'))
+        with open('csv/react_' + self.day_scraped + '.csv') as file:
             reader = csv.reader(file)
             self.assertEqual(
                 next(reader),
@@ -225,26 +212,26 @@ class TestPageScraping(unittest.TestCase):
             for row in reader:
                 pages += 1
             self.assertEqual(pages, 1)
-        # Deletar arqquivo na pasta
-        if self.csv_dir_file_react.is_file():
-            self.csv_dir_file_react.unlink()
-        else:
-            print("Arquivo não existe: " + str(self.csv_dir_file_react))
+        try:
+            os.remove(str(os.getcwd())+'/csv/react_' + self.day_scraped + '.csv')
+        except FileNotFoundError:
+            pass
 
     def test_if_get_reactions_works_with_more_pages(self):
         self.scraper.get_page_name_and_like('262588213843476')
         self.scraper.get_reactions()
-        self.scraper.write_csv('react')
+        self.scraper.write_to_csv('react')
         self.scraper.get_page_name_and_like('135117696663585')
         self.scraper.get_reactions()
-        self.scraper.write_csv('react')
+        self.scraper.write_to_csv('react')
         self.scraper.get_page_name_and_like('135117696663585')
         self.scraper.get_reactions()
-        self.scraper.write_csv('react')
+        self.scraper.write_to_csv('react')
         self.assertTrue(
-            self.csv_dir_file_react.is_file(), msg='File not found'
+            os.path.exists('csv/react_' + self.day_scraped + '.csv'),
+            msg='File not found'
         )
-        with open(str(self.csv_dir_file_react)) as file:
+        with open('csv/react_' + self.day_scraped + '.csv') as file:
             reader = csv.reader(file)
             self.assertEqual(
                 next(reader),
@@ -260,10 +247,10 @@ class TestPageScraping(unittest.TestCase):
                 pages += 1
             self.assertEqual(pages, 2)
         # Deletar arqquivo na pasta
-        if self.csv_dir_file_react.is_file():
-            self.csv_dir_file_react.unlink()
-        else:
-            print("Arquivo não existe: " + str(self.csv_dir_file_react))
+        try:
+            os.remove(str(os.getcwd())+'/csv/react_' + self.day_scraped + '.csv')
+        except FileNotFoundError:
+            pass
 
     def test_if_valid_page_works(self):
         """
