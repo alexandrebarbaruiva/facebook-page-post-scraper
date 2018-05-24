@@ -1,3 +1,6 @@
+
+##[Portuguese Readme](./README.md)     //    [English Readme](./Language/English/README.md)
+
 # Facebook Scraper
 
 [![Build Status](https://travis-ci.org/unb-cic-esw/facebook-page-post-scraper.svg?branch=master)](https://travis-ci.org/unb-cic-esw/facebook-page-post-scraper)
