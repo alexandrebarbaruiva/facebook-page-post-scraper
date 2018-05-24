@@ -11,6 +11,6 @@ def job_function():
 	collect_token()
 	collect_all_pages()
 
-sched.add_job(job_function,'cron', day_of_week='mon-sun', hour=11, minute=1)
+sched.add_job(job_function,'cron', day_of_week='mon-sun', hour=11, minute=2)
 
 sched.start()
