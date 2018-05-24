@@ -26,10 +26,10 @@ data:
 
 run:
 ifeq ($(OS), Windows_NT)
-	python3 scraper\token_manager.py
 	python -m scraper\collector
 else
-	python3 scraper/token_manager.py
+	mkdir -p $(JsonDir)
+	mkdir -p $(CsvDir)
 	python3 -m scraper.collector
 endif
 
