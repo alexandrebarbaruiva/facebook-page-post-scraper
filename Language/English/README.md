@@ -36,8 +36,9 @@ For Linux and MacOS users use:
 make chromedriver
 ```
 
-For Windows, is necessary to follow Splinter instructions:([Instructions to download 
-ChromeDriver](https://splinter.readthedocs.io/en/latest/drivers/chrome.html)).
+For Windows, is necessary to follow Splinter instructions:
+([Instructions to download ChromeDriver]
+(https://splinter.readthedocs.io/en/latest/drivers/chrome.html)).
 Once ChromeDriver installed sucessfully use
 
 ```

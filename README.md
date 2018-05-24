@@ -37,7 +37,8 @@ Para isso devemos baixar o ChromeDriver. Para Linux e MacOS basta utilizar o com
 make chromedriver
 ```
 
-Para Windows, é necessário seguir as instruções do Splinter para Windows:([Instruções para baixar ChromeDriver](https://splinter.readthedocs.io/en/latest/drivers/chrome.html)).
+Para Windows, é necessário seguir as instruções do Splinter para Windows:([Instruções para 
+baixar ChromeDriver](https://splinter.readthedocs.io/en/latest/drivers/chrome.html)).
 Uma vez com o ChromeDriver instalado corretamente,para a aquisição do Token basta digitar
 
 ```
