@@ -1,5 +1,5 @@
 
-##[Portuguese Readme](../../README.md) // [English Readme](./README.md)
+####  [Portuguese Readme](../../README.md)  |  [English Readme](./README.md)
 
 # Facebook Scraper 
 
