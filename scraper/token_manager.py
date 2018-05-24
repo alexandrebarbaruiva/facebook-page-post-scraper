@@ -98,11 +98,12 @@ def collect_token_automatically(email, password, file='config.ini'):
     this function will login on user's Facebook and get his
     "User Token Acces" and save in config.ini
     """
-    with Browser('chrome', headless=True) as browser:
+    with Browser('chrome', headless=False) as browser:
         # Visit Facebook developers web site
         try:
             browser.driver.set_window_size(1100, 800)
-            url = "https://developers.facebook.com/tools/explorer/?locale=en_US"
+            url = "https://developers.facebook.com/tools/explorer" \
+                "/?locale=en_US"
             browser.visit(url)
             # Find the login button, if not found means error
             # conecting with the Facebook
@@ -157,7 +158,8 @@ def collect_token_manually(file='config.ini'):
     this function will open facebook page so he can login on user's Facebook,
     get his "User Token Acces", paste on the terminal so we save in config.ini
     """
-    webbrowser.open('https://developers.facebook.com/tools/explorer?locale=en_US')
+    url = 'https://developers.facebook.com/tools/explorer?locale=en_US'
+    webbrowser.open(url)
     # update token and print if it worked
     manually_get_token = input()
     update_token_file(file, **{'token': manually_get_token})

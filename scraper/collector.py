@@ -23,7 +23,7 @@ def collect_all_pages():
                 print(inst)
                 return -1
         else:
-            try: 
+            try:
                 collect_token()
                 scraper = Scraper(retrieve_token_file())
             except Exception as inst:
