@@ -37,9 +37,9 @@ make chromedriver
 For Windows, is necessary to follow Splinter instructions:([Instruncions to download ChromeDriver](https://splinter.readthedocs.io/en/latest/drivers/chrome.html)).
 Once ChromeDriver installed sucessfully use
 ```
-make
+make run
 ```
-and follow the instructions to use the program.
+and follow the instructions to use the program. The file `entidades.csv` define which pages we are scrapping, so update it as you want.
 
 ## Testing the code
 

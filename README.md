@@ -38,16 +38,11 @@ Uma vez com o ChromeDriver instalado corretamente,para a aquisição do Token ba
 ```
 make autotoken
 ```
-e seguir as instruções do programa.
+## Usando o Programa
 
-## Modelo para arquivo Token
-
-O armazenamento do token está ocorrendo em um arquivo chamado config.ini para
-evitar falhas de segurança como compartilhamento indevido de tokens
-
+Uma vez com todas as configurações feitas, use:
 ```
-[DEFAULT]
-token={SEUTOKENGIGANTEAQUI}
+make run
 ```
 
 ## Rodando testes
