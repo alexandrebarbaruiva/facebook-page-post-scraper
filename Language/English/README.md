@@ -1,7 +1,6 @@
-
-####  [Portuguese Readme](../../README.md)  |  [English Readme](./README.md)
-
 # Facebook Scraper 
+
+#### [Portuguese Readme](../../README.md) | [English Readme](./README.md)
 
 [![Build Status](https://travis-ci.org/unb-cic-esw/facebook-page-post-scraper.svg?branch=master)](https://travis-ci.org/unb-cic-esw/facebook-page-post-scraper)
 [![Maintainability](https://api.codeclimate.com/v1/badges/6d78fb4221b49847ca9c/maintainability)](https://codeclimate.com/github/unb-cic-esw/facebook-page-post-scraper/maintainability)
@@ -24,22 +23,29 @@ make install
 ```
 
 For Windows
+
 ```
 pip install -r requirements.txt
 ```
 
-Once you have installed everything, is necessary ChromeDriver to update and configure the token. You
-need to Download it and add to your PATH.
+Once you have installed everything, is necessary ChromeDriver to update and 
+configure the token. You need to Download it and add to your PATH.
 For Linux and MacOS users use:
+
 ```
 make chromedriver
 ```
-For Windows, is necessary to follow Splinter instructions:([Instruncions to download ChromeDriver](https://splinter.readthedocs.io/en/latest/drivers/chrome.html)).
+
+For Windows, is necessary to follow Splinter instructions:([Instructions to download 
+ChromeDriver](https://splinter.readthedocs.io/en/latest/drivers/chrome.html)).
 Once ChromeDriver installed sucessfully use
+
 ```
 make run
 ```
-and follow the instructions to use the program. The file `entidades.csv` define which pages we are scrapping, so update it as you want.
+
+and follow the instructions to use the program. The file `entidades.csv` define
+which pages we are scrapping, so update it as you want.
 
 ## Testing the code
 
@@ -48,6 +54,7 @@ For using the tests we wrote to check code functionalities
 ```
 make
 ```
+
 ## verifying style
 
 To check your code identation:
@@ -55,5 +62,6 @@ To check your code identation:
 ```
 make style
 ```
-Important to use it if wanting to send us a Pull Request :)
+
+Important to use it if you want to send us a Pull Request :)
 

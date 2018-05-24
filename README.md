@@ -1,7 +1,6 @@
-
-####  [Portuguese Readme](./README.md)  |  [English Readme](./Language/English/README.md)
-
 # Facebook Scraper
+
+#### [Portuguese Readme](./README.md) | [English Readme](./Language/English/README.md)
 
 [![Build Status](https://travis-ci.org/unb-cic-esw/facebook-page-post-scraper.svg?branch=master)](https://travis-ci.org/unb-cic-esw/facebook-page-post-scraper)
 [![Maintainability](https://api.codeclimate.com/v1/badges/6d78fb4221b49847ca9c/maintainability)](https://codeclimate.com/github/unb-cic-esw/facebook-page-post-scraper/maintainability)
@@ -13,46 +12,57 @@ esteja com um editor de texto adequado (Atom, VSCode, Sublime ou Pycharm), deve-
 seguir os seguintes passos
 
 Criar o ambiente virtual (venv) e entrar no mesmo
+
 ```
 python3 -m venv venv
 source venv/bin/activate
 ```
 
 Para aqueles no Linux ou Mac
+
 ```
 make install
 ```
 
 Para windows
+
 ```
 pip install -r requirements.txt
 ```
 
 Uma vez instalados todos os módulos, é necessário configurar o token.
 Para isso devemos baixar o ChromeDriver. Para Linux e MacOS basta utilizar o comando
+
 ```
 make chromedriver
 ```
+
 Para Windows, é necessário seguir as instruções do Splinter para Windows:([Instruções para baixar ChromeDriver](https://splinter.readthedocs.io/en/latest/drivers/chrome.html)).
 Uma vez com o ChromeDriver instalado corretamente,para a aquisição do Token basta digitar
+
 ```
 make autotoken
 ```
+
 ## Usando o Programa
 
 Uma vez com todas as configurações feitas, use:
+
 ```
 make run
 ```
 
 ## Rodando testes
 
-Por enquanto rodar testes é a principal funcionalidade. Em breve serão adicionadas mais funções. Portanto, para testes
+Por enquanto rodar testes é a principal funcionalidade. Em breve serão adicionadas 
+mais funções. Portanto, para testes
 
 ```
 make
 ```
+
 E para saber qual a cobertura dos testes, use
+
 ```
 make cov
 ```
@@ -64,6 +74,7 @@ Para verificar se o seu código encontra-se bem indentado e bonito, use o seguin
 ```
 make style
 ```
+
 Importante usar este comando antes de mandar uma PR para garantir código mais legível..
 
 ## Heroku
