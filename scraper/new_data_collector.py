@@ -31,7 +31,7 @@ def collect_new_data():
             scraper.set_page(page)
             print(scraper.page)
             scraper.scrape_current_page(query=info)
-            scraper.write_csv(info)
+            scraper.write_to_csv(info)
 
 
 if __name__ == '__main__':

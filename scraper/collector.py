@@ -3,7 +3,7 @@ import sys
 from time import strftime
 from .page_scraper import Scraper
 from .token_manager import retrieve_token_file, get_user_password_decrypted, \
-    retrieve_password_file, collect_token_automatically
+    retrieve_password_file, collect_token_automatically, collect_token
 
 
 def collect_all_pages():
@@ -22,14 +22,21 @@ def collect_all_pages():
             except Exception as inst:
                 print(inst)
                 return -1
+        else:
+            try:
+                collect_token()
+                scraper = Scraper(retrieve_token_file())
+            except Exception as inst:
+                print(inst)
+                return -1
 
     for page in pages:
         scraper.set_page(page)
         print(scraper.page)
         scraper.get_page_name_and_like()
         scraper.get_reactions()
-        scraper.write_json()
-        scraper.write_csv()
+        scraper.write_to_json()
+        scraper.write_to_csv()
 
 
 def collect_2018():
@@ -79,7 +86,7 @@ def collect_2018():
                         scraper.get_reactions(
                             since_date=since_date, until_date=until_date
                         )
-                        scraper.write_json(file=filename)
+                        scraper.write_to_json(file=filename)
                     except Exception as inst:
                         print("Day {0} not found.".format(day+1))
                         print(inst)
