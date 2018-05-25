@@ -1,11 +1,11 @@
 # Facebook Scraper
 
-#### [Portuguese Readme](./README.md) | [English Readme](./Language/English/README.md)
+#### [Portuguese :brazil: Readme](./README.md) | [ :us: Readme](./Language/English/README.md)
 
 [![Build Status](https://travis-ci.org/unb-cic-esw/facebook-page-post-scraper.svg?branch=master)](https://travis-ci.org/unb-cic-esw/facebook-page-post-scraper)
 [![Maintainability](https://api.codeclimate.com/v1/badges/6d78fb4221b49847ca9c/maintainability)](https://codeclimate.com/github/unb-cic-esw/facebook-page-post-scraper/maintainability)
 
-## Fazendo tudo rodar
+## Fazendo tudo rodar 
 
 Uma vez que se tenha instalado python 3 e Git, baixado o repositório e
 esteja com um editor de texto adequado (Atom, VSCode, Sublime ou Pycharm), deve-se

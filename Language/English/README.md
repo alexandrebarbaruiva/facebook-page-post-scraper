@@ -1,6 +1,6 @@
 # Facebook Scraper 
 
-#### [Portuguese Readme](../../README.md) | [English Readme](./README.md)
+#### [Portuguese Readme](../../README.md) | [:us: Readme](./README.md)
 
 [![Build Status](https://travis-ci.org/unb-cic-esw/facebook-page-post-scraper.svg?branch=master)](https://travis-ci.org/unb-cic-esw/facebook-page-post-scraper)
 [![Maintainability](https://api.codeclimate.com/v1/badges/6d78fb4221b49847ca9c/maintainability)](https://codeclimate.com/github/unb-cic-esw/facebook-page-post-scraper/maintainability)
