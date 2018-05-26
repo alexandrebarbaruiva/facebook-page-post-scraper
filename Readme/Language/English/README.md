@@ -30,7 +30,7 @@ For Windows
 pip install -r requirements.txt
 ```
 
-Once you have installed everything, install ChromeDriver to update and 
+Once you have installed everything, install ChromeDriver to update and
 configure the token. You need to download it and add it to your PATH.
 For Linux and MacOS (Mac might not be working anymore) users use:
 
@@ -57,7 +57,8 @@ For using the tests we wrote to check code functionalities
 make
 ```
 
-WARNING: It'll print a bunch of stuff. As long as it returns an exit code 1, it's all fine.
+WARNING: It'll print a bunch of stuff. As long as it returns an exit code 1,
+it's all fine.
 
 ## verifying style
 
