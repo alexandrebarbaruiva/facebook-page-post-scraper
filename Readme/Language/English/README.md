@@ -10,7 +10,7 @@
 Once you have installed python3 and Git, cloned our repository and is using
 a coding text editor (Atom, VSCode, Sublime ou Pycharm), follow these instructions.
 
-Create an virtual environment
+Create a virtual environment
 
 ```
 python3 -m venv venv
