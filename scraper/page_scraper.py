@@ -181,6 +181,7 @@ class Scraper:
         post['id'] = status_id
         post['message'] = '' if 'message' not in message else message['message']
         post['published'] = status_published
+        post['type'] = status['type']
         # Converting from the way facebook gives us
         # the created time to a more readable
 
