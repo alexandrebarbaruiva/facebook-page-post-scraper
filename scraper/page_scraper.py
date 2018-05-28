@@ -18,8 +18,8 @@ class Scraper:
         self.file_name = None
         if not os.path.exists('csv/'):
             os.makedirs('csv/')
-        if not os.path.exists('json/'):
-            os.makedirs('json/')
+        if not os.path.exists('json/posts'):
+            os.makedirs('json/posts')
 
     def check_valid_token(self):
         """
@@ -155,7 +155,7 @@ class Scraper:
         return True
 
     def processFacebookPageFeedStatus(
-        self, status, total_reaction, total_comments, total_shares
+        self, status, total_reaction, total_comments, total_shares, page, message
     ):
 
         # The status is now a Python dictionary, so for top-level items,
@@ -166,6 +166,10 @@ class Scraper:
 
         # Time needs special care since a) it's in UTC and
         # b) it's not easy to use in statistical programs.
+        post={}
+        if not os.path.exists('json/posts/'+str(self.page)):
+            os.makedirs('json/posts/'+str(self.page))
+
         status_id = status['id']
 
         status_published = datetime.datetime.strptime(
@@ -173,16 +177,31 @@ class Scraper:
         status_published = status_published + \
             datetime.timedelta(hours=-3)  # Brasilia time
         status_published = status_published.strftime(
-            '%Y-%m-%d %H:%M:%S')  # Converting from the way facebook gives us
+            '%Y-%m-%d %H:%M:%S')
+        post['id'] = status_id
+        post['message'] = '' if 'message' not in message else message['message']
+        post['published'] = status_published
+        # Converting from the way facebook gives us
         # the created time to a more readable
 
         # Nested items require chaining dictionary keys.
 
         num_reactions = 0 if 'reactions' not in status else \
             status['reactions']['summary']['total_count']
+        post['reactions'] = num_reactions
         num_comments = 0 if 'comments' not in status else \
             status['comments']['summary']['total_count']
+        post['comments'] = num_comments
         num_shares = 0 if 'shares' not in status else status['shares']['count']
+        post['shares'] = num_shares
+        if not os.path.exists('json/posts/'+str(self.page)):
+            os.makedirs('json/posts/'+str(self.page))
+        try:
+            with open('json/posts/'+str(self.page)+'/'+status_id+'.json','w') as post_file:
+                post_file.write(json.dumps(post, indent=2, ensure_ascii=False))
+        except Exception as e:
+            print(e)
+            print('Algo errado na escrita do post')
         total_reaction = total_reaction + num_reactions
         total_comments = total_comments + num_comments
         total_shares = total_shares + num_shares
@@ -219,14 +238,18 @@ class Scraper:
                 ".limit(0).summary(true)"
 
             statuses = graph.get_object(
-                id=str(self.page)+'/posts?'+after+'&limit=100'+since+until,
+                id=str(self.page)+'/posts?'+after+'&limit=10'+since+until,
                 fields=fields
             )
             for status in statuses['data']:
+                post_message = graph.get_object(
+                    id=status['id'],
+                    fields='message'
+                )
                 # Ensure it is a status with the expected metadata
                 if 'reactions' in status:
                     status_data = self.processFacebookPageFeedStatus(
-                        status, total_reaction, total_comments, total_shares
+                        status, total_reaction, total_comments, total_shares, page, post_message
                     )
                     total_reaction = status_data[5]
                     total_comments = status_data[6]
@@ -239,6 +262,7 @@ class Scraper:
                             num_processed, datetime.datetime.now()
                         )
                     )
+
             # if there is no next page, we're done.
             if 'paging' in statuses:
                 after = statuses['paging']['cursors']['after']
