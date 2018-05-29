@@ -102,14 +102,15 @@ def collect_token_automatically(email, password, file='config.ini'):
         # Visit Facebook developers web site
         try:
             browser.driver.set_window_size(1100, 800)
-            url = "https://developers.facebook.com/tools/explorer/"
+            url = "https://developers.facebook.com/tools/explorer" \
+                "/?locale=en_US"
             browser.visit(url)
             # Find the login button, if not found means error
             # conecting with the Facebook
             browser.click_link_by_partial_href('login')
         except Exception as inst:
             print("\x1b[04;01;31mCouldn't open Facebook Dev site\x1b[0m")
-            return 'Não foi possível abrir o Facebook. Você está online?'
+            return 'Wasn`t possible to reach Facebook site. Are you online?'
         # Click on login button
         browser_login = browser.find_by_name('login')
         # Login with email and password from the user
@@ -118,7 +119,7 @@ def collect_token_automatically(email, password, file='config.ini'):
             browser.fill('pass', password)
             browser_login.click()
         # Request the updated User access token
-            browser_access = browser.find_by_text('Obter token')
+            browser_access = browser.find_by_text('Get Token')
             browser_access.click()
         except Exception as inst:
             # try:
@@ -128,10 +129,10 @@ def collect_token_automatically(email, password, file='config.ini'):
             print("\x1b[04;01;31m" + "Wrong User Login" + '\x1b[0m')
             return 'Wrong Facebook user or password'
         browser_accessus = browser.find_by_text(
-            'Obter token de acesso do usuário'
+            'Get User Access Token'
         )
         browser_accessus.click()
-        browser_token = browser.find_by_text('Obter token de acesso')
+        browser_token = browser.find_by_text('Get Access Token')
         browser_token.click()
         # find and catch the new user acces token
         browser_token = browser.find_by_css(
@@ -157,7 +158,8 @@ def collect_token_manually(file='config.ini'):
     this function will open facebook page so he can login on user's Facebook,
     get his "User Token Acces", paste on the terminal so we save in config.ini
     """
-    webbrowser.open('https://developers.facebook.com/tools/explorer')
+    url = 'https://developers.facebook.com/tools/explorer?locale=en_US'
+    webbrowser.open(url)
     # update token and print if it worked
     manually_get_token = input()
     update_token_file(file, **{'token': manually_get_token})
