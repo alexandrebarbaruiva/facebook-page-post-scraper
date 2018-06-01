@@ -280,8 +280,8 @@ class Scraper:
                 data['latest'] = strftime("%Y-%m-%d")
                 #print(data)
                 date_file.seek(0)
-                #if strftime("%Y-%m-%d") not in data['date']:
-                #    data['date'].append(strftime("%Y-%m-%d"))
+                data['date'] = data['date'].append(strftime("%Y-%m-%d")) if strftime("%Y-%m-%d")\
+                not in data['date'] else data['date']
                     #print(data)
                 date_file.write(
                     json.dumps(data, indent = 2, ensure_ascii = False)
