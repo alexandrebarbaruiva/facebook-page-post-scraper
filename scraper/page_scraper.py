@@ -274,19 +274,18 @@ class Scraper:
                 json.dumps(actors_dict, indent=2, ensure_ascii=False)
             )
         try:
-            #Admitindo que o arquivo existe
-            with open('json/date.json', 'r+', encoding='utf8') as date_file:
-                data = json.load(date_file)
-                data['latest'] = strftime("%Y-%m-%d")
+            date_file = open('json/date.json', 'r+', encoding='utf8')
+            data = json.load(date_file)
+            data['latest'] = strftime("%Y-%m-%d")
+            #print(data)
+            date_file.seek(0)
+            if strftime("%Y-%m-%d") not in data['date']:
+                data['date'].append(strftime("%Y-%m-%d"))
                 #print(data)
-                date_file.seek(0)
-                if strftime("%Y-%m-%d") not in data['date']:
-                    data['date'].append(strftime("%Y-%m-%d"))
-                    #print(data)
-                date_file.write(
-                    json.dumps(data, indent = 2, ensure_ascii = False)
-                )
-        except IOError as e:
+            date_file.write(
+                json.dumps(data, indent = 2, ensure_ascii = False)
+            )
+        except FileNotFoundError:
             data['date'].append(strftime("%Y-%m-%d"))
             data['latest'] = strftime("%Y-%m-%d")
             with open('json/date.json', 'w', encoding='utf8') as date_file:
