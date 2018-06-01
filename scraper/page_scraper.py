@@ -289,9 +289,7 @@ class Scraper:
         else:
             data['date'].append(strftime("%Y-%m-%d"))
             data['latest'] = strftime("%Y-%m-%d")
-            with open('json/' + 'date.json', 'w', encoding='utf8') as date_file:
+            with open('json/date.json', 'w', encoding='utf8') as date_file:
                 date_file.write(
                     json.dumps(data, indent=2, ensure_ascii=False)
                 )
-
-

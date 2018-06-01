@@ -11,12 +11,12 @@ def hello():
 @app.route('/actors', methods=['GET'])
 def show_actors_collected():
     with open('json/actors.json') as actors:
-        return jsonify(json.load(actors)) 
+        return jsonify(json.load(actors))
 
 
 @app.route('/date', methods=['GET'])
 def show_date():
-    with open('json/date.json') as date:
+    with open('json/'+'date.json') as date:
         return jsonify(json.load(date))
 
 @app.route('/scraped/<date>/<actor_name>', methods=['GET'])
