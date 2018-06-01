@@ -4,7 +4,7 @@ from time import strftime
 from .page_scraper import Scraper
 from .token_manager import retrieve_token_file, get_user_password_decrypted, \
     retrieve_password_file, collect_token_automatically, collect_token
-
+import os
 
 def collect_all_pages():
 
@@ -30,13 +30,21 @@ def collect_all_pages():
                 print(inst)
                 return -1
 
+    os.chdir("json")
+    print(strftime("%Y-%m-%d"))
+    if not os.path.exists(strftime("%Y-%m-%d")):
+        os.mkdir(strftime("%Y-%m-%d"))
+    os.chdir("..")
+
     for page in pages:
         scraper.set_page(page)
         print(scraper.page)
         scraper.get_page_name_and_like()
         scraper.get_reactions()
-        scraper.write_to_json()
+        scraper.write_to_json(actor_name=scraper.page)
         scraper.write_to_csv()
+    scraper.write_actors_and_date_file()
+
 
 
 def collect_2018():
@@ -93,6 +101,7 @@ def collect_2018():
                         pass
         except Exception as inst:
             print("Page not found.", inst)
+
 
 if __name__ == '__main__':
     collect_all_pages()

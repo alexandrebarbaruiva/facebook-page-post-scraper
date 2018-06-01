@@ -1,8 +1,6 @@
 # User addition
 .DS_Store
 config.ini
-*.json
-./json/*.json
 /csv/*.csv
 /.idea
 
@@ -31,6 +29,7 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+.vscode
 MANIFEST
 
 # PyInstaller
