@@ -278,14 +278,14 @@ class Scraper:
             with open('json/date.json', 'r+', encoding='utf8') as date_file:
                 data = json.load(date_file)
                 data['latest'] = strftime("%Y-%m-%d")
-                print(data)
+                #print(data)
                 date_file.seek(0)
                 if strftime("%Y-%m-%d") not in data['date']:
                     data['date'].append(strftime("%Y-%m-%d"))
-                    print(data)
-                    date_file.write(
-                        json.dumps(data, indent = 2, ensure_ascii = False)
-                    )
+                    #print(data)
+                date_file.write(
+                    json.dumps(data, indent = 2, ensure_ascii = False)
+                )
         else:
             data['date'].append(strftime("%Y-%m-%d"))
             data['latest'] = strftime("%Y-%m-%d")
