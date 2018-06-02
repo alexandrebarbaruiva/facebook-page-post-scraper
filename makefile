@@ -7,10 +7,7 @@ face_file2 = venv/src/facebook-sdk/facebook/version.py
 default: test
 
 travis:
-	make autotoken
-	green3 tests.test_page_scraper
-	green3 tests.test_token_manager.TestTokenFunctions
-	green3 tests.test_token_manager.TestTokenSecurity
+	@make style
 
 test:
 ifeq ($(OS), Windows_NT)
@@ -58,9 +55,9 @@ endif
 
 style:
 ifeq ($(OS), Windows_NT)
-	pycodestyle tests\. scraper\.
+	pycodestyle tests\. scraper\. server/. --ignore=E402,W504
 else
-	pycodestyle tests/. scraper/.
+	pycodestyle tests/. scraper/. server/. --ignore=E402,W504
 endif
 
 cov:
