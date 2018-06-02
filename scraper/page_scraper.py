@@ -5,7 +5,7 @@ import datetime
 from time import strftime
 import requests
 import facebook
-
+import psycopg2
 
 class Scraper:
     """
@@ -292,3 +292,27 @@ class Scraper:
                 date_file.write(
                     json.dumps(data, indent=2, ensure_ascii=False)
                 )
+
+
+    def calldb(self):
+            DATABASE_URL = os.environ['dados aqui']
+            conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+            params = {
+                "host":"HOST",
+                "database":"DB",
+                "user":"USER",
+                "password":"PASS"
+            }
+            conn = psycopg2.connect(**params)
+            sql_cmd = "INSERT INTO MyTable (channel, report_id, report_data) SELECT CAST(src.MyJSON->>'account_id' AS INTEGER), CAST(src.MyJSON->>'id' AS INTEGER), src.MyJSON FROM ( SELECT CAST(%s AS JSONB) AS MyJSON ) src" 
+            # Convert dictionary to native JSON data type
+            data2 = {"id": 4573457, "account_id": 456, "address": "15 Millers Rd, WA"}
+            data2_json = json.dumps(data2)
+            sql_params = (data2_json,) 
+            try: 
+                cur = db.cursor()
+                cur.execute(sql_cmd, sql_params)
+                conn.commit()
+            except Exception as e: 
+                print ('Error ', e ) 
+                raise 
