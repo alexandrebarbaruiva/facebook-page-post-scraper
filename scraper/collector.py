@@ -6,13 +6,16 @@ from .token_manager import retrieve_token_file, get_user_password_decrypted, \
     retrieve_password_file, collect_token_automatically, collect_token
 import os
 
-def collect_all_pages():
-
-    pages = []
-    with open('entidades.csv', 'r') as entidades:
+def read_entidades(pages,entidades = 'entidades'):
+    with open(entidades + '.csv', 'r') as entidades:
         reader = csv.reader(entidades)
         for row in reader:
             pages.append(row[0])
+    return pages
+
+def collect_all_pages():
+    pages = []
+    pages = read_entidades(pages)
     scraper = Scraper(retrieve_token_file())
     if not scraper.check_valid_token():
         if retrieve_password_file():

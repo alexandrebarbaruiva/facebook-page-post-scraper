@@ -4,19 +4,15 @@ from time import strftime
 from .page_scraper import Scraper
 from .token_manager import retrieve_token_file, get_user_password_decrypted, \
     retrieve_password_file, collect_token_automatically
+from .collector import read_entidades
+import os
 
 
 def collect_new_data():
     new_info = []
     pages = []
-    with open('entidades.csv', 'r') as entidades:
-        reader = csv.reader(entidades)
-        for row in reader:
-            pages.append(row[0])
-    with open('novos_dados.csv', 'r') as to_collect:
-        reader = csv.reader(to_collect)
-        for row in reader:
-            new_info.append(row[0])
+    pages = read_entidades(pages)
+    new_info = read_entidades(new_info,'novos_dados')
     scraper = Scraper(retrieve_token_file())
     if not scraper.check_valid_token():
         if retrieve_password_file():
