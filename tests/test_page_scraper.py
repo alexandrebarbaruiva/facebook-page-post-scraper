@@ -107,7 +107,10 @@ class TestPageScraping(unittest.TestCase):
         Check if scraping generates a JSON file in correct output file
         """
         test_query = 'message,comments.summary(true){likes}'
-        print('json/'+strftime("%Y-%m-%d")+'/262588213843476.json')
+        os.chdir("json")
+        if not os.path.exists(strftime("%Y-%m-%d")):
+            os.mkdir(strftime("%Y-%m-%d"))
+        os.chdir("..")
         self.scraper.scrape_current_page(
             page=self.github, feed=True, query=test_query
         )
@@ -118,9 +121,14 @@ class TestPageScraping(unittest.TestCase):
         )
         #Deletar arquivo na pasta
         try:
-            os.remove(str(os.getcwd())+'json/' + 
+            os.remove(str(os.getcwd())+'/json/' + 
                     strftime("%Y-%m-%d") + '/262588213843476.json')
         except FileNotFoundError:
+            pass
+        try:
+            os.rmdir(str(os.getcwd())+'/json/' +
+                strftime("%Y-%m-%d")+'/')
+        except OSError:
             pass
 
 
