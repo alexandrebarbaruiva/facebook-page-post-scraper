@@ -13,9 +13,7 @@ def read_entidades(pages,entidades = 'entidades'):
             pages.append(row[0])
     return pages
 
-def collect_all_pages():
-    pages = []
-    pages = read_entidades(pages)
+def checkin_updating_token():
     scraper = Scraper(retrieve_token_file())
     if not scraper.check_valid_token():
         if retrieve_password_file():
@@ -32,6 +30,13 @@ def collect_all_pages():
             except Exception as inst:
                 print(inst)
                 return -1
+
+
+def collect_all_pages():
+    pages = []
+    pages = read_entidades(pages)
+    checkin_updating_token()
+    scraper = Scraper(retrieve_token_file())
 
     os.chdir("json")
     print(strftime("%Y-%m-%d"))
@@ -52,11 +57,7 @@ def collect_all_pages():
 
 def collect_2018():
     pages = []
-    with open('entidades.csv', 'r') as entidades:
-        reader = csv.reader(entidades)
-        for row in reader:
-            pages.append(row[0])
-    scraper = Scraper(retrieve_token_file())
+    pages = read_entidades(pages)
 
     for page in pages:
         try:
