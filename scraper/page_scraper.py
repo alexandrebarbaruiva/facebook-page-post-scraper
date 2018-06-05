@@ -183,6 +183,15 @@ class Scraper:
         post['published'] = status_published
         post['link_to_post'] = '' if 'link' not in status.keys() else status['link']
         post['type'] = status['type']
+        specific_reactions = {}
+        specific_reactions['like'] = status['like']['summary']['total_count']
+        specific_reactions['wow'] = status['wow']['summary']['total_count']
+        specific_reactions['sad'] = status['sad']['summary']['total_count']
+        specific_reactions['love'] = status['love']['summary']['total_count']
+        specific_reactions['haha'] = status['haha']['summary']['total_count']
+        specific_reactions['angry'] = status['angry']['summary']['total_count']
+        post['specific_reactions'] = specific_reactions
+        post['story'] = message['story'] if 'story' in message.keys() else ''
         # Converting from the way facebook gives us
         # the created time to a more readable
 
@@ -237,16 +246,21 @@ class Scraper:
             after = '' if after == '' else "&after={}".format(after)
             fields = "fields=message,created_time,type,id," + \
                 "comments.limit(0).summary(true),shares,reactions" + \
-                ".limit(0).summary(true),link"
+                ".limit(0).summary(true),link,reactions.type(LIKE).limit(0)" + \
+             ".summary(total_count).as(like),reactions.type(WOW).limit(0)" + \
+             ".summary(total_count).as(wow),reactions.type(SAD).limit(0).summary(total_count).as(sad)" + \
+             ",reactions.type(LOVE).limit(0).summary(total_count).as(love)," + \
+             "reactions.type(HAHA).limit(0).summary(total_count).as(haha)," + \
+             "reactions.type(ANGRY).limit(0).summary(total_count).as(angry)"
 
             statuses = graph.get_object(
-                id=str(self.page)+'/posts?'+after+'&limit=100'+since+until,
+                id=str(self.page)+'/posts?'+after+'&limit=10'+since+until,
                 fields=fields
             )
             for status in statuses['data']:
                 post_message = graph.get_object(
                     id=status['id'],
-                    fields='message'
+                    fields="message,story"
                 )
                 # Ensure it is a status with the expected metadata
                 if 'reactions' in status:
