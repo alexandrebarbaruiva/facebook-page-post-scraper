@@ -13,7 +13,7 @@ sys.path.append(
 )
 from scraper.page_scraper import Scraper
 
-path = str(os.getcwd())+'/scraper/'
+path = str(os.getcwd()) + '/scraper/'
 
 
 def retrieve_token_file(file='config.ini'):
@@ -22,7 +22,7 @@ def retrieve_token_file(file='config.ini'):
     """
     try:
         config = ConfigParser()
-        config.read_file(open(path+file))
+        config.read_file(open(path + file))
         if ('DEFAULT' in config.keys()):
             if ('token' in config['DEFAULT'].keys()):
                 return(config['DEFAULT']['token'])
@@ -37,7 +37,7 @@ def retrieve_password_file(file='config.ini'):
     """
     try:
         config = ConfigParser()
-        config.read_file(open(path+file))
+        config.read_file(open(path + file))
         if ('USER' in config.keys()):
             if {'user', 'password', 'utoken'} <= set(config['USER']):
                 return(
@@ -57,20 +57,20 @@ def update_token_file(file='config.ini', **kwargs):
     Update token from config.ini file on scraper folder
     """
     config = ConfigParser()
-    config.read(path+file)
+    config.read(path + file)
 
     if len(kwargs.keys()) > 0:
         # if kwargs has all info for password
         if {'user', 'password', 'utoken'} == set(kwargs):
             config['USER'] = kwargs
-            with open(path+file, 'w') as configfile:
+            with open(path + file, 'w') as configfile:
                 config.write(configfile)
             return 'User and password updated.'
 
         # if kwargs has token info
         if ('token' in kwargs.keys()):
             config['DEFAULT'] = {'token': kwargs['token']}
-            with open(path+file, 'w') as configfile:
+            with open(path + file, 'w') as configfile:
                 config.write(configfile)
             print('\x1b[04;01;32mNew token written successfuly.\x1b[0m\n')
             return 'New token written successfuly.'
@@ -85,7 +85,7 @@ def generate_token_file(new_token=None, file='config.ini'):
     """
     if(not retrieve_token_file(file)):
         token_data = '[DEFAULT]\ntoken = \'' + str(new_token) + '\''
-        with open(path+file, 'w') as token_file:
+        with open(path + file, 'w') as token_file:
             token_file.write(token_data)
             return [True, new_token]
     else:
@@ -180,19 +180,20 @@ def check_automatic_collection(file='config.ini'):
         token_is_valid = collect_token_automatically(email, password)
         if(token_is_valid.check_valid_token()):
             print("\x1b[04;01;32m" + "Set Token Is Valid" + '\x1b[0m\n')
-            print("\x1b[04;01;32m"+"Auto Token function Completed"+"\x1b[0m")
+            print("\x1b[04;01;32m" + "Auto Token function Completed" +
+                  "\x1b[0m")
             return True
         print("\x1b[04;01;31mSet Token is not Valid\x1b[0m\n")
         return False
     except Exception as inst:
         # something went wrong getting the token
-        print("\x1b[04;01;31m"+"Auto Token function Failed!"+"\x1b[0m")
+        print("\x1b[04;01;31m" + "Auto Token function Failed!" + "\x1b[0m")
         return 'Wrong user or password.'
 
 
-def check_semi_automatic_collection(
-    file='config.ini', email=None, password=None
-):
+def check_semi_automatic_collection(file='config.ini',
+                                    email=None,
+                                    password=None):
     os.system("clear")
     print('Email from your Facebook Account:')
     if email is None:
@@ -220,7 +221,7 @@ def check_semi_automatic_collection(
         return True
     except Exception as inst:
         # something went wrong getting the token
-        print("\x1b[04;01;31m"+"Auto Token function Failed!"+"\x1b[0m")
+        print("\x1b[04;01;31m" + "Auto Token function Failed!" + "\x1b[0m")
         return False
 
 

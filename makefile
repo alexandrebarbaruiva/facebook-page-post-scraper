@@ -19,7 +19,7 @@ else
 endif
 
 data:
-	python3 scraper/new_data_collector.py
+	python3 -c 'from scraper.collector import collect_new_data; collect_new_data()'
 
 run:
 ifeq ($(OS), Windows_NT)
