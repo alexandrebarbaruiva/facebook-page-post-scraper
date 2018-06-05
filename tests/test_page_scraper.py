@@ -116,21 +116,21 @@ class TestPageScraping(unittest.TestCase):
         )
         self.assertTrue(self.scraper.write_to_json())
         self.assertTrue(
-            os.path.exists('json/'+strftime("%Y-%m-%d")+'/262588213843476.json'),
+            os.path.exists('json/' + strftime("%Y-%m-%d") +
+                           '/262588213843476.json'),
             msg='File not found.'
         )
-        #Deletar arquivo na pasta
+        # Deletar arquivo na pasta
         try:
-            os.remove(str(os.getcwd())+'/json/' + 
-                    strftime("%Y-%m-%d") + '/262588213843476.json')
+            os.remove(str(os.getcwd()) + '/json/' +
+                      strftime("%Y-%m-%d") + '/262588213843476.json')
         except FileNotFoundError:
             pass
         try:
-            os.rmdir(str(os.getcwd())+'/json/' +
-                strftime("%Y-%m-%d")+'/')
+            os.rmdir(str(os.getcwd()) + '/json/' +
+                     strftime("%Y-%m-%d") + '/')
         except OSError:
             pass
-
 
     def test_if_csv_without_content_returns_nothing(self):
         """
@@ -165,7 +165,7 @@ class TestPageScraping(unittest.TestCase):
         # Deletar arqquivo na pasta
         try:
             os.remove(
-                str(os.getcwd())+'/csv/nome_' + self.day_scraped + '.csv'
+                str(os.getcwd()) + '/csv/nome_' + self.day_scraped + '.csv'
             )
         except FileNotFoundError:
             pass
@@ -202,7 +202,7 @@ class TestPageScraping(unittest.TestCase):
         # Deletar arqquivo na pasta
         try:
             os.remove(
-                str(os.getcwd())+'/csv/test_' + self.day_scraped + '.csv'
+                str(os.getcwd()) + '/csv/test_' + self.day_scraped + '.csv'
             )
         except FileNotFoundError:
             pass
@@ -228,7 +228,7 @@ class TestPageScraping(unittest.TestCase):
             self.assertEqual(pages, 1)
         try:
             os.remove(
-                str(os.getcwd())+'/csv/react_' + self.day_scraped + '.csv'
+                str(os.getcwd()) + '/csv/react_' + self.day_scraped + '.csv'
             )
         except FileNotFoundError:
             pass
@@ -265,7 +265,7 @@ class TestPageScraping(unittest.TestCase):
         # Deletar arqquivo na pasta
         try:
             os.remove(
-                str(os.getcwd())+'/csv/react_' + self.day_scraped + '.csv'
+                str(os.getcwd()) + '/csv/react_' + self.day_scraped + '.csv'
             )
         except FileNotFoundError:
             pass

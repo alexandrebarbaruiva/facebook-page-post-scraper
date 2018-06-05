@@ -50,7 +50,7 @@ class TestTokenFunctions(unittest.TestCase):
             'New token written successfuly.'
         )
         try:
-            os.remove(str(os.getcwd())+'/scraper/default.ini')
+            os.remove(str(os.getcwd()) + '/scraper/default.ini')
         except Exception as i:
             pass
 
@@ -64,7 +64,7 @@ class TestTokenFunctions(unittest.TestCase):
             [False, 'File already exists']
         )
         try:
-            os.remove(str(os.getcwd())+'/scraper/empty.ini')
+            os.remove(str(os.getcwd()) + '/scraper/empty.ini')
         except Exception as i:
             pass
 
@@ -78,7 +78,7 @@ class TestTokenFunctions(unittest.TestCase):
             [True, new_token]
         )
         try:
-            os.remove(str(os.getcwd())+'/scraper/empty.ini')
+            os.remove(str(os.getcwd()) + '/scraper/empty.ini')
         except Exception as i:
             pass
 
@@ -115,7 +115,7 @@ class TestTokenSecurity(unittest.TestCase):
             'User and password updated.'
         )
         try:
-            os.remove(str(os.getcwd())+'/scraper/default.ini')
+            os.remove(str(os.getcwd()) + '/scraper/default.ini')
         except Exception as i:
             pass
 
@@ -143,7 +143,7 @@ class TestTokenCollectionWithBrowser(unittest.TestCase):
                 type(Scraper(''))
             )
         try:
-            os.remove(str(os.getcwd())+'/scraper/default.ini')
+            os.remove(str(os.getcwd()) + '/scraper/default.ini')
         except Exception as i:
             pass
 
@@ -155,7 +155,7 @@ class TestTokenCollectionWithBrowser(unittest.TestCase):
                 type(False)
             )
         try:
-            os.remove(str(os.getcwd())+'/scraper/default.ini')
+            os.remove(str(os.getcwd()) + '/scraper/default.ini')
         except Exception as i:
             pass
 
@@ -170,7 +170,7 @@ class TestTokenCollection(unittest.TestCase):
             'Wrong Facebook user or password'
         )
         try:
-            os.remove(str(os.getcwd())+'/scraper/default.ini')
+            os.remove(str(os.getcwd()) + '/scraper/default.ini')
         except Exception as i:
             pass
 
