@@ -1,10 +1,10 @@
+import os
 import csv
 import sys
 from time import strftime
 from .page_scraper import Scraper
 from .token_manager import retrieve_token_file, get_user_password_decrypted, \
     retrieve_password_file, collect_token_automatically, collect_token
-import os
 
 
 def read_entidades(pages, entidades='entidades'):
@@ -98,6 +98,24 @@ def collect_2018():
                         pass
         except Exception as inst:
             print("Page not found.", inst)
+
+
+def collect_new_data():
+    """
+    Fuction used to check what sort of output the Graph API generates
+    """
+    new_info = []
+    pages = []
+    pages = read_entidades(pages)
+    new_info = read_entidades(new_info, 'novos_dados')
+    checkin_updating_token()
+    scraper = Scraper(retrieve_token_file())
+    for info in new_info:
+        for page in pages:
+            scraper.set_page(page)
+            print(scraper.page)
+            scraper.scrape_current_page(query=info)
+            scraper.write_to_csv(info)
 
 
 if __name__ == '__main__':
