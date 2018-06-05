@@ -21,14 +21,12 @@ def checkin_updating_token():
         if retrieve_password_file():
             try:
                 collect_token_automatically(*get_user_password_decrypted())
-                scraper = Scraper(retrieve_token_file())
             except Exception as inst:
                 print(inst)
                 return -1
         else:
             try:
                 collect_token()
-                scraper = Scraper(retrieve_token_file())
             except Exception as inst:
                 print(inst)
                 return -1
