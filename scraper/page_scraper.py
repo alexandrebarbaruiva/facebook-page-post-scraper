@@ -293,26 +293,36 @@ class Scraper:
                     json.dumps(data, indent=2, ensure_ascii=False)
                 )
 
-
-    def calldb(self):
-            DATABASE_URL = os.environ['dados aqui']
-            conn = psycopg2.connect(DATABASE_URL, sslmode='require')
-            params = {
-                "host":"HOST",
-                "database":"DB",
-                "user":"USER",
-                "password":"PASS"
-            }
-            conn = psycopg2.connect(**params)
-            sql_cmd = "INSERT INTO MyTable (channel, report_id, report_data) SELECT CAST(src.MyJSON->>'account_id' AS INTEGER), CAST(src.MyJSON->>'id' AS INTEGER), src.MyJSON FROM ( SELECT CAST(%s AS JSONB) AS MyJSON ) src" 
-            # Convert dictionary to native JSON data type
-            data2 = {"id": 4573457, "account_id": 456, "address": "15 Millers Rd, WA"}
-            data2_json = json.dumps(data2)
-            sql_params = (data2_json,) 
-            try: 
-                cur = db.cursor()
-                cur.execute(sql_cmd, sql_params)
-                conn.commit()
-            except Exception as e: 
-                print ('Error ', e ) 
-                raise 
+    def calldb(self, actor_name=None, file=None):
+        #conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+        if file is None:
+            file = self.file_name
+        data_file = open(
+            'json/'+ strftime("%Y-%m-%d") + '/' + file + '.json',
+            'w', encoding='utf8'
+            )
+        params = {
+            "host":"host",
+            "database":"db",
+            "user":"user",
+            "password":"pw"
+        }
+        conn = psycopg2.connect(**params)
+        sql_cmd = "INSERT INTO Facebook(name, fan_count, id, date, since_date, until_date, total_reactions, total_comments, total_shares, total_posts, average_reactions, average_comments) SELECT CAST(src.MyJSON->>'name' AS TEXT), CAST(src.MyJSON->>'fan_count' AS INTEGER), CAST(src.MyJSON->>'id' AS TEXT), CAST(src.MyJSON->>'date' AS DATE),CAST(src.MyJSON->>'since_date' AS DATE), CAST(src.MyJSON->>'until_date' AS DATE), CAST(src.MyJSON->>'total_reactions' AS INTEGER), CAST(src.MyJSON->>'total_comments' AS INTEGER),CAST(src.MyJSON->>'total_shares' AS INTEGER), CAST(src.MyJSON->>'total_posts' AS INTEGER), CAST(src.MyJSON->>'average_reactions' AS INTEGER), CAST(src.MyJSON->>'average_comments' AS INTEGER), src.MyJSON FROM ( SELECT CAST(%s AS JSONB) AS MyJSON ) src"
+        #sql_cmd += "SELECT CAST(src.MyJSON->>'name' AS TEXT), CAST(src.MyJSON->>'fan_count' AS INTEGER), CAST(src.MyJSON->>'id' AS TEXT), CAST(src.MyJSON->>'date' AS DATE),"
+        #sql_cmd += "CAST(src.MyJSON->>'since_date' AS DATE), CAST(src.MyJSON->>'until_date' AS DATE), CAST(src.MyJSON->>'total_reactions' AS INTEGER), CAST(src.MyJSON->>'total_comments' AS INTEGER),"
+        #sql_cmd += "CAST(src.MyJSON->>'total_shares' AS INTEGER), CAST(src.MyJSON->>'total_posts' AS INTEGER), CAST(src.MyJSON->>'average_reactions' AS INTEGER), CAST(src.MyJSON->>'average_comments' AS INTEGER), src.MyJSON FROM ( SELECT CAST(%s AS JSONB) AS MyJSON) src"
+        # Convert dictionary to native JSON data type
+        data2 = {"id": 4573457, "account_id": 456, "address": "15 Millers Rd, WA"}
+        data2_json = json.dumps(data2)
+        sql_params = (data_file,) 
+        try: 
+            cur = conn.cursor()
+            cur.execute(sql_cmd, sql_params)
+            conn.commit()
+        except Exception as e: 
+            print ('Error ', e ) 
+            raise
+        if actor_name is not None:
+            self.actors_list.append(actor_name)
+        return True
