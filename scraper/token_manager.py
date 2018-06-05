@@ -191,8 +191,7 @@ def check_automatic_collection(file='config.ini'):
 
 
 def check_semi_automatic_collection(
-    file='config.ini', email=None, password=None
-):
+    file='config.ini', email=None, password=None):
     os.system("clear")
     print('Email from your Facebook Account:')
     if email is None:
