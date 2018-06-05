@@ -17,21 +17,15 @@ def read_entidades(pages, entidades='entidades'):
 
 def checkin_updating_token():
     scraper = Scraper(retrieve_token_file())
+
+    # Verifica se o token ainda é válido
     if not scraper.check_valid_token():
+        # Caso não seja, verifica se existe um config.ini
         if retrieve_password_file():
-            try:
-                collect_token_automatically(*get_user_password_decrypted())
-                scraper = Scraper(retrieve_token_file())
-            except Exception as inst:
-                print(inst)
-                return -1
+            collect_token_automatically(*get_user_password_decrypted())
+        # Caso não exista o arquivo, dispara a função para gerar o arquivo
         else:
-            try:
-                collect_token()
-                scraper = Scraper(retrieve_token_file())
-            except Exception as inst:
-                print(inst)
-                return -1
+            collect_token()
 
 
 def collect_all_pages():
@@ -65,9 +59,7 @@ def collect_2018():
             scraper.set_page(page)
             print(scraper.page)
             for month in range(1, 6):
-                # print("Month {}".format(month))
                 for day in range(1, 31):
-                    # print("Day {}".format(day))
                     if not scraper.check_valid_token():
                         collect_token_automatically(
                             *get_user_password_decrypted()
