@@ -6,12 +6,14 @@ from .token_manager import retrieve_token_file, get_user_password_decrypted, \
     retrieve_password_file, collect_token_automatically, collect_token
 import os
 
-def read_entidades(pages,entidades = 'entidades'):
+
+def read_entidades(pages, entidades='entidades'):
     with open(entidades + '.csv', 'r') as entidades:
         reader = csv.reader(entidades)
         for row in reader:
             pages.append(row[0])
     return pages
+
 
 def checkin_updating_token():
     scraper = Scraper(retrieve_token_file())
@@ -54,7 +56,6 @@ def collect_all_pages():
     scraper.write_actors_and_date_file()
 
 
-
 def collect_2018():
     pages = []
     pages = read_entidades(pages)
@@ -76,7 +77,7 @@ def collect_2018():
                         print("Page doesn't exist")
                         break
                     if (month == int(strftime("%m"))) \
-                            and (day == (int(strftime("%d"))+1)):
+                            and (day == (int(strftime("%d")) + 1)):
                         print("end of collection")
                         break
                     try:
@@ -88,7 +89,7 @@ def collect_2018():
                         until_date = \
                             strftime("%Y-") + \
                             "{0:02d}".format(month) + "-" + \
-                            "{0:02d}".format(day+1)
+                            "{0:02d}".format(day + 1)
                         print(since_date, until_date)
                         filename = \
                             str(page) + "_" + \
@@ -100,7 +101,7 @@ def collect_2018():
                         )
                         scraper.write_to_json(file=filename)
                     except Exception as inst:
-                        print("Day {0} not found.".format(day+1))
+                        print("Day {0} not found.".format(day + 1))
                         print(inst)
                         pass
         except Exception as inst:
