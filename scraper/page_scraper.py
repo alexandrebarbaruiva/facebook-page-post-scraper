@@ -179,8 +179,9 @@ class Scraper:
         status_published = status_published.strftime(
             '%Y-%m-%d %H:%M:%S')
         post['id'] = status_id
-        post['message'] = '' if 'message' not in message else message['message']
+        post['message'] = '' if 'message' not in message.keys() else message['message']
         post['published'] = status_published
+        post['link_to_post'] = '' if 'link' not in status.keys() else status['link']
         post['type'] = status['type']
         # Converting from the way facebook gives us
         # the created time to a more readable
@@ -236,10 +237,10 @@ class Scraper:
             after = '' if after == '' else "&after={}".format(after)
             fields = "fields=message,created_time,type,id," + \
                 "comments.limit(0).summary(true),shares,reactions" + \
-                ".limit(0).summary(true)"
+                ".limit(0).summary(true),link"
 
             statuses = graph.get_object(
-                id=str(self.page)+'/posts?'+after+'&limit=10'+since+until,
+                id=str(self.page)+'/posts?'+after+'&limit=100'+since+until,
                 fields=fields
             )
             for status in statuses['data']:
