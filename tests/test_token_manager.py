@@ -28,10 +28,17 @@ class TestTokenFunctions(unittest.TestCase):
         """
         Check if token file is well formatted
         """
+        FILE_PATH = str(os.getcwd()) + '/scraper/badtoken.ini'
+        with open(FILE_PATH, 'w') as testfile:
+            testfile.write("[DAFAULT]\ntoken = TestTokenNotValid")
         self.assertEqual(
             retrieve_token_file('badtoken.ini'),
             'Token with bad structure'
         )
+        try:
+            os.remove(str(os.getcwd()) + '/scraper/badtoken.ini')
+        except FileNotFoundError:
+            pass
 
     def test_if_token_file_can_be_updated(self):
         """
@@ -51,7 +58,7 @@ class TestTokenFunctions(unittest.TestCase):
         )
         try:
             os.remove(str(os.getcwd()) + '/scraper/default.ini')
-        except Exception as i:
+        except FileNotFoundError:
             pass
 
     def test_if_empty_token_file_can_be_generated(self):
@@ -79,7 +86,7 @@ class TestTokenFunctions(unittest.TestCase):
         )
         try:
             os.remove(str(os.getcwd()) + '/scraper/empty.ini')
-        except Exception as i:
+        except FileNotFoundError:
             pass
 
 
@@ -116,7 +123,7 @@ class TestTokenSecurity(unittest.TestCase):
         )
         try:
             os.remove(str(os.getcwd()) + '/scraper/default.ini')
-        except Exception as i:
+        except FileNotFoundError:
             pass
 
     def test_get_user_password_decrypted_no_token(self):
@@ -144,7 +151,7 @@ class TestTokenCollectionWithBrowser(unittest.TestCase):
             )
         try:
             os.remove(str(os.getcwd()) + '/scraper/default.ini')
-        except Exception as i:
+        except FileNotFoundError:
             pass
 
     def test_check_function_for_manual_token(self):
@@ -156,7 +163,7 @@ class TestTokenCollectionWithBrowser(unittest.TestCase):
             )
         try:
             os.remove(str(os.getcwd()) + '/scraper/default.ini')
-        except Exception as i:
+        except FileNotFoundError:
             pass
 
 
@@ -171,7 +178,7 @@ class TestTokenCollection(unittest.TestCase):
         )
         try:
             os.remove(str(os.getcwd()) + '/scraper/default.ini')
-        except Exception as i:
+        except FileNotFoundError:
             pass
 
     def test_collect_token_automatically_with_correct_id(self):
