@@ -92,25 +92,6 @@ class TestPageScraping(unittest.TestCase):
             (feed=True, query=test_query), True
         )
 
-    def test_if_scraping_outputs_file(self):
-        """
-        Check if scraping generates a JSON file in correct output file
-        """
-        test_query = 'message,comments.summary(true){likes}'
-        self.scraper.scrape_current_page(
-            page=self.github, feed=True, query=test_query
-        )
-        self.assertTrue(self.scraper.write_to_json())
-        self.assertTrue(
-            os.path.exists('json/262588213843476.json'),
-            msg='File not found'
-        )
-        # Deletar arqquivo na pasta
-        try:
-            os.remove(str(os.getcwd())+'/json/262588213843476.json')
-        except FileNotFoundError:
-            pass
-
     def test_scraping_name_and_likes(self):
         """
         Check if it's possible to collect name and like from
@@ -118,8 +99,38 @@ class TestPageScraping(unittest.TestCase):
         """
         self.assertEqual(
             self.scraper.get_page_name_and_like('262588213843476'),
-            ['GitHub', strftime("%d/%m/%Y")]
+            ['GitHub', strftime("%Y-%m-%d")]
         )
+
+    def test_if_scraping_outputs_file(self):
+        """
+        Check if scraping generates a JSON file in correct output file
+        """
+        test_query = 'message,comments.summary(true){likes}'
+        os.chdir("json")
+        if not os.path.exists(strftime("%Y-%m-%d")):
+            os.mkdir(strftime("%Y-%m-%d"))
+        os.chdir("..")
+        self.scraper.scrape_current_page(
+            page=self.github, feed=True, query=test_query
+        )
+        self.assertTrue(self.scraper.write_to_json())
+        self.assertTrue(
+            os.path.exists('json/' + strftime("%Y-%m-%d") +
+                           '/262588213843476.json'),
+            msg='File not found.'
+        )
+        # Deletar arquivo na pasta
+        try:
+            os.remove(str(os.getcwd()) + '/json/' +
+                      strftime("%Y-%m-%d") + '/262588213843476.json')
+        except FileNotFoundError:
+            pass
+        try:
+            os.rmdir(str(os.getcwd()) + '/json/' +
+                     strftime("%Y-%m-%d") + '/')
+        except OSError:
+            pass
 
     def test_if_csv_without_content_returns_nothing(self):
         """
@@ -154,7 +165,7 @@ class TestPageScraping(unittest.TestCase):
         # Deletar arqquivo na pasta
         try:
             os.remove(
-                str(os.getcwd())+'/csv/nome_' + self.day_scraped + '.csv'
+                str(os.getcwd()) + '/csv/nome_' + self.day_scraped + '.csv'
             )
         except FileNotFoundError:
             pass
@@ -191,7 +202,7 @@ class TestPageScraping(unittest.TestCase):
         # Deletar arqquivo na pasta
         try:
             os.remove(
-                str(os.getcwd())+'/csv/test_' + self.day_scraped + '.csv'
+                str(os.getcwd()) + '/csv/test_' + self.day_scraped + '.csv'
             )
         except FileNotFoundError:
             pass
@@ -217,7 +228,7 @@ class TestPageScraping(unittest.TestCase):
             self.assertEqual(pages, 1)
         try:
             os.remove(
-                str(os.getcwd())+'/csv/react_' + self.day_scraped + '.csv'
+                str(os.getcwd()) + '/csv/react_' + self.day_scraped + '.csv'
             )
         except FileNotFoundError:
             pass
@@ -254,7 +265,7 @@ class TestPageScraping(unittest.TestCase):
         # Deletar arqquivo na pasta
         try:
             os.remove(
-                str(os.getcwd())+'/csv/react_' + self.day_scraped + '.csv'
+                str(os.getcwd()) + '/csv/react_' + self.day_scraped + '.csv'
             )
         except FileNotFoundError:
             pass

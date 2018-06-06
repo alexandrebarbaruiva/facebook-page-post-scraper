@@ -1,6 +1,6 @@
 # Facebook Scraper
 
-#### [:brazil: Readme](./README.md) | [:us: Readme](./Readme/Language/English/README.md)
+**[:brazil: Readme](./README.md) | [:us: Readme](./Readme/Language/English/README.md)**
 
 [![Build Status](https://travis-ci.org/unb-cic-esw/facebook-page-post-scraper.svg?branch=master)](https://travis-ci.org/unb-cic-esw/facebook-page-post-scraper)
 [![Maintainability](https://api.codeclimate.com/v1/badges/6d78fb4221b49847ca9c/maintainability)](https://codeclimate.com/github/unb-cic-esw/facebook-page-post-scraper/maintainability)
@@ -80,13 +80,17 @@ Importante usar este comando antes de mandar uma PR para garantir código mais l
 
 ## Heroku
 
-O Heroku é uma das mais populares de plataforma como serviço que suporta aplicações escritas em diversas linguagens, dentre elas, Python, java, node, etc.
+O Heroku é uma das mais populares de plataforma como serviço que suporta
+aplicações escritas em diversas linguagens, dentre elas, Python, java, node, etc.
 
 Primeiro precisa criar uma conta.
 
-requirements.txt - especifica todas as dependencias que a aplicação precisa para rodar dentro do Heroku.
+requirements.txt - especifica todas as dependencias que a aplicação
+precisa para rodar dentro do Heroku.
 
-Procfile - especifica os comandos que serão executados pela aplicação dentro da máquina Dynos. Nossa aplicação é um serviço de coleta de dados que será todos dias da semana em um horário especifico.
+Procfile - especifica os comandos que serão executados pela aplicação
+dentro da máquina Dynos. Nossa aplicação é um serviço de coleta de
+dados que será todos dias da semana em um horário especifico.
 Formato do arquivo:
 clock: python heroku_clock.py
 
@@ -99,9 +103,12 @@ Clone do repositorio:
 heroku git:clone -a facebook-page-post-scraper
 
 Adicionar um remote:
+
+```
 heroku login
 git remote add heroku https://git.heroku.com/facebook-page-post-scraper.git
 git pull heroku master
+```
 
 Link Heroku - Git ([Deploying with Git](https://devcenter.heroku.com/articles/git)).
 
