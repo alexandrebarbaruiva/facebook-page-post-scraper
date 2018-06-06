@@ -1,6 +1,7 @@
 from flask import Flask, jsonify
 import json
 import os
+from service import DBService
 
 app = Flask(__name__)
 
@@ -10,8 +11,9 @@ def hello():
 
 @app.route('/actors', methods=['GET'])
 def show_actors_collected():
-    with open('json/actors.json') as actors:
-        return jsonify(json.load(actors))
+    access_db = DBService()
+    # with open('json/actors.json') as actors:
+    return jsonify(access_db.get_actors_from_db())
 
 
 @app.route('/date', methods=['GET'])
@@ -19,8 +21,8 @@ def show_date():
     with open('json/'+'date.json') as date:
         return jsonify(json.load(date))
 
-@app.route('/scraped/<date>/<actor_name>', methods=['GET'])
-def show_data_scraped(date, actor_name):
+@app.route('/basic/<date>/<actor_name>', methods=['GET'])
+def show_basic_data(date, actor_name):
     if(date == 'latest'):
         with open('json/date.json', 'r', encoding='utf8') as date_file:
             data = json.load(date_file)
