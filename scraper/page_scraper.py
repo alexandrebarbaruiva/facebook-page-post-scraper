@@ -16,6 +16,8 @@ class Scraper:
         self.status_code = 400
         self.current_data = ''
         self.file_name = None
+        self.actors_list = []
+        self.date_list = []
         if not os.path.exists('csv/'):
             os.makedirs('csv/')
         if not os.path.exists('json/posts'):
@@ -59,11 +61,11 @@ class Scraper:
         feed_statement = '/feed' if feed else ''
         try:
             post = graph.get_object(
-                id=str(self.page)+feed_statement,
+                id=str(self.page) + feed_statement,
                 fields=query
             )
             self.current_data = post
-            self.current_data['date'] = strftime("%d/%m/%Y")
+            self.current_data['date'] = strftime("%Y-%m-%d")
             # print(self.current_data)
             if 'name' in post.keys():
                 return post['name']
@@ -73,14 +75,17 @@ class Scraper:
             print(inst)
             return 'Page not defined or bad query structure'
 
-    def write_to_json(self, file=None):
+    def write_to_json(self, actor_name=None, file=None):
         if file is None:
-            file = self.file_name + '.json'
-        with open('json/'+file, 'w', encoding='utf8') as data_file:
-            data_file.write(
-                json.dumps(self.current_data, indent=2, ensure_ascii=False)
-            )  # pretty json
-            return True
+            file = self.file_name
+        with open('json/' + strftime("%Y-%m-%d") + '/' + file + '.json',
+                  'w', encoding='utf8') as data_file:
+                data_file.write(
+                    json.dumps(self.current_data, indent=2, ensure_ascii=False)
+                )  # pretty json
+        if actor_name is not None:
+            self.actors_list.append(actor_name)
+        return True
 
     def get_page_name_and_like(self, page=None):
         self.scrape_current_page(page, query='name,fan_count')
@@ -88,7 +93,7 @@ class Scraper:
             self.current_data['name'],
             # self.current_data['fan_count'],
             # self.current_data['id'],
-            strftime("%d/%m/%Y")
+            strftime("%Y-%m-%d")
         ])
 
     def write_to_csv(self, file_name='scraped'):
@@ -231,7 +236,7 @@ class Scraper:
         if not self.valid_page(page):
             return "Page is not valid."
         if since_date is None:
-            month = str(int(strftime("%m"))-1)
+            month = str(int(strftime("%m")) - 1)
             since_date = strftime("%Y-") + month + strftime("-%d")
         if until_date is None:
             until_date = strftime("%Y-%m-%d")
@@ -258,7 +263,8 @@ class Scraper:
                      "reactions.type(ANGRY).limit(0).summary(total_count).as(angry)"
 
             statuses = graph.get_object(
-                id=str(self.page)+'/posts?'+after+'&limit=100'+since+until,
+                id=str(self.page) + '/posts?' + after +
+                '&limit=100' + since + until,
                 fields=fields
             )
             for status in statuses['data']:
@@ -332,3 +338,30 @@ class Scraper:
                     csv_comments_file.close()
         except Exception as e:
             print('Erro na escrita do csv: '+str(e))
+
+    def write_actors_and_date_file(self):
+        data = {'date': [], 'latest': strftime("%Y-%m-%d")}
+        actors_dict = {'actors': self.actors_list}
+        with open('json/' + 'actors.json', 'w', encoding='utf8') as actor_file:
+            actor_file.write(
+                json.dumps(actors_dict, indent=2, ensure_ascii=False)
+            )
+        try:
+            date_file = open('json/date.json', 'r+', encoding='utf8')
+            data = json.load(date_file)
+            data['latest'] = strftime("%Y-%m-%d")
+            # print(data)
+            date_file.seek(0)
+            if strftime("%Y-%m-%d") not in data['date']:
+                data['date'].append(strftime("%Y-%m-%d"))
+                # print(data)
+            date_file.write(
+                json.dumps(data, indent=2, ensure_ascii=False)
+            )
+        except FileNotFoundError:
+            data['date'].append(strftime("%Y-%m-%d"))
+            data['latest'] = strftime("%Y-%m-%d")
+            with open('json/date.json', 'w', encoding='utf8') as date_file:
+                date_file.write(
+                    json.dumps(data, indent=2, ensure_ascii=False)
+                )

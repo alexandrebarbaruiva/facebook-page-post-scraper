@@ -7,10 +7,7 @@ face_file2 = venv/src/facebook-sdk/facebook/version.py
 default: test
 
 travis:
-	make autotoken
-	green3 tests.test_page_scraper
-	green3 tests.test_token_manager.TestTokenFunctions
-	green3 tests.test_token_manager.TestTokenSecurity
+	@make style
 
 test:
 ifeq ($(OS), Windows_NT)
@@ -22,7 +19,7 @@ else
 endif
 
 data:
-	python3 scraper/new_data_collector.py
+	python3 -c 'from scraper.collector import collect_new_data; collect_new_data()'
 
 run:
 ifeq ($(OS), Windows_NT)
@@ -58,9 +55,9 @@ endif
 
 style:
 ifeq ($(OS), Windows_NT)
-	pycodestyle tests\. scraper\.
+	pycodestyle tests\. scraper\. server/. --ignore=E402,W504
 else
-	pycodestyle tests/. scraper/.
+	pycodestyle tests/. scraper/. server/. --ignore=E402,W504
 endif
 
 cov:
@@ -122,14 +119,10 @@ json:
 .PHONY: clean
 clean:
 ifeq ($(OS), Windows_NT)
-	rm -f .\*.json
-	rm -f .\json\*.json
 	rm -f .\csv\*.csv
 	rm -rf .\htmlcov
 	rm -f .\.coverage
 else
-	rm -f ./*.json
-	rm -f $(JsonDir)*.json
 	rm -f $(CsvDir)*.csv
 	rm -rf ./htmlcov
 	rm -f ./.coverage
