@@ -312,15 +312,23 @@ class Scraper:
         try:
             for actor in list_of_actors:
                 with open('csv/'+actor+time+'.csv','w') as csv_file:
+                    csv_comments_file = open('csv/'+actor+time+'_comments.csv','w')
+                    comments_info = csv.writer(csv_comments_file)
                     info = csv.writer(csv_file)
                     info.writerow(columns)
                     list_of_posts = os.listdir(path+'/'+actor)
                     for post in list_of_posts:
                         list_of_content = []
+                        list_of_comments = []
                         with open(path+'/'+actor+'/'+post,'r',encoding = 'utf8') as json_post:
                             content = json.load(json_post)
+                            list_of_comments.append(content['id'])
+                            for comment in content['specific_comments']:
+                                list_of_comments.append(content['specific_comments'][comment])
                             for key in columns:
                                 list_of_content.append(content[key])
+                        comments_info.writerow(list_of_comments)
                         info.writerow(list_of_content)
+                    csv_comments_file.close()
         except Exception as e:
-            print('Erro na escrita do csv:'+e)
+            print('Erro na escrita do csv: '+str(e))
