@@ -37,7 +37,7 @@ def collect_all_pages():
         scraper.get_reactions()
         scraper.write_to_json()
         scraper.write_to_csv()
-
+    scraper.write_posts_to_csv();
 
 def collect_2018():
     pages = []

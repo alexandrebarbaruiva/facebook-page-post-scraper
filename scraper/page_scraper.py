@@ -183,14 +183,12 @@ class Scraper:
         post['published'] = status_published
         post['link_to_post'] = '' if 'link' not in status.keys() else status['link']
         post['type'] = status['type']
-        specific_reactions = {}
-        specific_reactions['like'] = status['like']['summary']['total_count']
-        specific_reactions['wow'] = status['wow']['summary']['total_count']
-        specific_reactions['sad'] = status['sad']['summary']['total_count']
-        specific_reactions['love'] = status['love']['summary']['total_count']
-        specific_reactions['haha'] = status['haha']['summary']['total_count']
-        specific_reactions['angry'] = status['angry']['summary']['total_count']
-        post['specific_reactions'] = specific_reactions
+        post['like'] = status['like']['summary']['total_count']
+        post['wow'] = status['wow']['summary']['total_count']
+        post['sad'] = status['sad']['summary']['total_count']
+        post['love'] = status['love']['summary']['total_count']
+        post['haha'] = status['haha']['summary']['total_count']
+        post['angry'] = status['angry']['summary']['total_count']
         post['story'] = message['story'] if 'story' in message.keys() else ''
         # Converting from the way facebook gives us
         # the created time to a more readable
@@ -203,6 +201,12 @@ class Scraper:
         num_comments = 0 if 'comments' not in status else \
             status['comments']['summary']['total_count']
         post['comments'] = num_comments
+        specific_comments = {}
+        num_of_comment = 0
+        for comment in status['comments']['data']:
+            specific_comments['comment '+str(num_of_comment)]=comment['message']
+            num_of_comment+=1
+        post['specific_comments'] = specific_comments
         num_shares = 0 if 'shares' not in status else status['shares']['count']
         post['shares'] = num_shares
         if not os.path.exists('json/posts/'+str(self.page)):
@@ -245,16 +249,16 @@ class Scraper:
         while has_next_page:
             after = '' if after == '' else "&after={}".format(after)
             fields = "fields=message,created_time,type,id," + \
-                "comments.limit(0).summary(true),shares,reactions" + \
-                ".limit(0).summary(true),link,reactions.type(LIKE).limit(0)" + \
-             ".summary(total_count).as(like),reactions.type(WOW).limit(0)" + \
-             ".summary(total_count).as(wow),reactions.type(SAD).limit(0).summary(total_count).as(sad)" + \
-             ",reactions.type(LOVE).limit(0).summary(total_count).as(love)," + \
-             "reactions.type(HAHA).limit(0).summary(total_count).as(haha)," + \
-             "reactions.type(ANGRY).limit(0).summary(total_count).as(angry)"
+                     "comments.limit(100).summary(total_count),shares,reactions" + \
+                     ".limit(0).summary(true),link,reactions.type(LIKE).limit(0)" + \
+                     ".summary(total_count).as(like),reactions.type(WOW).limit(0)" + \
+                     ".summary(total_count).as(wow),reactions.type(SAD).limit(0).summary(total_count).as(sad)" + \
+                     ",reactions.type(LOVE).limit(0).summary(total_count).as(love)," + \
+                     "reactions.type(HAHA).limit(0).summary(total_count).as(haha)," + \
+                     "reactions.type(ANGRY).limit(0).summary(total_count).as(angry)"
 
             statuses = graph.get_object(
-                id=str(self.page)+'/posts?'+after+'&limit=10'+since+until,
+                id=str(self.page)+'/posts?'+after+'&limit=100'+since+until,
                 fields=fields
             )
             for status in statuses['data']:
@@ -298,3 +302,25 @@ class Scraper:
         self.current_data['total_posts'] = total_posts
         self.current_data['average_reactions'] = average_reaction
         self.current_data['average_comments'] = average_comments
+
+    def write_posts_to_csv(self):
+        path = 'json/posts'
+        list_of_actors = os.listdir(path)
+        columns = ['id','message','type','shares','published','story','reactions',
+                   'love','like','wow','sad','angry','haha','link_to_post']
+        time = strftime("%Y-%m-%d")
+        try:
+            for actor in list_of_actors:
+                with open('csv/'+actor+time+'.csv','w') as csv_file:
+                    info = csv.writer(csv_file)
+                    info.writerow(columns)
+                    list_of_posts = os.listdir(path+'/'+actor)
+                    for post in list_of_posts:
+                        list_of_content = []
+                        with open(path+'/'+actor+'/'+post,'r',encoding = 'utf8') as json_post:
+                            content = json.load(json_post)
+                            for key in columns:
+                                list_of_content.append(content[key])
+                        info.writerow(list_of_content)
+        except Exception as e:
+            print('Erro na escrita do csv:'+e)
