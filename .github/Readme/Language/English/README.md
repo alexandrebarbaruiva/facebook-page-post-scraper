@@ -1,9 +1,18 @@
 # Facebook Scraper
 
-**[:brazil: Readme](../../../../README.md) | [:us: Readme](./README.md)**
-
 [![Build Status](https://travis-ci.org/unb-cic-esw/facebook-page-post-scraper.svg?branch=master)](https://travis-ci.org/unb-cic-esw/facebook-page-post-scraper)
 [![Maintainability](https://api.codeclimate.com/v1/badges/6d78fb4221b49847ca9c/maintainability)](https://codeclimate.com/github/unb-cic-esw/facebook-page-post-scraper/maintainability)
+
+**[:brazil: Readme](../../../../README.md) | [:us: Readme](./README.md)**
+
+## Tabel of Content
+
+* [begin](#facebook-scraper)
+* [Tabel of Content](#table-of-content) 
+* [Making it Run](#making-it-run)
+* [Testing the code](#testing-the-code)
+* [Verifying style](#verifying-style)
+* [A Project by](#a-project-by)
 
 ## Making it Run
 
@@ -61,7 +70,7 @@ make
 WARNING: It'll print a bunch of stuff. As long as it returns an exit code 1,
 it's all fine.
 
-## verifying style
+## Verifying style
 
 To check your code indentation and PEP8 related:
 
@@ -71,7 +80,7 @@ make style
 
 Important to use it if you want to send us a Pull Request :smile:
 
-## A project by
+## A Project by
 
 
 [![alt text][unb]](https://www.unb.br/)
