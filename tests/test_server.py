@@ -1,4 +1,4 @@
-from server.server import app
+from server.rest import app
 import unittest
 
 
