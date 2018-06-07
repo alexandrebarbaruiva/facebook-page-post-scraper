@@ -6,7 +6,7 @@
 [:brazil: Readme](./README.md) | [:us: Readme](./.github/Readme/Language/English/README.md)
 
 [:brazil: Documentação](./.github/Docs/Portuguese/Doc.md) |
-[:us: Readme](./.github/Docs/English/Doc.md)
+[:us: Documentation](./.github/Docs/English/Doc.md)
 
 ## Tabela de Conteudo
 

@@ -3,7 +3,7 @@
 [:brazil: Readme](../../../README.md) |
 [:us: Readme](../../Readme/Language/English/README.md)
 
-[:brazil: Documentação](./Portuguese/Doc.md) |
+[:brazil: Documentação](../Portuguese/Doc.md) |
 [:us: Documentation](./Doc.md)
 
 ## Table of Content
