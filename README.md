@@ -11,7 +11,7 @@
 ## Tabela de Conteudo
 
 * [Inicio](#facebook-scraper)
-* [Tabela de Conteudo](#tabela-de-conteudo) 
+* [Tabela de Conteudo](#tabela-de-conteudo)
 * [Fazendo tudo rodar](#fazendo-tudo-rodar)
 * [Usando o Programa](#usando-o-programa)
 * [Rodando os testes](#rodando-os-testes)

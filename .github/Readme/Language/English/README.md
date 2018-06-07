@@ -11,7 +11,7 @@
 ## Tabel of Content
 
 * [Begin](#facebook-scraper)
-* [Tabel of Content](#table-of-content) 
+* [Tabel of Content](#table-of-content)
 * [Making it Run](#making-it-run)
 * [Testing the code](#testing-the-code)
 * [Verifying style](#verifying-style)
@@ -98,6 +98,4 @@ Universidade de Brasília
 [resocie]:../../../Images/resocie.jpg
 
 Resocie : Repensando as Relações entre Sociedade e Estado
-
-
 
