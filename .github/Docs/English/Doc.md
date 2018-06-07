@@ -6,21 +6,21 @@
 [:brazil: Documentação](./Portuguese/Doc.md) |
 [:us: Documentation](./Doc.md)
 
-## Tabel of Content
+## Table of Content
 
 * [Begin](#documentation-facebook-scraper)
-* [Tabel of Content](#table-of-content)
+* [Table of Content](#table-of-content)
 * [Scraper](#scraper)
-  * [Collector.py](#collector)
-  * [Page_scraper.py](#page_scraper)
-  * [Token_manager.py](#token_manager)
+  * [Collector.py](#collectorpy)
+  * [Page_scraper.py](#page_scraperpy)
+  * [Token_manager.py](#token_managerpy)
 * [Server](#server)
-  * [Rest.py](#rest)
-  * [Service.py](#service)
+  * [Rest.py](#restpy)
+  * [Service.py](#servicepy)
 * [Tests](#tests)
-  * [Test_page_scraper.py](#test_page_scraper)
-  * [Test_server.py](#test_server)
-  * [Test_token_manager.py](#test_token_manager)
+  * [Test_page_scraper.py](#test_page_scraperpy)
+  * [Test_server.py](#test_serverpy)
+  * [Test_token_manager.py](#test_token_managerpy)
 
 ## Scraper
 

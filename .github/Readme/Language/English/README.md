@@ -8,10 +8,10 @@
 [:brazil: Documentação](../../../Docs/Portuguese/Doc.md) |
 [:us: Documentation](../../../Docs/English/Doc.md)
 
-## Tabel of Content
+## Table of Content
 
 * [Begin](#facebook-scraper)
-* [Tabel of Content](#table-of-content)
+* [Table of Content](#table-of-content)
 * [Making it Run](#making-it-run)
 * [Testing the code](#testing-the-code)
 * [Verifying style](#verifying-style)
