@@ -47,6 +47,7 @@ def collect_all_pages():
         scraper.get_reactions()
         scraper.write_to_json(actor_name=scraper.page)
         scraper.write_to_csv()
+        scraper.calldb(actor_name=scraper.page)
     scraper.write_posts_to_csv();
     scraper.write_actors_and_date_file()
 
