@@ -10,10 +10,10 @@ class DBService:
 
     def __init__(self):
         self.params = {
-            "host": "ec2-23-23-247-245.compute-1.amazonaws.com",
-            "database": "dcut7901ku63t1",
-            "user": "outvrxddgqtmwt",
-            "password": "e4f2c7675d8bacc541b8e0162d5e023c63ce63df91bcfbeaf9f1a3e803800add"
+            "host": "host",
+            "database": "db",
+            "user": "user",
+            "password": "password"
         }
 
     def get_actors_from_db(self):
