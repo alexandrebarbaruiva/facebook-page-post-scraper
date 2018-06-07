@@ -1,18 +1,26 @@
 from flask import Flask, jsonify
 import json
 import os
-from service import DBService
+import sys
+sys.path.append(
+    os.path.dirname(
+        os.path.dirname(os.path.realpath(__file__))
+    )
+)
+from server.service import DBService
+
 
 app = Flask(__name__)
+
 
 @app.route("/")
 def hello():
     return "Facebook Scraper."
 
+
 @app.route('/actors', methods=['GET'])
 def show_actors_collected():
     access_db = DBService()
-    # with open('json/actors.json') as actors:
     return jsonify(json.loads(access_db.get_actors_from_db()))
 
 
@@ -21,6 +29,7 @@ def show_date():
     access_db = DBService()
     return jsonify(json.loads(access_db.get_all_date()))
 
+
 @app.route('/basic/<date>/<actor_name>', methods=['GET'])
 def show_basic_data(date, actor_name):
     access_db = DBService()
@@ -28,7 +37,9 @@ def show_basic_data(date, actor_name):
         data = json.loads(access_db.get_all_date())
         date = data['latest']
         print(date)
-    return jsonify(json.loads(access_db.get_basic_actor_data(actor_name, date)))
+    return jsonify(
+        json.loads(access_db.get_basic_actor_data(actor_name, date))
+    )
 
 
 if __name__ == '__main__':

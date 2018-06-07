@@ -304,10 +304,10 @@ class Scraper:
                 data = json.load(data_file)
         data['file_name'] = file
         params = {
-            "host": "ec2-23-23-247-245.compute-1.amazonaws.com",
-            "database": "dcut7901ku63t1",
-            "user": "outvrxddgqtmwt",
-            "password": "e4f2c7675d8bacc541b8e0162d5e023c63ce63df91bcfbeaf9f1a3e803800add"
+            "host": "host",
+            "database": "db",
+            "user": "user",
+            "password": "password"
         }
         conn = psycopg2.connect(**params)
         sql_cmd = "INSERT INTO Facebook(file_name, name, fan_count, id, date, since_date, until_date, total_reactions, total_comments, total_shares, total_posts, average_reactions, average_comments) SELECT CAST(src.MyJSON->>'file_name' AS TEXT), CAST(src.MyJSON->>'name' AS TEXT), CAST(src.MyJSON->>'fan_count' AS INTEGER), CAST(src.MyJSON->>'id' AS TEXT), CAST(src.MyJSON->>'date' AS DATE),CAST(src.MyJSON->>'since_date' AS DATE), CAST(src.MyJSON->>'until_date' AS DATE), CAST(src.MyJSON->>'total_reactions' AS INTEGER), CAST(src.MyJSON->>'total_comments' AS INTEGER),CAST(src.MyJSON->>'total_shares' AS INTEGER), CAST(src.MyJSON->>'total_posts' AS INTEGER), CAST(src.MyJSON->>'average_reactions' AS INTEGER), CAST(src.MyJSON->>'average_comments' AS INTEGER) FROM ( SELECT CAST(%s AS JSONB) AS MyJSON ) src"

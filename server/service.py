@@ -5,6 +5,7 @@ import re
 import datetime
 from time import strftime
 
+
 class DBService:
 
     def __init__(self):
@@ -15,30 +16,31 @@ class DBService:
             "password": "e4f2c7675d8bacc541b8e0162d5e023c63ce63df91bcfbeaf9f1a3e803800add"
         }
 
-    
     def get_actors_from_db(self):
         conn = psycopg2.connect(**self.params)
         sql_cmd = "SELECT DISTINCT file_name FROM Facebook"
         cur = conn.cursor()
         cur.execute(sql_cmd)
         conn.commit()
-        actors = {'actors':[]}
+        actors = {'actors': []}
         actors_tuple = cur.fetchall()
         actors_list = []
         for row in actors_tuple:
             actors_list.append(row[0])
         actors['actors'] = actors_list
         actors = json.dumps(
-            actors, indent=2, ensure_ascii=False, separators=(',', ': ')
+            actors, indent=2, ensure_ascii=False
         )
         return actors
-        
+
     def get_basic_actor_data(self, actor, date):
         actor_dict = {}
         conn = psycopg2.connect(**self.params)
         cur = conn.cursor()
         cur.execute(
-            """SELECT DISTINCT * FROM Facebook WHERE file_name=%s AND date=%s""", (str(actor), str(date))
+            """SELECT DISTINCT *
+               FROM Facebook
+               WHERE file_name=%s AND date=%s""", (str(actor), str(date))
         )
         conn.commit()
         actor_tuple = cur.fetchall()
@@ -55,7 +57,7 @@ class DBService:
         actor_dict['average_reactions'] = actor_tuple[0][10]
         actor_dict['average_comments'] = actor_tuple[0][11]
         actor = json.dumps(
-            actor_dict, indent=2, ensure_ascii=True, separators=(',', ': '), default=str
+            actor_dict, indent=2, ensure_ascii=True, default=str
         )
         return actor
 
@@ -72,7 +74,7 @@ class DBService:
             date_dict['date'].append(row[0])
         date_dict['latest'] = latest[0][0]
         date = json.dumps(
-            date_dict, indent=2, ensure_ascii=False, separators=(',', ': '), default=str
+            date_dict, indent=2, ensure_ascii=False, default=str
         )
         return date
 
