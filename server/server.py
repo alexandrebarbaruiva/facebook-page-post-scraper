@@ -13,7 +13,7 @@ def hello():
 def show_actors_collected():
     access_db = DBService()
     # with open('json/actors.json') as actors:
-    return jsonify(access_db.get_actors_from_db())
+    return jsonify(json.loads(access_db.get_actors_from_db()))
 
 
 @app.route('/date', methods=['GET'])
@@ -23,13 +23,12 @@ def show_date():
 
 @app.route('/basic/<date>/<actor_name>', methods=['GET'])
 def show_basic_data(date, actor_name):
+    access_db = DBService()
     if(date == 'latest'):
         with open('json/date.json', 'r', encoding='utf8') as date_file:
             data = json.load(date_file)
         date = data['latest']
-    actor_name.replace(" ","")
-    with open('json/' + date + '/' + actor_name + '.json') as scraped_data:
-        return jsonify(json.load(scraped_data))
+    return jsonify(json.loads(access_db.get_basic_actor_data(actor_name, date)))
 
 
 if __name__ == '__main__':
