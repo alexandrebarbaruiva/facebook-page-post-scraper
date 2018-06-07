@@ -5,9 +5,12 @@
 
 **[:brazil: Readme](../../../../README.md) | [:us: Readme](./README.md)**
 
+**[:brazil: Documentação](../../../Docs/Portuguese/Doc.md) |
+[:us: Documentation](../../../Docs/English/Doc.md)**
+
 ## Tabel of Content
 
-* [begin](#facebook-scraper)
+* [Begin](#facebook-scraper)
 * [Tabel of Content](#table-of-content) 
 * [Making it Run](#making-it-run)
 * [Testing the code](#testing-the-code)
