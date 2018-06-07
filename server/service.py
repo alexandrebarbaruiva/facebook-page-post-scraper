@@ -55,13 +55,29 @@ class DBService:
         actor_dict['average_reactions'] = actor_tuple[0][10]
         actor_dict['average_comments'] = actor_tuple[0][11]
         actor = json.dumps(
-            actor_dict, indent=2, ensure_ascii=False, separators=(',', ': '), default=str
+            actor_dict, indent=2, ensure_ascii=True, separators=(',', ': '), default=str
         )
         return actor
 
+    def get_all_date(self):
+        date_dict = {'date': []}
+        conn = psycopg2.connect(**self.params)
+        cur = conn.cursor()
+        cur.execute("SELECT DISTINCT date FROM Facebook")
+        date_tuple = cur.fetchall()
+        cur.execute("SELECT MAX(date) FROM Facebook")
+        latest = cur.fetchall()
+        conn.commit()
+        for row in date_tuple:
+            date_dict['date'].append(row[0])
+        date_dict['latest'] = latest[0][0]
+        date = json.dumps(
+            date_dict, indent=2, ensure_ascii=False, separators=(',', ': '), default=str
+        )
+        return date
 
 
-            
 if __name__ == '__main__':
     dbs = DBService()
     dbs.get_basic_actor_data(actor='omercadopopular', date='2018-06-06')
+    dbs.get_all_date()

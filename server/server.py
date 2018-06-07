@@ -18,16 +18,16 @@ def show_actors_collected():
 
 @app.route('/date', methods=['GET'])
 def show_date():
-    with open('json/'+'date.json') as date:
-        return jsonify(json.load(date))
+    access_db = DBService()
+    return jsonify(json.loads(access_db.get_all_date()))
 
 @app.route('/basic/<date>/<actor_name>', methods=['GET'])
 def show_basic_data(date, actor_name):
     access_db = DBService()
     if(date == 'latest'):
-        with open('json/date.json', 'r', encoding='utf8') as date_file:
-            data = json.load(date_file)
+        data = json.loads(access_db.get_all_date())
         date = data['latest']
+        print(date)
     return jsonify(json.loads(access_db.get_basic_actor_data(actor_name, date)))
 
 
