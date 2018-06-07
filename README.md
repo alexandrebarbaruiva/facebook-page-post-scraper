@@ -3,10 +3,10 @@
 [![Build Status](https://travis-ci.org/unb-cic-esw/facebook-page-post-scraper.svg?branch=master)](https://travis-ci.org/unb-cic-esw/facebook-page-post-scraper)
 [![Maintainability](https://api.codeclimate.com/v1/badges/6d78fb4221b49847ca9c/maintainability)](https://codeclimate.com/github/unb-cic-esw/facebook-page-post-scraper/maintainability)
 
-**[:brazil: Readme](./README.md) | [:us: Readme](./.github/Readme/Language/English/README.md)**
+[:brazil: Readme](./README.md) | [:us: Readme](./.github/Readme/Language/English/README.md)
 
-**[:brazil: Documentação](./.github/Docs/Portuguese/Doc.md) |
-[:us: Readme](./.github/Docs/English/Doc.md)**
+[:brazil: Documentação](./.github/Docs/Portuguese/Doc.md) |
+[:us: Readme](./.github/Docs/English/Doc.md)
 
 ## Tabela de Conteudo
 
@@ -139,17 +139,14 @@ python heroku_clock.py
 
 ## Um projeto de
 
-
 [![alt text][unb]](https://www.unb.br/)
 
 [unb]:./.github/Images/logo_unb.png
 
 Universidade de Brasília
 
-
 [![alt text][resocie]](https://www.resocie.org/)
 
 [resocie]:./.github/Images/resocie.jpg
 
 Resocie : Repensando as Relações entre Sociedade e Estado
-
