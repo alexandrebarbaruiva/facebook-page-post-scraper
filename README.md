@@ -15,8 +15,8 @@
 * [Fazendo tudo rodar](#fazendo-tudo-rodar)
 * [Usando o Programa](#usando-o-programa)
 * [Rodando os testes](#rodando-os-testes)
-* [Verificando o estilo](#verificando-o-estilo)
-* [Apschedule](#apschedule)
+* [Verificando estilo](#verificando-estilo)
+* [APScheduled](#apscheduled)
 * [Agendamento](#agendamento)
 * [Projeto de](#um-projeto-de)
 
@@ -68,7 +68,7 @@ Uma vez com todas as configurações feitas, use:
 make run
 ```
 
-## Rodando testes
+## Rodando os testes
 
 Por enquanto rodar testes é a principal funcionalidade. Em breve serão adicionadas 
 mais funções. Portanto, para testes
