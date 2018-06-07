@@ -122,10 +122,12 @@ ifeq ($(OS), Windows_NT)
 	rm -f .\csv\*.csv
 	rm -rf .\htmlcov
 	rm -f .\.coverage
+	rm -f .\json
 else
 	rm -f $(CsvDir)*.csv
 	rm -rf ./htmlcov
 	rm -f ./.coverage
+	rm -rf ./json/
 endif
 
 pylint:
