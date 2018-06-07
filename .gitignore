@@ -2,6 +2,8 @@
 .DS_Store
 config.ini
 /csv/*.csv
+/json/*.json 
+/json
 /.idea
 
 # Byte-compiled / optimized / DLL files
