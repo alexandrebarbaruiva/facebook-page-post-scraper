@@ -38,8 +38,7 @@ class DBService:
         conn = psycopg2.connect(**self.params)
         cur = conn.cursor()
         cur.execute(
-            """SELECT DISTINCT *
-               FROM Facebook
+            """SELECT DISTINCT * FROM Facebook
                WHERE file_name=%s AND date=%s""", (str(actor), str(date))
         )
         conn.commit()
