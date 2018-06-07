@@ -1,34 +1,38 @@
+import os
 import csv
 import sys
 from time import strftime
 from .page_scraper import Scraper
 from .token_manager import retrieve_token_file, get_user_password_decrypted, \
     retrieve_password_file, collect_token_automatically, collect_token
-import os
 
-def collect_all_pages():
 
-    pages = []
-    with open('entidades.csv', 'r') as entidades:
+def read_entidades(pages, entidades='entidades'):
+    with open(entidades + '.csv', 'r') as entidades:
         reader = csv.reader(entidades)
         for row in reader:
             pages.append(row[0])
+    return pages
+
+
+def checkin_updating_token():
     scraper = Scraper(retrieve_token_file())
+
+    # Verifica se o token ainda é válido
     if not scraper.check_valid_token():
+        # Caso não seja, verifica se existe um config.ini
         if retrieve_password_file():
-            try:
-                collect_token_automatically(*get_user_password_decrypted())
-                scraper = Scraper(retrieve_token_file())
-            except Exception as inst:
-                print(inst)
-                return -1
+            collect_token_automatically(*get_user_password_decrypted())
+        # Caso não exista o arquivo, dispara a função para gerar o arquivo
         else:
-            try:
-                collect_token()
-                scraper = Scraper(retrieve_token_file())
-            except Exception as inst:
-                print(inst)
-                return -1
+            collect_token()
+
+
+def collect_all_pages():
+    pages = []
+    pages = read_entidades(pages)
+    checkin_updating_token()
+    scraper = Scraper(retrieve_token_file())
 
     os.chdir("json")
     print(strftime("%Y-%m-%d"))
@@ -47,23 +51,16 @@ def collect_all_pages():
     scraper.write_actors_and_date_file()
 
 
-
 def collect_2018():
     pages = []
-    with open('entidades.csv', 'r') as entidades:
-        reader = csv.reader(entidades)
-        for row in reader:
-            pages.append(row[0])
-    scraper = Scraper(retrieve_token_file())
+    pages = read_entidades(pages)
 
     for page in pages:
         try:
             scraper.set_page(page)
             print(scraper.page)
             for month in range(1, 6):
-                # print("Month {}".format(month))
                 for day in range(1, 31):
-                    # print("Day {}".format(day))
                     if not scraper.check_valid_token():
                         collect_token_automatically(
                             *get_user_password_decrypted()
@@ -73,7 +70,7 @@ def collect_2018():
                         print("Page doesn't exist")
                         break
                     if (month == int(strftime("%m"))) \
-                            and (day == (int(strftime("%d"))+1)):
+                            and (day == (int(strftime("%d")) + 1)):
                         print("end of collection")
                         break
                     try:
@@ -85,7 +82,7 @@ def collect_2018():
                         until_date = \
                             strftime("%Y-") + \
                             "{0:02d}".format(month) + "-" + \
-                            "{0:02d}".format(day+1)
+                            "{0:02d}".format(day + 1)
                         print(since_date, until_date)
                         filename = \
                             str(page) + "_" + \
@@ -97,11 +94,29 @@ def collect_2018():
                         )
                         scraper.write_to_json(file=filename)
                     except Exception as inst:
-                        print("Day {0} not found.".format(day+1))
+                        print("Day {0} not found.".format(day + 1))
                         print(inst)
                         pass
         except Exception as inst:
             print("Page not found.", inst)
+
+
+def collect_new_data():
+    """
+    Fuction used to check what sort of output the Graph API generates
+    """
+    new_info = []
+    pages = []
+    pages = read_entidades(pages)
+    new_info = read_entidades(new_info, 'novos_dados')
+    checkin_updating_token()
+    scraper = Scraper(retrieve_token_file())
+    for info in new_info:
+        for page in pages:
+            scraper.set_page(page)
+            print(scraper.page)
+            scraper.scrape_current_page(query=info)
+            scraper.write_to_csv(info)
 
 
 if __name__ == '__main__':

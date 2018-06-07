@@ -61,7 +61,7 @@ class Scraper:
         feed_statement = '/feed' if feed else ''
         try:
             post = graph.get_object(
-                id=str(self.page)+feed_statement,
+                id=str(self.page) + feed_statement,
                 fields=query
             )
             self.current_data = post
@@ -78,10 +78,8 @@ class Scraper:
     def write_to_json(self, actor_name=None, file=None):
         if file is None:
             file = self.file_name
-        with open(
-            'json/'+ strftime("%Y-%m-%d") + '/' + file + '.json',
-            'w', encoding='utf8'
-            ) as data_file:
+        with open('json/' + strftime("%Y-%m-%d") + '/' + file + '.json',
+                  'w', encoding='utf8') as data_file:
                 data_file.write(
                     json.dumps(self.current_data, indent=2, ensure_ascii=False)
                 )  # pretty json
@@ -204,7 +202,7 @@ class Scraper:
         if not self.valid_page(page):
             return "Page is not valid."
         if since_date is None:
-            month = str(int(strftime("%m"))-1)
+            month = str(int(strftime("%m")) - 1)
             since_date = strftime("%Y-") + month + strftime("-%d")
         if until_date is None:
             until_date = strftime("%Y-%m-%d")
@@ -226,7 +224,8 @@ class Scraper:
                 ".limit(0).summary(true)"
 
             statuses = graph.get_object(
-                id=str(self.page)+'/posts?'+after+'&limit=100'+since+until,
+                id=str(self.page) + '/posts?' + after +
+                '&limit=100' + since + until,
                 fields=fields
             )
             for status in statuses['data']:
@@ -268,7 +267,7 @@ class Scraper:
 
     def write_actors_and_date_file(self):
         data = {'date': [], 'latest': strftime("%Y-%m-%d")}
-        actors_dict = {'actors' : self.actors_list}
+        actors_dict = {'actors': self.actors_list}
         with open('json/' + 'actors.json', 'w', encoding='utf8') as actor_file:
             actor_file.write(
                 json.dumps(actors_dict, indent=2, ensure_ascii=False)
@@ -277,13 +276,13 @@ class Scraper:
             date_file = open('json/date.json', 'r+', encoding='utf8')
             data = json.load(date_file)
             data['latest'] = strftime("%Y-%m-%d")
-            #print(data)
+            # print(data)
             date_file.seek(0)
             if strftime("%Y-%m-%d") not in data['date']:
                 data['date'].append(strftime("%Y-%m-%d"))
-                #print(data)
+                # print(data)
             date_file.write(
-                json.dumps(data, indent = 2, ensure_ascii = False)
+                json.dumps(data, indent=2, ensure_ascii=False)
             )
         except FileNotFoundError:
             data['date'].append(strftime("%Y-%m-%d"))
