@@ -1,6 +1,6 @@
 # Facebook Scraper
 
-**[:brazil: Readme](../../../README.md) | [:us: Readme](./README.md)**
+**[:brazil: Readme](../../../../README.md) | [:us: Readme](./README.md)**
 
 [![Build Status](https://travis-ci.org/unb-cic-esw/facebook-page-post-scraper.svg?branch=master)](https://travis-ci.org/unb-cic-esw/facebook-page-post-scraper)
 [![Maintainability](https://api.codeclimate.com/v1/badges/6d78fb4221b49847ca9c/maintainability)](https://codeclimate.com/github/unb-cic-esw/facebook-page-post-scraper/maintainability)
@@ -76,14 +76,14 @@ Important to use it if you want to send us a Pull Request :smile:
 
 [![alt text][unb]](https://www.unb.br/)
 
-[unb]:../../Images/logo_unb.png
+[unb]:../../../Images/logo_unb.png
 
 Universidade de Brasília
 
 
 [![alt text][resocie]](https://www.resocie.org/)
 
-[resocie]:../../Images/resocie.jpg
+[resocie]:../../../Images/resocie.jpg
 
 Resocie : Repensando as Relações entre Sociedade e Estado
 
