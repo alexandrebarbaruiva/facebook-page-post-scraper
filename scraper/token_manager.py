@@ -13,9 +13,17 @@ sys.path.append(
 )
 from scraper.page_scraper import Scraper
 
+
+"""@token_manager responsible for dealing with token information.
+
+Everything related to token (get from file, update from Facebook, save on file)
+, is dealt with a function described here.
+
+"""
 path = str(os.getcwd()) + '/scraper/'
 
 
+# TODO: make retrieve_config_file()
 def retrieve_token_file(file='config.ini'):
     """
     Retrieves token from config.ini file on scraper folder
@@ -152,7 +160,8 @@ def collect_token_automatically(email, password, file='config.ini'):
 
 
 def collect_token_manually(file='config.ini'):
-    """
+    """ Function to collect token with user input
+
     Case is the first time the User try to get the Token, User
     will have to accept Facebook Terms and Conditions,
     this function will open facebook page so he can login on user's Facebook,
@@ -169,6 +178,11 @@ def collect_token_manually(file='config.ini'):
 
 
 def check_automatic_collection(file='config.ini'):
+    """ Function to retrieve token from facebook automatically
+
+    Once token file has email and password, the process will happen
+    automatically
+    """
     try:
         # tried to get the token
         print(
@@ -194,6 +208,11 @@ def check_automatic_collection(file='config.ini'):
 def check_semi_automatic_collection(file='config.ini',
                                     email=None,
                                     password=None):
+    """ Function that still demands some user input
+
+    Most part is done automatically, however user has to input facebook
+    email and password.
+    """
     os.system("clear")
     print('Email from your Facebook Account:')
     if email is None:
@@ -210,7 +229,6 @@ def check_semi_automatic_collection(file='config.ini',
                 "Set Token Is Valid" +
                 "\x1b[0m\n"
             )
-
         else:
             print("\x1b[04;01;31mSet Token is not Valid\x1b[0m\n")
         print(
@@ -271,6 +289,9 @@ def collect_token(file='config.ini'):
 
 
 def encrypt_user_password(user, password):
+    """
+    Encrypts user name and password to store on config.ini
+    """
     key = Fernet.generate_key()
     cipher_suite = Fernet(key)
     user_byte = str.encode(user)
@@ -281,6 +302,9 @@ def encrypt_user_password(user, password):
 
 
 def decrypt_user_password(**kwargs):
+    """
+    Decrypts user name and password given a user token
+    """
     if {'user', 'password', 'utoken'} <= set(kwargs):
         try:
             kwargs['utoken'] = kwargs['utoken'][2:-1].encode()
@@ -296,6 +320,9 @@ def decrypt_user_password(**kwargs):
 
 
 def get_user_password_decrypted(file='config.ini'):
+    """
+    Decrypts user name and password from config.ini
+    """
     try:
         return decrypt_user_password(**retrieve_password_file(file))
     except Exception as inst:
