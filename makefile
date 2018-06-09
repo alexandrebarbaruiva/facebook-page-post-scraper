@@ -126,7 +126,7 @@ ifeq ($(OS), Windows_NT)
 	rm -f .\.coverage
 	rm -f .\json
 else
-	rm -rf $(CsvDir)
+	rm -f $(CsvDir)*.csv
 	rm -rf ./htmlcov
 	rm -f ./.coverage
 	rm -rf ./json/

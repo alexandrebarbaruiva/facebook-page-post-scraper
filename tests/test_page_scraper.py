@@ -158,7 +158,6 @@ class TestPageScraping(unittest.TestCase):
             pages = 0
             for row in reader:
                 pages += 1
-                row
             self.assertEqual(pages, 1)
         # Deletar arqquivo na pasta
         try:
@@ -196,7 +195,6 @@ class TestPageScraping(unittest.TestCase):
             pages = 0
             for row in reader:
                 pages += 1
-                row
             self.assertEqual(pages, 2)
         # Deletar arqquivo na pasta
         try:
@@ -224,7 +222,6 @@ class TestPageScraping(unittest.TestCase):
             pages = 0
             for row in reader:
                 pages += 1
-                row
             self.assertEqual(pages, 1)
         try:
             os.remove(
@@ -261,7 +258,6 @@ class TestPageScraping(unittest.TestCase):
             pages = 0
             for row in reader:
                 pages += 1
-                row
             self.assertEqual(pages, 2)
         # Deletar arqquivo na pasta
         try:
