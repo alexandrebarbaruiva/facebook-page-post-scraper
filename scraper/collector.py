@@ -1,3 +1,4 @@
+"""All functions related to collecting multiple pages automatically."""
 import os
 import csv
 from time import strftime
@@ -7,6 +8,12 @@ from .token_manager import retrieve_token_file, get_user_password_decrypted, \
 
 
 def read_entidades(pages, entidades='entidades'):
+    """
+    Leitura de todas as entidades desejadas.
+
+    Responsável por coletas todas a entidades em que será feita a
+    raspagem de dados.
+    """
     with open(entidades + '.csv', 'r') as entidades:
         reader = csv.reader(entidades)
         for row in reader:
@@ -51,6 +58,11 @@ def collect_all_pages():
 
 
 def collect_2018():
+    """
+    Collects all data from 2018.
+
+    Retrieves all data from 2018 day by day, generates lots of files.
+    """
     pages = []
     pages = read_entidades(pages)
     checkin_updating_token()

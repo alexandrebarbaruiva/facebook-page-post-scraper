@@ -55,9 +55,18 @@ endif
 
 style:
 ifeq ($(OS), Windows_NT)
-	pycodestyle tests\. scraper\. server/. --ignore=E402,W504
+	pycodestyle tests\. scraper\. server\. --ignore=E402,W504
 else
 	pycodestyle tests/. scraper/. server/. --ignore=E402,W504
+endif
+
+doc:
+ifeq ($(OS), Windows_NT)
+	pycodestyle tests\. scraper\. server\. --ignore=E402,W504
+	pydocstyle tests\. scraper\. server\.
+else
+	pycodestyle tests/. scraper/. server/. --ignore=E402,W504
+	pydocstyle tests/. scraper/. server/.
 endif
 
 cov:

@@ -9,4 +9,5 @@ cryptography
 radon
 pylint
 flask
+pydocstyle
 APScheduler==3.0.0
