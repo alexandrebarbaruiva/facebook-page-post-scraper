@@ -28,6 +28,17 @@
 
 Documentação do arquivo [Collector.py](../../../scraper/collector.py)
 
+#### read_entidades(pages, entidades='entidades')
+
+Responsável por coletas todas a entidades em que será feita a
+raspagem de dados.
+
+#### checkin_updating_token()
+
+#### collect_all_pages()
+
+#### collect_2018()
+
 ### Page_scraper.py
 
 Documentação do arquivo [page_scraper.py](../../../scraper/page_scraper.py)

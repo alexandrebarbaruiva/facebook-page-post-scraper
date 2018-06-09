@@ -1,3 +1,11 @@
+"""
+@token_manager responsible for dealing with token information.
+
+Everything related to token (get from file, update from Facebook,
+save on file), is dealt with a function described here.
+
+"""
+
 import os
 import sys
 from configparser import ConfigParser
@@ -14,20 +22,12 @@ sys.path.append(
 from scraper.page_scraper import Scraper
 
 
-"""@token_manager responsible for dealing with token information.
-
-Everything related to token (get from file, update from Facebook, save on file)
-, is dealt with a function described here.
-
-"""
 path = str(os.getcwd()) + '/scraper/'
 
 
 # TODO: make retrieve_config_file()
 def retrieve_token_file(file='config.ini'):
-    """
-    Retrieves token from config.ini file on scraper folder
-    """
+    """Retrieve token from config.ini file on scraper folder."""
     try:
         config = ConfigParser()
         config.read_file(open(path + file))
@@ -40,9 +40,7 @@ def retrieve_token_file(file='config.ini'):
 
 
 def retrieve_password_file(file='config.ini'):
-    """
-    Retrieves user and password from config.ini file on scraper folder
-    """
+    """Retrieve user and password from config.ini file on scraper folder."""
     try:
         config = ConfigParser()
         config.read_file(open(path + file))
@@ -61,9 +59,7 @@ def retrieve_password_file(file='config.ini'):
 
 
 def update_token_file(file='config.ini', **kwargs):
-    """
-    Update token from config.ini file on scraper folder
-    """
+    """Update token from config.ini file on scraper folder."""
     config = ConfigParser()
     config.read(path + file)
 
@@ -88,8 +84,9 @@ def update_token_file(file='config.ini', **kwargs):
 
 def generate_token_file(new_token=None, file='config.ini'):
     """
-    Generate empty token file with token provided, else returns
-    that token already exists
+    Generate empty token file with token provided.
+
+    Else returns that token already exists.
     """
     if(not retrieve_token_file(file)):
         token_data = '[DEFAULT]\ntoken = \'' + str(new_token) + '\''
@@ -102,9 +99,11 @@ def generate_token_file(new_token=None, file='config.ini'):
 
 def collect_token_automatically(email, password, file='config.ini'):
     """
+    Login to facebook and update token.
+
     When user has already accepted Facebook Terms and Conditions,
     this function will login on user's Facebook and get his
-    "User Token Acces" and save in config.ini
+    "User Token Acces" and save in config.ini.
     """
     with Browser('chrome', headless=True) as browser:
         # Visit Facebook developers web site
@@ -160,12 +159,13 @@ def collect_token_automatically(email, password, file='config.ini'):
 
 
 def collect_token_manually(file='config.ini'):
-    """ Function to collect token with user input
+    """
+    Collect token with user input.
 
     Case is the first time the User try to get the Token, User
     will have to accept Facebook Terms and Conditions,
     this function will open facebook page so he can login on user's Facebook,
-    get his "User Token Acces", paste on the terminal so we save in config.ini
+    get his "User Token Acces", paste on the terminal so we save in config.ini.
     """
     url = 'https://developers.facebook.com/tools/explorer?locale=en_US'
     webbrowser.open(url)
@@ -178,10 +178,11 @@ def collect_token_manually(file='config.ini'):
 
 
 def check_automatic_collection(file='config.ini'):
-    """ Function to retrieve token from facebook automatically
+    """
+    Retrieve token from facebook automatically.
 
     Once token file has email and password, the process will happen
-    automatically
+    automatically.
     """
     try:
         # tried to get the token
@@ -208,7 +209,8 @@ def check_automatic_collection(file='config.ini'):
 def check_semi_automatic_collection(file='config.ini',
                                     email=None,
                                     password=None):
-    """ Function that still demands some user input
+    """
+    Collect token but still demands some user input.
 
     Most part is done automatically, however user has to input facebook
     email and password.
@@ -268,8 +270,9 @@ def check_manual_collection(file='config.ini'):
 
 def collect_token(file='config.ini'):
     """
-    Function for collecting token manually if it's the first time or
-    automatically if user has done the process at least once.
+    Collect token manually if it's the first time.
+
+    Or automatically if user has done the process at least once.
     """
     os.system("clear")
     cond = "something"
@@ -289,9 +292,7 @@ def collect_token(file='config.ini'):
 
 
 def encrypt_user_password(user, password):
-    """
-    Encrypts user name and password to store on config.ini
-    """
+    """Encrypts user name and password to store on config.ini."""
     key = Fernet.generate_key()
     cipher_suite = Fernet(key)
     user_byte = str.encode(user)
@@ -302,9 +303,7 @@ def encrypt_user_password(user, password):
 
 
 def decrypt_user_password(**kwargs):
-    """
-    Decrypts user name and password given a user token
-    """
+    """Decrypts user name and password given a user token."""
     if {'user', 'password', 'utoken'} <= set(kwargs):
         try:
             kwargs['utoken'] = kwargs['utoken'][2:-1].encode()
@@ -320,9 +319,7 @@ def decrypt_user_password(**kwargs):
 
 
 def get_user_password_decrypted(file='config.ini'):
-    """
-    Decrypts user name and password from config.ini
-    """
+    """Decrypts user name and password from config.ini."""
     try:
         return decrypt_user_password(**retrieve_password_file(file))
     except Exception as inst:
