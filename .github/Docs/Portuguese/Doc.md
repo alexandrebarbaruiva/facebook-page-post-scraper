@@ -28,16 +28,16 @@
 
 Documentação do arquivo [Collector.py](../../../scraper/collector.py)
 
-**read_entidades(pages, entidades='entidades')**
+#### read_entidades(pages, entidades='entidades') ####
 
 Responsável por coletas todas a entidades em que será feita a
 raspagem de dados.
 
-**checkin_updating_token()**
+#### checkin_updating_token() ####
 
-**collect_all_pages()**
+#### collect_all_pages() ####
 
-**collect_2018()**
+#### collect_2018() ####
 
 ### Page_scraper.py
 
