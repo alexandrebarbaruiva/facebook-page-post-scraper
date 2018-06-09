@@ -1,4 +1,4 @@
-from server.server import app
+from server.rest import app
 import unittest
 
 
@@ -24,7 +24,7 @@ class TestFlask(unittest.TestCase):
         # Verifica o código de estado da resposta da requisição
         #   Se for sucesso irá retornar 200
         self.assertEqual(result.status_code, 200)
-    
+
     def test_dates_status_code(self):
         # Envia uma requisição HTTP GET para a aplicação
         result = self.app.get('/date')

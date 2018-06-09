@@ -28,10 +28,17 @@ class TestTokenFunctions(unittest.TestCase):
         """
         Check if token file is well formatted
         """
+        FILE_PATH = str(os.getcwd()) + '/scraper/badtoken.ini'
+        with open(FILE_PATH, 'w') as testfile:
+            testfile.write("[DAFAULT]\ntoken = TestTokenNotValid")
         self.assertEqual(
             retrieve_token_file('badtoken.ini'),
             'Token with bad structure'
         )
+        try:
+            os.remove(str(os.getcwd()) + '/scraper/badtoken.ini')
+        except FileNotFoundError:
+            pass
 
     def test_if_token_file_can_be_updated(self):
         """
@@ -50,8 +57,8 @@ class TestTokenFunctions(unittest.TestCase):
             'New token written successfuly.'
         )
         try:
-            os.remove(str(os.getcwd())+'/scraper/default.ini')
-        except Exception as i:
+            os.remove(str(os.getcwd()) + '/scraper/default.ini')
+        except FileNotFoundError:
             pass
 
     def test_if_empty_token_file_can_be_generated(self):
@@ -64,7 +71,7 @@ class TestTokenFunctions(unittest.TestCase):
             [False, 'File already exists']
         )
         try:
-            os.remove(str(os.getcwd())+'/scraper/empty.ini')
+            os.remove(str(os.getcwd()) + '/scraper/empty.ini')
         except Exception as i:
             pass
 
@@ -78,8 +85,8 @@ class TestTokenFunctions(unittest.TestCase):
             [True, new_token]
         )
         try:
-            os.remove(str(os.getcwd())+'/scraper/empty.ini')
-        except Exception as i:
+            os.remove(str(os.getcwd()) + '/scraper/empty.ini')
+        except FileNotFoundError:
             pass
 
 
@@ -115,8 +122,8 @@ class TestTokenSecurity(unittest.TestCase):
             'User and password updated.'
         )
         try:
-            os.remove(str(os.getcwd())+'/scraper/default.ini')
-        except Exception as i:
+            os.remove(str(os.getcwd()) + '/scraper/default.ini')
+        except FileNotFoundError:
             pass
 
     def test_get_user_password_decrypted_no_token(self):
@@ -143,8 +150,8 @@ class TestTokenCollectionWithBrowser(unittest.TestCase):
                 type(Scraper(''))
             )
         try:
-            os.remove(str(os.getcwd())+'/scraper/default.ini')
-        except Exception as i:
+            os.remove(str(os.getcwd()) + '/scraper/default.ini')
+        except FileNotFoundError:
             pass
 
     def test_check_function_for_manual_token(self):
@@ -155,8 +162,8 @@ class TestTokenCollectionWithBrowser(unittest.TestCase):
                 type(False)
             )
         try:
-            os.remove(str(os.getcwd())+'/scraper/default.ini')
-        except Exception as i:
+            os.remove(str(os.getcwd()) + '/scraper/default.ini')
+        except FileNotFoundError:
             pass
 
 
@@ -170,8 +177,8 @@ class TestTokenCollection(unittest.TestCase):
             'Wrong Facebook user or password'
         )
         try:
-            os.remove(str(os.getcwd())+'/scraper/default.ini')
-        except Exception as i:
+            os.remove(str(os.getcwd()) + '/scraper/default.ini')
+        except FileNotFoundError:
             pass
 
     def test_collect_token_automatically_with_correct_id(self):

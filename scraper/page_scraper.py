@@ -5,6 +5,7 @@ import datetime
 from time import strftime
 import requests
 import facebook
+import psycopg2
 
 
 class Scraper:
@@ -61,7 +62,7 @@ class Scraper:
         feed_statement = '/feed' if feed else ''
         try:
             post = graph.get_object(
-                id=str(self.page)+feed_statement,
+                id=str(self.page) + feed_statement,
                 fields=query
             )
             self.current_data = post
@@ -79,9 +80,9 @@ class Scraper:
         if file is None:
             file = self.file_name
         with open(
-            'json/'+ strftime("%Y-%m-%d") + '/' + file + '.json',
+            'json/' + strftime("%Y-%m-%d") + '/' + file + '.json',
             'w', encoding='utf8'
-            ) as data_file:
+        ) as data_file:
                 data_file.write(
                     json.dumps(self.current_data, indent=2, ensure_ascii=False)
                 )  # pretty json
@@ -204,7 +205,7 @@ class Scraper:
         if not self.valid_page(page):
             return "Page is not valid."
         if since_date is None:
-            month = str(int(strftime("%m"))-1)
+            month = str(int(strftime("%m")) - 1)
             since_date = strftime("%Y-") + month + strftime("-%d")
         if until_date is None:
             until_date = strftime("%Y-%m-%d")
@@ -226,7 +227,8 @@ class Scraper:
                 ".limit(0).summary(true)"
 
             statuses = graph.get_object(
-                id=str(self.page)+'/posts?'+after+'&limit=100'+since+until,
+                id=str(self.page) + '/posts?' + after +
+                '&limit=100' + since + until,
                 fields=fields
             )
             for status in statuses['data']:
@@ -268,7 +270,7 @@ class Scraper:
 
     def write_actors_and_date_file(self):
         data = {'date': [], 'latest': strftime("%Y-%m-%d")}
-        actors_dict = {'actors' : self.actors_list}
+        actors_dict = {'actors': self.actors_list}
         with open('json/' + 'actors.json', 'w', encoding='utf8') as actor_file:
             actor_file.write(
                 json.dumps(actors_dict, indent=2, ensure_ascii=False)
@@ -277,13 +279,11 @@ class Scraper:
             date_file = open('json/date.json', 'r+', encoding='utf8')
             data = json.load(date_file)
             data['latest'] = strftime("%Y-%m-%d")
-            #print(data)
             date_file.seek(0)
             if strftime("%Y-%m-%d") not in data['date']:
                 data['date'].append(strftime("%Y-%m-%d"))
-                #print(data)
             date_file.write(
-                json.dumps(data, indent = 2, ensure_ascii = False)
+                json.dumps(data, indent=2, ensure_ascii=False)
             )
         except FileNotFoundError:
             data['date'].append(strftime("%Y-%m-%d"))
@@ -292,3 +292,53 @@ class Scraper:
                 date_file.write(
                     json.dumps(data, indent=2, ensure_ascii=False)
                 )
+
+    def calldb(self, actor_name=None, file=None):
+        # conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+        if file is None:
+            file = self.file_name
+        with open(
+            'json/' + strftime("%Y-%m-%d") + '/' + file + '.json',
+            'r', encoding='utf8'
+        ) as data_file:
+            data = json.load(data_file)
+        data['file_name'] = file
+        params = {
+            "host": "host",
+            "database": "db",
+            "user": "user",
+            "password": "password"
+        }
+        conn = psycopg2.connect(**params)
+        sql_cmd = """INSERT INTO Facebook(
+            file_name, name, fan_count, id, date, since_date,
+            until_date, total_reactions, total_comments, total_shares,
+            total_posts, average_reactions, average_comments)
+            SELECT
+                CAST(src.MyJSON->>'file_name' AS TEXT),
+                CAST(src.MyJSON->>'name' AS TEXT),
+                CAST(src.MyJSON->>'fan_count' AS INTEGER),
+                CAST(src.MyJSON->>'id' AS TEXT),
+                CAST(src.MyJSON->>'date' AS DATE),
+                CAST(src.MyJSON->>'since_date' AS DATE),
+                CAST(src.MyJSON->>'until_date' AS DATE),
+                CAST(src.MyJSON->>'total_reactions' AS INTEGER),
+                CAST(src.MyJSON->>'total_comments' AS INTEGER),
+                CAST(src.MyJSON->>'total_shares' AS INTEGER),
+                CAST(src.MyJSON->>'total_posts' AS INTEGER),
+                CAST(src.MyJSON->>'average_reactions' AS INTEGER),
+                CAST(src.MyJSON->>'average_comments' AS INTEGER)
+            FROM ( SELECT CAST(%s AS JSONB) AS MyJSON ) src"""
+        # Convert dictionary to native JSON data type
+        data_str = json.dumps(data)
+        sql_params = (data_str,)
+        try:
+            cur = conn.cursor()
+            cur.execute(sql_cmd, sql_params)
+            conn.commit()
+        except Exception as e:
+            print('Error ', e)
+            raise
+        if actor_name is not None:
+            self.actors_list.append(actor_name)
+        return True
