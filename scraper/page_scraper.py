@@ -45,7 +45,7 @@ class Scraper:
     def get_current_page(self):
         try:
             return self.page
-        except Exception as inst:
+        except Exception:
             return 'Page not set'
 
     def valid_page(self, page=None):
@@ -304,10 +304,11 @@ class Scraper:
             data = json.load(data_file)
         data['file_name'] = file
         params = {
-            "host": "host",
-            "database": "db",
-            "user": "user",
-            "password": "password"
+            "host": "ec2-23-23-247-245.compute-1.amazonaws.com",
+            "database": "dcut7901ku63t1",
+            "user": "outvrxddgqtmwt",
+            "password": "e4f2c7675d8bacc541b8e0162d5e023c" +
+            "63ce63df91bcfbeaf9f1a3e803800add"
         }
         conn = psycopg2.connect(**params)
         sql_cmd = """INSERT INTO Facebook(

@@ -1,6 +1,5 @@
 import os
 import csv
-import sys
 from time import strftime
 from .page_scraper import Scraper
 from .token_manager import retrieve_token_file, get_user_password_decrypted, \
@@ -54,6 +53,8 @@ def collect_all_pages():
 def collect_2018():
     pages = []
     pages = read_entidades(pages)
+    checkin_updating_token()
+    scraper = Scraper(retrieve_token_file())
 
     for page in pages:
         try:

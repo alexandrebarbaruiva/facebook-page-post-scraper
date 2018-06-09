@@ -1,14 +1,11 @@
 import unittest
 import os
-import sys
 import csv
 from time import strftime
 from scraper.page_scraper import Scraper
 from scraper.token_manager import \
-    retrieve_token_file, update_token_file, generate_token_file,\
-    retrieve_password_file, encrypt_user_password, \
-    collect_token_automatically, decrypt_user_password, \
-    get_user_password_decrypted
+    retrieve_token_file, retrieve_password_file, \
+    collect_token_automatically, get_user_password_decrypted
 
 
 class TestPageScraperBasics(unittest.TestCase):
@@ -161,6 +158,7 @@ class TestPageScraping(unittest.TestCase):
             pages = 0
             for row in reader:
                 pages += 1
+                row
             self.assertEqual(pages, 1)
         # Deletar arqquivo na pasta
         try:
@@ -198,6 +196,7 @@ class TestPageScraping(unittest.TestCase):
             pages = 0
             for row in reader:
                 pages += 1
+                row
             self.assertEqual(pages, 2)
         # Deletar arqquivo na pasta
         try:
@@ -225,6 +224,7 @@ class TestPageScraping(unittest.TestCase):
             pages = 0
             for row in reader:
                 pages += 1
+                row
             self.assertEqual(pages, 1)
         try:
             os.remove(
@@ -261,6 +261,7 @@ class TestPageScraping(unittest.TestCase):
             pages = 0
             for row in reader:
                 pages += 1
+                row
             self.assertEqual(pages, 2)
         # Deletar arqquivo na pasta
         try:
