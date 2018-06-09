@@ -62,13 +62,15 @@ endif
 
 cov:
 ifeq ($(OS), Windows_NT)
-	coverage run -m py.test tests\test_page_scraper.py
-	coverage report -m scraper\page_scraper.py
-	coverage html scraper\page_scraper.py
+	make clean
+	coverage run -m py.test tests/test_page_scraper.py tests/test_token_manager.py
+	coverage report -m scraper/page_scraper.py scraper/token_manager.py
+	coverage html scraper/page_scraper.py scraper/token_manager.py
 else
-	coverage run -m py.test tests/test_page_scraper.py
-	coverage report -m scraper/page_scraper.py
-	coverage html scraper/page_scraper.py
+	make clean
+	coverage run -m py.test tests/test_page_scraper.py tests/test_token_manager.py
+	coverage report -m scraper/page_scraper.py scraper/token_manager.py
+	coverage html scraper/page_scraper.py scraper/token_manager.py
 endif
 
 full:
@@ -124,7 +126,7 @@ ifeq ($(OS), Windows_NT)
 	rm -f .\.coverage
 	rm -f .\json
 else
-	rm -f $(CsvDir)*.csv
+	rm -rf $(CsvDir)
 	rm -rf ./htmlcov
 	rm -f ./.coverage
 	rm -rf ./json/
