@@ -148,10 +148,10 @@ no Heroku, que pode ser executado em um dyno.
 Os buildpacks são compostos por um conjunto de scripts e,
 dependendo da linguagem de programação.
 Para adicionar um BuildPack segue os passos:
-Settings -> Add buildpack<br/>
+Settings -> Add buildpack
+
 Segue aqui o [link do BuildPack](https://github.com/jontewks/puppeteer-heroku-buildpack)
 da depedência(chromemium-browser) projeto necessita
-
 
 ## Um projeto de
 
