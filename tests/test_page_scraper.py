@@ -26,7 +26,6 @@ class TestPageScraperBasics(unittest.TestCase):
 
     def tearDown(self):
         self.scraper = None
-        
 
     def test_if_token_provided_is_valid(self):
         """
