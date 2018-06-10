@@ -14,12 +14,12 @@ from getpass import getpass
 from time import sleep
 from splinter import Browser
 from cryptography.fernet import Fernet
+from scraper.page_scraper import Scraper
 sys.path.append(
     os.path.dirname(
         os.path.dirname(os.path.realpath(__file__))
     )
 )
-from scraper.page_scraper import Scraper
 
 
 path = str(os.getcwd()) + '/scraper/'
@@ -35,7 +35,7 @@ def retrieve_token_file(file='config.ini'):
             if ('token' in config['DEFAULT'].keys()):
                 return(config['DEFAULT']['token'])
         return 'Token with bad structure'
-    except Exception as inst:
+    except Exception:
         return False
 
 
@@ -54,7 +54,7 @@ def retrieve_password_file(file='config.ini'):
                     }
                 )
         return False
-    except Exception as inst:
+    except Exception:
         return False
 
 
@@ -115,7 +115,7 @@ def collect_token_automatically(email, password, file='config.ini'):
             # Find the login button, if not found means error
             # conecting with the Facebook
             browser.click_link_by_partial_href('login')
-        except Exception as inst:
+        except Exception:
             print("\x1b[04;01;31mCouldn't open Facebook Dev site\x1b[0m")
             return 'Wasn`t possible to reach Facebook site. Are you online?'
         # Click on login button
@@ -128,7 +128,7 @@ def collect_token_automatically(email, password, file='config.ini'):
         # Request the updated User access token
             browser_access = browser.find_by_text('Get Token')
             browser_access.click()
-        except Exception as inst:
+        except Exception:
             # try:
             #     os.remove(str(os.getcwd())+'/scraper/'+file)
             # except Exception as inst:
@@ -200,7 +200,7 @@ def check_automatic_collection(file='config.ini'):
             return True
         print("\x1b[04;01;31mSet Token is not Valid\x1b[0m\n")
         return False
-    except Exception as inst:
+    except Exception:
         # something went wrong getting the token
         print("\x1b[04;01;31m" + "Auto Token function Failed!" + "\x1b[0m")
         return 'Wrong user or password.'
@@ -239,7 +239,7 @@ def check_semi_automatic_collection(file='config.ini',
             "\x1b[0m"
         )
         return True
-    except Exception as inst:
+    except Exception:
         # something went wrong getting the token
         print("\x1b[04;01;31m" + "Auto Token function Failed!" + "\x1b[0m")
         return False

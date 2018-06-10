@@ -18,13 +18,14 @@
 * [Verificando estilo](#verificando-estilo)
 * [APScheduled](#apscheduled)
 * [Agendamento](#agendamento)
+* [BuildPacks](#buildpacks)
 * [Projeto de](#um-projeto-de)
 
 ## Fazendo tudo rodar 
 
 Uma vez que se tenha instalado python 3 e Git, baixado o repositório e
 esteja com um editor de texto adequado (Atom, VSCode, Sublime ou Pycharm), deve-se
-seguir os seguintes passos
+seguir os seguintes passos:
 
 Criar o ambiente virtual (venv) e entrar no mesmo
 
@@ -135,7 +136,22 @@ Link Heroku - Agendamento ([Scheduled (Agendamento)](https://devcenter.heroku.co
 
 ## Agendamento
 
+Para automatizar a coleta de dados periodicamente, utilizamos
+um modelo do heroku de agendamento chamado clock.
+O programa será executado todos os dias à oito horas da manhã.
 python heroku_clock.py
+
+## BuildPacks
+
+Os buildpacks são responsáveis ​​por transformar o código implantado
+no Heroku, que pode ser executado em um dyno.
+Os buildpacks são compostos por um conjunto de scripts e,
+dependendo da linguagem de programação.
+Para adicionar um BuildPack segue os passos:
+Settings -> Add buildpack
+
+Segue aqui o [link do BuildPack](https://github.com/jontewks/puppeteer-heroku-buildpack)
+da depedência(chromemium-browser) projeto necessita
 
 ## Um projeto de
 

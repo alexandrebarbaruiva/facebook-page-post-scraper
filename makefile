@@ -55,29 +55,22 @@ endif
 
 style:
 ifeq ($(OS), Windows_NT)
-	pycodestyle tests\. scraper\. server\. --ignore=E402,W504
+	pycodestyle tests\. scraper\. server/. --ignore=E402,W504
 else
 	pycodestyle tests/. scraper/. server/. --ignore=E402,W504
-endif
-
-doc:
-ifeq ($(OS), Windows_NT)
-	pycodestyle tests\. scraper\. server\. --ignore=E402,W504
-	pydocstyle tests\. scraper\. server\.
-else
-	pycodestyle tests/. scraper/. server/. --ignore=E402,W504
-	pydocstyle tests/. scraper/. server/.
 endif
 
 cov:
 ifeq ($(OS), Windows_NT)
-	coverage run -m py.test tests\test_page_scraper.py
-	coverage report -m scraper\page_scraper.py
-	coverage html scraper\page_scraper.py
+	make clean
+	coverage run -m py.test tests/test_page_scraper.py tests/test_token_manager.py
+	coverage report -m scraper/page_scraper.py scraper/token_manager.py
+	coverage html scraper/page_scraper.py scraper/token_manager.py
 else
-	coverage run -m py.test tests/test_page_scraper.py
-	coverage report -m scraper/page_scraper.py
-	coverage html scraper/page_scraper.py
+	make clean
+	coverage run -m py.test tests/test_page_scraper.py tests/test_token_manager.py
+	coverage report -m scraper/page_scraper.py scraper/token_manager.py
+	coverage html scraper/page_scraper.py scraper/token_manager.py
 endif
 
 full:

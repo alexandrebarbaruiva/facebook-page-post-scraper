@@ -1,15 +1,12 @@
 import os
-import sys
-import csv
 import requests
 import unittest
-from time import strftime
 from unittest.mock import patch
 from scraper.page_scraper import Scraper
 from scraper.token_manager import \
     retrieve_token_file, update_token_file, generate_token_file, \
     retrieve_password_file, encrypt_user_password, decrypt_user_password, \
-    collect_token, collect_token_manually, collect_token_automatically, \
+    collect_token_manually, collect_token_automatically, \
     check_automatic_collection, get_user_password_decrypted, \
     check_semi_automatic_collection, check_manual_collection
 
@@ -72,7 +69,7 @@ class TestTokenFunctions(unittest.TestCase):
         )
         try:
             os.remove(str(os.getcwd()) + '/scraper/empty.ini')
-        except Exception as i:
+        except Exception:
             pass
 
     def test_if_token_file_can_be_generated(self):
@@ -194,7 +191,6 @@ class TestTokenCollection(unittest.TestCase):
     def test_collect_token_automatically_without_internet(self):
         url = 'https://www.google.com/'
         if requests.get(url).status_code != 200:
-            user, password = get_user_password_decrypted()
             self.assertEqual(
                 collect_token_automatically(
                     'user', 'hugepassword', 'default.ini'
