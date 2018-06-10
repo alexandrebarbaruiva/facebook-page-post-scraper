@@ -18,13 +18,14 @@
 * [Verificando estilo](#verificando-estilo)
 * [APScheduled](#apscheduled)
 * [Agendamento](#agendamento)
+* [BuildPacks](#buildpacks)
 * [Projeto de](#um-projeto-de)
 
 ## Fazendo tudo rodar 
 
 Uma vez que se tenha instalado python 3 e Git, baixado o repositório e
 esteja com um editor de texto adequado (Atom, VSCode, Sublime ou Pycharm), deve-se
-seguir os seguintes passos
+seguir os seguintes passos:
 
 Criar o ambiente virtual (venv) e entrar no mesmo
 
@@ -147,7 +148,7 @@ no Heroku, que pode ser executado em um dyno.
 Os buildpacks são compostos por um conjunto de scripts e,
 dependendo da linguagem de programação.
 Para adicionar um BuildPack segue os passos:
-Settings -> Add buildpack
+Settings -> Add buildpack<br/>
 Segue aqui o link do buildPack da depedência(chromemium-browser)
 projeto necessita
 ([https://github.com/jontewks/puppeteer-heroku-buildpack](https://github.com/jontewks/puppeteer-heroku-buildpack)
