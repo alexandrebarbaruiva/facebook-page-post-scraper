@@ -149,9 +149,9 @@ Os buildpacks são compostos por um conjunto de scripts e,
 dependendo da linguagem de programação.
 Para adicionar um BuildPack segue os passos:
 Settings -> Add buildpack<br/>
-Segue aqui o link do buildPack da depedência(chromemium-browser)
-projeto necessita
-([https://github.com/jontewks/puppeteer-heroku-buildpack](https://github.com/jontewks/puppeteer-heroku-buildpack)
+Segue aqui o [link do BuildPack](https://github.com/jontewks/puppeteer-heroku-buildpack)
+da depedência(chromemium-browser) projeto necessita
+
 
 ## Um projeto de
 
