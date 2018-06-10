@@ -135,17 +135,21 @@ Link Heroku - Agendamento ([Scheduled (Agendamento)](https://devcenter.heroku.co
 
 ## Agendamento
 
-Para automatizar a coleta de dados periodicamente, utilizamos um modelo do heroku de agendamento chamado clock.
+Para automatizar a coleta de dados periodicamente, utilizamos
+um modelo do heroku de agendamento chamado clock.
 O programa será executado todos os dias à oito horas da manhã.
 python heroku_clock.py
 
 ## BuildPacks
 
-Os buildpacks são responsáveis ​​por transformar o código implantado no Heroku, que pode ser executado em um dyno. 
-Os buildpacks são compostos por um conjunto de scripts e, dependendo da linguagem de programação.
+Os buildpacks são responsáveis ​​por transformar o código implantado
+no Heroku, que pode ser executado em um dyno. 
+Os buildpacks são compostos por um conjunto de scripts e,
+dependendo da linguagem de programação.
 Para adicionar um BuildPack segue os passos:
 Settings -> Add buildpack
-Segue aqui o link do buildPack da depedência(chromemium-browser) projeto necessita 
+Segue aqui o link do buildPack da depedência(chromemium-browser)
+projeto necessita 
 ([https://github.com/jontewks/puppeteer-heroku-buildpack](https://github.com/jontewks/puppeteer-heroku-buildpack)
 
 ## Um projeto de
