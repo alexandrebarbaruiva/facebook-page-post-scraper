@@ -5,6 +5,7 @@ from time import strftime
 from .page_scraper import Scraper
 from .token_manager import retrieve_token_file, get_user_password_decrypted, \
     retrieve_password_file, collect_token_automatically, collect_token
+from .get_posts import write_posts_to_csv
 
 
 def read_entidades(pages, entidades='entidades'):
@@ -47,8 +48,9 @@ def collect_all_pages():
         scraper.get_reactions()
         scraper.write_to_json(actor_name=scraper.page)
         scraper.write_to_csv()
-    scraper.write_posts_to_csv();
+    write_posts_to_csv()
     scraper.write_actors_and_date_file()
+
 
 def collect_2018():
     pages = []
