@@ -5,6 +5,8 @@ import datetime
 from time import strftime
 import requests
 import facebook
+import psycopg2
+from get_posts import process_posts
 
 
 class Scraper:
@@ -44,7 +46,7 @@ class Scraper:
     def get_current_page(self):
         try:
             return self.page
-        except Exception as inst:
+        except Exception:
             return 'Page not set'
 
     def valid_page(self, page=None):
@@ -78,8 +80,10 @@ class Scraper:
     def write_to_json(self, actor_name=None, file=None):
         if file is None:
             file = self.file_name
-        with open('json/' + strftime("%Y-%m-%d") + '/' + file + '.json',
-                  'w', encoding='utf8') as data_file:
+        with open(
+            'json/' + strftime("%Y-%m-%d") + '/' + file + '.json',
+            'w', encoding='utf8'
+        ) as data_file:
                 data_file.write(
                     json.dumps(self.current_data, indent=2, ensure_ascii=False)
                 )  # pretty json
@@ -160,7 +164,7 @@ class Scraper:
         return True
 
     def processFacebookPageFeedStatus(
-        self, status, total_reaction, total_comments, total_shares, page, message
+        self, status, total_reaction, total_comments, total_shares
     ):
 
         # The status is now a Python dictionary, so for top-level items,
@@ -171,10 +175,6 @@ class Scraper:
 
         # Time needs special care since a) it's in UTC and
         # b) it's not easy to use in statistical programs.
-        post={}
-        if not os.path.exists('json/posts/'+str(self.page)):
-            os.makedirs('json/posts/'+str(self.page))
-
         status_id = status['id']
 
         status_published = datetime.datetime.strptime(
@@ -183,18 +183,6 @@ class Scraper:
             datetime.timedelta(hours=-3)  # Brasilia time
         status_published = status_published.strftime(
             '%Y-%m-%d %H:%M:%S')
-        post['id'] = status_id
-        post['message'] = '' if 'message' not in message.keys() else message['message']
-        post['published'] = status_published
-        post['link_to_post'] = '' if 'link' not in status.keys() else status['link']
-        post['type'] = status['type']
-        post['like'] = status['like']['summary']['total_count']
-        post['wow'] = status['wow']['summary']['total_count']
-        post['sad'] = status['sad']['summary']['total_count']
-        post['love'] = status['love']['summary']['total_count']
-        post['haha'] = status['haha']['summary']['total_count']
-        post['angry'] = status['angry']['summary']['total_count']
-        post['story'] = message['story'] if 'story' in message.keys() else ''
         # Converting from the way facebook gives us
         # the created time to a more readable
 
@@ -202,26 +190,9 @@ class Scraper:
 
         num_reactions = 0 if 'reactions' not in status else \
             status['reactions']['summary']['total_count']
-        post['reactions'] = num_reactions
         num_comments = 0 if 'comments' not in status else \
             status['comments']['summary']['total_count']
-        post['comments'] = num_comments
-        specific_comments = {}
-        num_of_comment = 0
-        for comment in status['comments']['data']:
-            specific_comments['comment '+str(num_of_comment)]=comment['message']
-            num_of_comment+=1
-        post['specific_comments'] = specific_comments
         num_shares = 0 if 'shares' not in status else status['shares']['count']
-        post['shares'] = num_shares
-        if not os.path.exists('json/posts/'+str(self.page)):
-            os.makedirs('json/posts/'+str(self.page))
-        try:
-            with open('json/posts/'+str(self.page)+'/'+status_id+'.json','w') as post_file:
-                post_file.write(json.dumps(post, indent=2, ensure_ascii=False))
-        except Exception as e:
-            print(e)
-            print('Algo errado na escrita do post')
         total_reaction = total_reaction + num_reactions
         total_comments = total_comments + num_comments
         total_shares = total_shares + num_shares
@@ -254,13 +225,20 @@ class Scraper:
         while has_next_page:
             after = '' if after == '' else "&after={}".format(after)
             fields = "fields=message,created_time,type,id," + \
-                     "comments.limit(100).summary(total_count),shares,reactions" + \
-                     ".limit(0).summary(true),link,reactions.type(LIKE).limit(0)" + \
-                     ".summary(total_count).as(like),reactions.type(WOW).limit(0)" + \
-                     ".summary(total_count).as(wow),reactions.type(SAD).limit(0).summary(total_count).as(sad)" + \
-                     ",reactions.type(LOVE).limit(0).summary(total_count).as(love)," + \
-                     "reactions.type(HAHA).limit(0).summary(total_count).as(haha)," + \
-                     "reactions.type(ANGRY).limit(0).summary(total_count).as(angry)"
+                     "comments.limit(100).summary(total_count)," + \
+                     "shares,reactions.limit(0).summary(true)," + \
+                     "link,reactions.type(LIKE).limit(0)" + \
+                     ".summary(total_count).as(like)," + \
+                     "reactions.type(WOW).limit(0)" + \
+                     ".summary(total_count).as(wow)," + \
+                     "reactions.type(SAD).limit(0)." + \
+                     "summary(total_count).as(sad)" + \
+                     ",reactions.type(LOVE).limit(0)." + \
+                     "summary(total_count).as(love)," + \
+                     "reactions.type(HAHA).limit(0)." + \
+                     "summary(total_count).as(haha)," + \
+                     "reactions.type(ANGRY).limit(0)." + \
+                     "summary(total_count).as(angry)"
 
             statuses = graph.get_object(
                 id=str(self.page) + '/posts?' + after +
@@ -275,12 +253,13 @@ class Scraper:
                 # Ensure it is a status with the expected metadata
                 if 'reactions' in status:
                     status_data = self.processFacebookPageFeedStatus(
-                        status, total_reaction, total_comments, total_shares, page, post_message
+                        status, total_reaction, total_comments, total_shares
                     )
                     total_reaction = status_data[5]
                     total_comments = status_data[6]
                     total_shares = status_data[7]
                     total_posts += 1
+
                 num_processed += 1
                 if num_processed % 100 == 0:
                     print(
@@ -309,36 +288,6 @@ class Scraper:
         self.current_data['average_reactions'] = average_reaction
         self.current_data['average_comments'] = average_comments
 
-    def write_posts_to_csv(self):
-        path = 'json/posts'
-        list_of_actors = os.listdir(path)
-        columns = ['id','message','type','shares','published','story','reactions',
-                   'love','like','wow','sad','angry','haha','link_to_post']
-        time = strftime("%Y-%m-%d")
-        try:
-            for actor in list_of_actors:
-                with open('csv/'+actor+time+'.csv','w') as csv_file:
-                    csv_comments_file = open('csv/'+actor+time+'_comments.csv','w')
-                    comments_info = csv.writer(csv_comments_file)
-                    info = csv.writer(csv_file)
-                    info.writerow(columns)
-                    list_of_posts = os.listdir(path+'/'+actor)
-                    for post in list_of_posts:
-                        list_of_content = []
-                        list_of_comments = []
-                        with open(path+'/'+actor+'/'+post,'r',encoding = 'utf8') as json_post:
-                            content = json.load(json_post)
-                            list_of_comments.append(content['id'])
-                            for comment in content['specific_comments']:
-                                list_of_comments.append(content['specific_comments'][comment])
-                            for key in columns:
-                                list_of_content.append(content[key])
-                        comments_info.writerow(list_of_comments)
-                        info.writerow(list_of_content)
-                    csv_comments_file.close()
-        except Exception as e:
-            print('Erro na escrita do csv: '+str(e))
-
     def write_actors_and_date_file(self):
         data = {'date': [], 'latest': strftime("%Y-%m-%d")}
         actors_dict = {'actors': self.actors_list}
@@ -350,11 +299,9 @@ class Scraper:
             date_file = open('json/date.json', 'r+', encoding='utf8')
             data = json.load(date_file)
             data['latest'] = strftime("%Y-%m-%d")
-            # print(data)
             date_file.seek(0)
             if strftime("%Y-%m-%d") not in data['date']:
                 data['date'].append(strftime("%Y-%m-%d"))
-                # print(data)
             date_file.write(
                 json.dumps(data, indent=2, ensure_ascii=False)
             )
@@ -365,3 +312,54 @@ class Scraper:
                 date_file.write(
                     json.dumps(data, indent=2, ensure_ascii=False)
                 )
+
+    def calldb(self, actor_name=None, file=None):
+        # conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+        if file is None:
+            file = self.file_name
+        with open(
+            'json/' + strftime("%Y-%m-%d") + '/' + file + '.json',
+            'r', encoding='utf8'
+        ) as data_file:
+            data = json.load(data_file)
+        data['file_name'] = file
+        params = {
+            "host": "ec2-23-23-247-245.compute-1.amazonaws.com",
+            "database": "dcut7901ku63t1",
+            "user": "outvrxddgqtmwt",
+            "password": "e4f2c7675d8bacc541b8e0162d5e023c" +
+            "63ce63df91bcfbeaf9f1a3e803800add"
+        }
+        conn = psycopg2.connect(**params)
+        sql_cmd = """INSERT INTO Facebook(
+            file_name, name, fan_count, id, date, since_date,
+            until_date, total_reactions, total_comments, total_shares,
+            total_posts, average_reactions, average_comments)
+            SELECT
+                CAST(src.MyJSON->>'file_name' AS TEXT),
+                CAST(src.MyJSON->>'name' AS TEXT),
+                CAST(src.MyJSON->>'fan_count' AS INTEGER),
+                CAST(src.MyJSON->>'id' AS TEXT),
+                CAST(src.MyJSON->>'date' AS DATE),
+                CAST(src.MyJSON->>'since_date' AS DATE),
+                CAST(src.MyJSON->>'until_date' AS DATE),
+                CAST(src.MyJSON->>'total_reactions' AS INTEGER),
+                CAST(src.MyJSON->>'total_comments' AS INTEGER),
+                CAST(src.MyJSON->>'total_shares' AS INTEGER),
+                CAST(src.MyJSON->>'total_posts' AS INTEGER),
+                CAST(src.MyJSON->>'average_reactions' AS INTEGER),
+                CAST(src.MyJSON->>'average_comments' AS INTEGER)
+            FROM ( SELECT CAST(%s AS JSONB) AS MyJSON ) src"""
+        # Convert dictionary to native JSON data type
+        data_str = json.dumps(data)
+        sql_params = (data_str,)
+        try:
+            cur = conn.cursor()
+            cur.execute(sql_cmd, sql_params)
+            conn.commit()
+        except Exception as e:
+            print('Error ', e)
+            raise
+        if actor_name is not None:
+            self.actors_list.append(actor_name)
+        return True
