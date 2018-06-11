@@ -1,15 +1,31 @@
 # Facebook Scraper
 
-**[:brazil: Readme](./README.md) | [:us: Readme](./Readme/Language/English/README.md)**
-
 [![Build Status](https://travis-ci.org/unb-cic-esw/facebook-page-post-scraper.svg?branch=master)](https://travis-ci.org/unb-cic-esw/facebook-page-post-scraper)
 [![Maintainability](https://api.codeclimate.com/v1/badges/6d78fb4221b49847ca9c/maintainability)](https://codeclimate.com/github/unb-cic-esw/facebook-page-post-scraper/maintainability)
+
+[:brazil: Readme](./README.md) | [:us: Readme](./.github/Readme/Language/English/README.md)
+
+[:brazil: Documentação](./.github/Docs/Portuguese/Doc.md) |
+[:us: Documentation](./.github/Docs/English/Doc.md)
+
+## Tabela de Conteudo
+
+* [Inicio](#facebook-scraper)
+* [Tabela de Conteudo](#tabela-de-conteudo)
+* [Fazendo tudo rodar](#fazendo-tudo-rodar)
+* [Usando o Programa](#usando-o-programa)
+* [Rodando os testes](#rodando-os-testes)
+* [Verificando estilo](#verificando-estilo)
+* [APScheduled](#apscheduled)
+* [Agendamento](#agendamento)
+* [BuildPacks](#buildpacks)
+* [Projeto de](#um-projeto-de)
 
 ## Fazendo tudo rodar 
 
 Uma vez que se tenha instalado python 3 e Git, baixado o repositório e
 esteja com um editor de texto adequado (Atom, VSCode, Sublime ou Pycharm), deve-se
-seguir os seguintes passos
+seguir os seguintes passos:
 
 Criar o ambiente virtual (venv) e entrar no mesmo
 
@@ -53,7 +69,7 @@ Uma vez com todas as configurações feitas, use:
 make run
 ```
 
-## Rodando testes
+## Rodando os testes
 
 Por enquanto rodar testes é a principal funcionalidade. Em breve serão adicionadas 
 mais funções. Portanto, para testes
@@ -120,21 +136,33 @@ Link Heroku - Agendamento ([Scheduled (Agendamento)](https://devcenter.heroku.co
 
 ## Agendamento
 
+Para automatizar a coleta de dados periodicamente, utilizamos
+um modelo do heroku de agendamento chamado clock.
+O programa será executado todos os dias à oito horas da manhã.
 python heroku_clock.py
+
+## BuildPacks
+
+Os buildpacks são responsáveis ​​por transformar o código implantado
+no Heroku, que pode ser executado em um dyno.
+Os buildpacks são compostos por um conjunto de scripts e,
+dependendo da linguagem de programação.
+Para adicionar um BuildPack segue os passos:
+Settings -> Add buildpack
+
+Segue aqui o [link do BuildPack](https://github.com/jontewks/puppeteer-heroku-buildpack)
+da depedência(chromemium-browser) projeto necessita
 
 ## Um projeto de
 
-
 [![alt text][unb]](https://www.unb.br/)
 
-[unb]:./Readme/Images/logo_unb.png
+[unb]:./.github/Images/logo_unb.png
 
 Universidade de Brasília
 
-
 [![alt text][resocie]](https://www.resocie.org/)
 
-[resocie]:./Readme/Images/resocie.jpg
+[resocie]:./.github/Images/resocie.jpg
 
 Resocie : Repensando as Relações entre Sociedade e Estado
-

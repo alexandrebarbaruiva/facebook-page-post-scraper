@@ -5,6 +5,8 @@ config.ini
 ./json/*.json
 *.csv
 /csv/*.csv
+/json/*.json 
+/json
 /.idea
 
 # Byte-compiled / optimized / DLL files
