@@ -5,7 +5,7 @@ from time import strftime
 from .page_scraper import Scraper
 from .token_manager import retrieve_token_file, get_user_password_decrypted, \
     retrieve_password_file, collect_token_automatically, collect_token
-from .get_posts import write_posts_to_csv
+from .get_posts import write_posts_to_csv, write_comments_to_csv
 
 
 def read_entidades(pages, entidades='entidades'):

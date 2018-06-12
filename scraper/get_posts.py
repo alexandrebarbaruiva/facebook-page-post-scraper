@@ -29,17 +29,17 @@ def pretty_post(status, message):
     post['id'] = status['id']
     post['message'] = '' if 'message' not in message.keys() else \
         message['message']
-    post['link_to_post'] = '' if 'link' not in status else status['link']
+    post['link_to_post'] = '' if 'link' not in status else \
+        status['link']
     post['type'] = status['type']
     reactions = ['like', 'wow', 'sad', 'love', 'haha', 'angry']
     for react in reactions:
         post[react] = status[react]['summary']['total_count']
     post['story'] = message['story'] if 'story' in message.keys() else ''
-    post['reactions'] = 0 if 'reactions' not in status.keys() else \
-        status['reactions']['summary']['total_count']
-    post['comments'] = 0 if 'comments' not in status else \
-        status['comments']['summary']['total_count']
-    post['shares'] = 0 if 'shares' not in status else status['shares']['count']
+    post['reactions'] = status['reactions']['summary']['total_count']
+    post['comments'] = status['comments']['summary']['total_count']
+    post['shares'] = 0 if 'shares' not in status.keys() \
+        else status['shares']['count']
     return post
 
 
@@ -52,23 +52,20 @@ def write_posts_to_csv():
     time = strftime("%Y-%m-%d")
     if not os.path.exists('csv/' + time):
         os.makedirs('csv/' + time)
-    try:
-        for actor in list_of_actors:
-            actor_file_name = 'csv/' + time + '/' + actor + '.csv'
-            with open(actor_file_name, 'w', encoding='utf8') as csv_file:
-                info = csv.writer(csv_file)
-                info.writerow(columns)
-                list_of_posts = os.listdir(path + '/' + actor)
-                for post in list_of_posts:
-                    list_of_content = []
-                    json_post = path + '/' + actor + '/' + post
-                    with open(json_post, 'r', encoding='utf8') as json_post:
-                        content = json.load(json_post)
-                        for key in columns:
-                            list_of_content.append(content[key])
-                    info.writerow(list_of_content)
-    except Exception as e:
-        print('Erro na escrita do csv: ' + str(e))
+    for actor in list_of_actors:
+        actor_file_name = 'csv/' + time + '/' + actor + '.csv'
+        with open(actor_file_name, 'w', encoding='utf8') as csv_file:
+            info = csv.writer(csv_file)
+            info.writerow(columns)
+            list_of_posts = os.listdir(path + '/' + actor)
+            for post in list_of_posts:
+                list_of_content = []
+                json_post = path + '/' + actor + '/' + post
+                with open(json_post, 'r', encoding='utf8') as json_post:
+                    content = json.load(json_post)
+                    for key in columns:
+                        list_of_content.append(content[key])
+                info.writerow(list_of_content)
 
 
 def write_comments_to_csv():
@@ -87,7 +84,8 @@ def write_comments_to_csv():
             with open(json_post, 'r', encoding='utf8') as json_post:
                 content = json.load(json_post)
                 list_of_comments.append(content['id'])
-                for comment in content['specific_comments'].items():
-                    list_of_comments.append(comment)
+                for comment in content['specific_comments']:
+                    list_of_comments.append(
+                        content['specific_comments'][comment])
             comments_info.writerow(list_of_comments)
         csv_comt_file.close()
