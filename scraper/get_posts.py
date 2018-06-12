@@ -32,9 +32,13 @@ def pretty_post(status, message):
     post['link_to_post'] = '' if 'link' not in status else \
         status['link']
     post['type'] = status['type']
-    reactions = ['like', 'wow', 'sad', 'love', 'haha', 'angry']
-    for react in reactions:
-        post[react] = status[react]['summary']['total_count']
+    post['like'] = status['like']['summary']['total_count']
+    post['wow'] = status['wow']['summary']['total_count']
+    post['sad'] = status['sad']['summary']['total_count']
+    post['love'] = status['love']['summary']['total_count']
+    post['haha'] = status['haha']['summary']['total_count']
+    post['angry'] = status['angry']['summary']['total_count']
+
     post['story'] = message['story'] if 'story' in message.keys() else ''
     post['reactions'] = status['reactions']['summary']['total_count']
     post['comments'] = status['comments']['summary']['total_count']
