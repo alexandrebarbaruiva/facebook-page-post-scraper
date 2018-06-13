@@ -54,8 +54,6 @@ def write_posts_to_csv():
                'reactions', 'love', 'like', 'wow', 'sad', 'angry', 'haha',
                'link_to_post']
     time = strftime("%Y-%m-%d")
-    if not os.path.exists('csv/' + time):
-        os.makedirs('csv/' + time)
     for actor in list_of_actors:
         actor_file_name = 'csv/' + time + '/' + actor + '.csv'
         with open(actor_file_name, 'w', encoding='utf8') as csv_file:
@@ -88,8 +86,13 @@ def write_comments_to_csv():
             with open(json_post, 'r', encoding='utf8') as json_post:
                 content = json.load(json_post)
                 list_of_comments.append(content['id'])
-                for comment in content['specific_comments']:
-                    list_of_comments.append(
-                        content['specific_comments'][comment])
+                list_of_comments = dict_to_list(content['specific_comments'])
             comments_info.writerow(list_of_comments)
         csv_comt_file.close()
+
+
+def dict_to_list(dictionary):
+    list_of_comments = []
+    for comment in dictionary.items():
+        list_of_comments.append(comment)
+    return list_of_comments

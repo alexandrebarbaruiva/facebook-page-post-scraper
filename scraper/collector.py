@@ -46,6 +46,8 @@ def collect_all_pages():
     if not os.path.exists(strftime("%Y-%m-%d")):
         os.mkdir(strftime("%Y-%m-%d"))
     os.chdir("..")
+    if not os.path.exists('csv/' + time):
+        os.makedirs('csv/' + time)
 
     for page in pages:
         scraper.set_page(page)
