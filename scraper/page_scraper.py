@@ -254,6 +254,8 @@ class Scraper:
                     total_comments = status_data[6]
                     total_shares = status_data[7]
                     total_posts += 1
+                    if not os.path.exists('json/posts/' + str(self.page)):
+                        os.makedirs('json/posts/' + str(self.page))
                     process_posts(
                         self.page, status, post_message, status_data[1]
                     )

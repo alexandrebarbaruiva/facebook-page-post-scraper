@@ -5,8 +5,6 @@ import json
 
 
 def process_posts(page, status, message, status_published):
-    if not os.path.exists('json/posts/' + str(page)):
-            os.makedirs('json/posts/' + str(page))
     post = pretty_post(status, message)
     post['published'] = status_published
     specific_comments = {}
@@ -32,42 +30,42 @@ def pretty_post(status, message):
     post['link_to_post'] = '' if 'link' not in status else \
         status['link']
     post['type'] = status['type']
-    post['like'] = status['like']['summary']['total_count']
-    post['wow'] = status['wow']['summary']['total_count']
-    post['sad'] = status['sad']['summary']['total_count']
-    post['love'] = status['love']['summary']['total_count']
-    post['haha'] = status['haha']['summary']['total_count']
-    post['angry'] = status['angry']['summary']['total_count']
-
+    reactions = ['like', 'wow', 'sad', 'love', 'haha', 'angry',
+                 'reactions', 'comments']
+    for react in reactions:
+        post[react] = status[react]['summary']['total_count']
     post['story'] = message['story'] if 'story' in message.keys() else ''
-    post['reactions'] = status['reactions']['summary']['total_count']
-    post['comments'] = status['comments']['summary']['total_count']
-    post['shares'] = 0 if 'shares' not in status.keys() \
-        else status['shares']['count']
     return post
 
 
 def write_posts_to_csv():
     path = 'json/posts'
-    list_of_actors = os.listdir(path)
-    columns = ['id', 'message', 'type', 'shares', 'published', 'story',
+    columns = ['id', 'message', 'type', 'published', 'story',
                'reactions', 'love', 'like', 'wow', 'sad', 'angry', 'haha',
                'link_to_post']
+    list_of_actors = os.listdir(path)
     time = strftime("%Y-%m-%d")
     for actor in list_of_actors:
+        list_of_content = []
+        list_of_posts = os.listdir(path + '/' + actor)
+        for post in list_of_posts:
+            json_post = path + '/' + actor + '/' + post
+            with open(json_post, 'r', encoding='utf8') as json_post:
+                content = json.load(json_post)
+            list_of_content.append(get_info(content, columns))
         actor_file_name = 'csv/' + time + '/' + actor + '.csv'
         with open(actor_file_name, 'w', encoding='utf8') as csv_file:
             info = csv.writer(csv_file)
             info.writerow(columns)
-            list_of_posts = os.listdir(path + '/' + actor)
-            for post in list_of_posts:
-                list_of_content = []
-                json_post = path + '/' + actor + '/' + post
-                with open(json_post, 'r', encoding='utf8') as json_post:
-                    content = json.load(json_post)
-                    for key in columns:
-                        list_of_content.append(content[key])
-                info.writerow(list_of_content)
+            for row in list_of_content:
+                info.writerow(row)
+
+
+def get_info(content, keys):
+    list_of_content = []
+    for key in keys:
+        list_of_content.append(content[key])
+    return list_of_content
 
 
 def write_comments_to_csv():
@@ -93,6 +91,6 @@ def write_comments_to_csv():
 
 def dict_to_list(dictionary):
     list_of_comments = []
-    for comment in dictionary.items():
+    for comment in dictionary.values():
         list_of_comments.append(comment)
     return list_of_comments
