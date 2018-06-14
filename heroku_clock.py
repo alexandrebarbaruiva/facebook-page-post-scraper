@@ -12,6 +12,6 @@ def job_function():
 	collect_all_pages()
 	#collect_new_data()
 
-sched.add_job(job_function,'cron', day_of_week='mon-sun', hour=11, minute=1)
+sched.add_job(job_function,'cron', day_of_week='mon-sun', hour=10, minute=6)
 
 sched.start()
