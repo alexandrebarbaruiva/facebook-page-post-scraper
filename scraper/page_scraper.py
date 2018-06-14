@@ -318,7 +318,7 @@ class Scraper:
             "user": "outvrxddgqtmwt",
             "password": "e4f2c7675d8bacc541b8e0162d5e023c" +
             "63ce63df91bcfbeaf9f1a3e803800add"
-        }
+
         conn = psycopg2.connect(**params)
         sql_cmd = """INSERT INTO Facebook(
             file_name, name, fan_count, id, date, since_date,
