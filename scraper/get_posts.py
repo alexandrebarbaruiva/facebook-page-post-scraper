@@ -6,6 +6,7 @@ import json
 
 def process_posts(page, status, message, status_published):
     post = pretty_post(status, message)
+    post = get_reactions_info(post, status)
     post['published'] = status_published
     specific_comments = {}
     num_of_comment = 0
@@ -26,15 +27,19 @@ def pretty_post(status, message):
     post = {}
     post['id'] = status['id']
     post['type'] = status['type']
-    reactions = ['like', 'wow', 'sad', 'love', 'haha', 'angry',
-                 'reactions', 'comments']
-    for react in reactions:
-        post[react] = status[react]['summary']['total_count']
     post['message'] = '' if 'message' not in message.keys() else \
         message['message']
     post['link_to_post'] = '' if 'link' not in status else \
         status['link']
     post['story'] = message['story'] if 'story' in message.keys() else ''
+    return post
+
+
+def get_reactions_info(post, status):
+    reactions = ['like', 'wow', 'sad', 'love', 'haha', 'angry',
+                 'reactions', 'comments']
+    for react in reactions:
+        post[react] = status[react]['summary']['total_count']
     return post
 
 
