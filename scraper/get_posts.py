@@ -31,11 +31,11 @@ def pretty_post(status, message):
         message['message']
     post['link_to_post'] = '' if 'link' not in status else \
         status['link']
-    post['story'] = message['story'] if 'story' in message.keys() else ''
     return post
 
 
 def get_reactions_info(post, status):
+    post['story'] = message['story'] if 'story' in message.keys() else ''
     reactions = ['like', 'wow', 'sad', 'love', 'haha', 'angry',
                  'reactions', 'comments']
     for react in reactions:
