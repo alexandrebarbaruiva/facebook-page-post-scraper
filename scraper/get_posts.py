@@ -25,15 +25,15 @@ def process_posts(page, status, message, status_published):
 def pretty_post(status, message):
     post = {}
     post['id'] = status['id']
-    post['message'] = '' if 'message' not in message.keys() else \
-        message['message']
-    post['link_to_post'] = '' if 'link' not in status else \
-        status['link']
     post['type'] = status['type']
     reactions = ['like', 'wow', 'sad', 'love', 'haha', 'angry',
                  'reactions', 'comments']
     for react in reactions:
         post[react] = status[react]['summary']['total_count']
+    post['message'] = '' if 'message' not in message.keys() else \
+        message['message']
+    post['link_to_post'] = '' if 'link' not in status else \
+        status['link']
     post['story'] = message['story'] if 'story' in message.keys() else ''
     return post
 
@@ -54,11 +54,15 @@ def write_posts_to_csv():
                 content = json.load(json_post)
             list_of_content.append(get_info(content, columns))
         actor_file_name = 'csv/' + time + '/' + actor + '.csv'
-        with open(actor_file_name, 'w', encoding='utf8') as csv_file:
-            info = csv.writer(csv_file)
-            info.writerow(columns)
-            for row in list_of_content:
-                info.writerow(row)
+        dump_to_csv(actor_file_name, list_of_content)
+
+
+def dump_to_csv(path, list_of_content):
+    with open(path, 'w', encoding='utf8') as csv_file:
+        info = csv.writer(csv_file)
+        info.writerow(columns)
+        for row in list_of_content:
+            info.writerow(row)
 
 
 def get_info(content, keys):
