@@ -117,9 +117,7 @@ def collect_2018():
 
 
 def collect_new_data():
-    """
-    Fuction used to check what sort of output the Graph API generates
-    """
+    """Fuction used to check what sort of output the Graph API generates."""
     new_info = []
     pages = []
     pages = read_entidades(pages)

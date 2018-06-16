@@ -11,10 +11,10 @@ import psycopg2
 
 
 class Scraper:
-    """
-    Scraper responsável por coletar posts do Facebook
-    """
+    """Scraper responsável por coletar posts do Facebook."""
+
     def __init__(self, token):
+        """Construtor da classe, recebe token do Facebook como parâmetro."""
         self.token = token
         self.status_code = 400
         self.current_data = ''
@@ -27,9 +27,7 @@ class Scraper:
             os.makedirs('json/')
 
     def check_valid_token(self):
-        """
-        Verifica se o token disponível é válido
-        """
+        """Verifica se o token disponível é válido."""
         if (self.status_code is not 200):
             url = 'https://graph.facebook.com/v2.12/me?access_token=' \
                 + str(self.token)
@@ -37,26 +35,19 @@ class Scraper:
         return(self.status_code == 200)
 
     def set_page(self, page):
-        """
-        Set which page to scrape, useful for when having multiple pages
-        to scrape.
-        """
+        """Set which page to scrape for when having multiple pages to scrape."""
         self.page = page
         self.file_name = (str(self.page))
 
     def get_current_page(self):
-        """
-        Verifica se uma página foi selecionada
-        """
+        """Verifica se uma página foi selecionada."""
         try:
             return self.page
         except Exception:
             return 'Page not set'
 
     def valid_page(self, page=None):
-        """
-        Verifica se uma página selecionada é válida
-        """
+        """Verifica se uma página selecionada é válida."""
         if page is None:
             page = self.page
         valid_url = 'https://www.facebook.com/' + str(page)
@@ -64,9 +55,7 @@ class Scraper:
         return(valid_status_code == 200)
 
     def scrape_current_page(self, page=None, feed=False, query=''):
-        """
-        Raspa dados de uma página selecionada
-        """
+        """Raspa dados de uma página selecionada."""
         if page is not None:
             self.set_page(page)
         graph = facebook.GraphAPI(access_token=self.token, version="2.12")
@@ -88,9 +77,7 @@ class Scraper:
             return 'Page not defined or bad query structure'
 
     def write_to_json(self, actor_name=None, file=None):
-        """
-        Grava informações da página raspada em um arquivo JSON
-        """
+        """Grava informações da página raspada em um arquivo JSON."""
         if file is None:
             file = self.file_name
         with open(
@@ -105,6 +92,7 @@ class Scraper:
         return True
 
     def get_page_name_and_like(self, page=None):
+        """Grava nome e quantidade de likes da página raspada."""
         self.scrape_current_page(page, query='name,fan_count')
         return([
             self.current_data['name'],
@@ -114,9 +102,7 @@ class Scraper:
         ])
 
     def write_to_csv(self, file_name='scraped'):
-        """
-        Grava informações da página raspada em um arquivo CSV
-        """
+        """Grava informações da página raspada em um arquivo CSV."""
         def dict_to_list():
             content = []
             for column in column_names:
@@ -182,6 +168,10 @@ class Scraper:
     def processFacebookPageFeedStatus(
         self, status, total_reaction, total_comments, total_shares
     ):
+    """
+    Responsável pelo processamento do total de reações,comentário,
+    compartilhamentos e posts.
+    """
 
         # The status is now a Python dictionary, so for top-level items,
         # we can simply call the key.
@@ -216,9 +206,7 @@ class Scraper:
             num_shares, total_reaction, total_comments, total_shares
 
     def get_reactions(self, page=None, since_date=None, until_date=None):
-        """
-        Raspa informações da página referentes a reações
-        """
+        """Raspa informações da página referentes a reações."""
         graph = facebook.GraphAPI(access_token=self.token, version="2.12")
         if page is None:
             page = self.page
@@ -289,6 +277,7 @@ class Scraper:
         self.current_data['average_comments'] = average_comments
 
     def write_actors_and_date_file(self):
+        """Escreve atores e datas no arquivo."""
         data = {'date': [], 'latest': strftime("%Y-%m-%d")}
         actors_dict = {'actors': self.actors_list}
         with open('json/' + 'actors.json', 'w', encoding='utf8') as actor_file:
@@ -314,7 +303,7 @@ class Scraper:
                 )
 
     def calldb(self, actor_name=None, file=None):
-        # conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+        """Responsável pela chamada do banco de dados."""
         if file is None:
             file = self.file_name
         with open(
