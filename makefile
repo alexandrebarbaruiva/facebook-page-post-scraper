@@ -60,6 +60,13 @@ else
 	pycodestyle tests/. scraper/. server/. --ignore=E402,W504
 endif
 
+doc:
+ifeq ($(OS), Windows_NT)
+	pydocstyle tests\. scraper\. server/. --ignore=E402,W504
+else
+	pydocstyle tests/. scraper/.
+endif
+
 cov:
 ifeq ($(OS), Windows_NT)
 	make clean

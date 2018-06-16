@@ -22,6 +22,9 @@ def read_entidades(pages, entidades='entidades'):
 
 
 def checkin_updating_token():
+    """
+    Verifica se o token é válido e atualiza o mesmo caso necessário.
+    """
     scraper = Scraper(retrieve_token_file())
 
     # Verifica se o token ainda é válido
