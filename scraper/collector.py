@@ -22,9 +22,7 @@ def read_entidades(pages, entidades='entidades'):
 
 
 def checkin_updating_token():
-    """
-    Verifica se o token é válido e atualiza o mesmo caso necessário.
-    """
+    """Verifica se o token é válido e atualiza o mesmo caso necessário."""
     scraper = Scraper(retrieve_token_file())
 
     # Verifica se o token ainda é válido
@@ -38,6 +36,7 @@ def checkin_updating_token():
 
 
 def collect_all_pages():
+    """Raspa informações de todas as páginas."""
     pages = []
     pages = read_entidades(pages)
     checkin_updating_token()
@@ -62,7 +61,7 @@ def collect_all_pages():
 
 def collect_2018():
     """
-    Collects all data from 2018.
+    Collect all data from 2018.
 
     Retrieves all data from 2018 day by day, generates lots of files.
     """
