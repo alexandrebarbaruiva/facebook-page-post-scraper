@@ -10,3 +10,4 @@ radon
 pylint
 flask
 APScheduler==3.0.0
+gunicorn
