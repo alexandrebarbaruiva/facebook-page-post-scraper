@@ -58,6 +58,7 @@ def collect_all_pages():
         scraper.calldb(actor_name=scraper.page)
     scraper.write_actors_and_date_file()
 
+
 def collect_new_data():
     """Função usada para checar o formato dos novos dados."""
     new_info = []
