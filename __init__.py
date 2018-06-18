@@ -1,4 +1,4 @@
-from server import rest
+# from server import rest
 
-if __name__ == '__main__':
-    rest.app.run()
+# if __name__ == '__main__':
+#     rest.app.run()
