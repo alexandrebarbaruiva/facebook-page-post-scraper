@@ -1,4 +1,4 @@
-﻿JsonDir = ./json/
+JsonDir = ./json/
 CsvDir = ./csv/
 UNAME := $(shell uname)
 face_file1 = venv/src/facebook-sdk/facebook/__init__.py
@@ -23,7 +23,7 @@ data:
 
 run:
 ifeq ($(OS), Windows_NT)
-	python -m scraper.collector
+	python -m scraper\collector
 else
 	mkdir -p $(JsonDir)
 	mkdir -p $(CsvDir)
