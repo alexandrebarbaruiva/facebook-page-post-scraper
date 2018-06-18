@@ -1,4 +1,4 @@
-"""@page_scraper responsible for defining Scraper and it's methods."""
+"""@page_scraper Responsavel por definir Scraper e seus metodos."""
 
 import os
 import json
@@ -35,7 +35,7 @@ class Scraper:
         return(self.status_code == 200)
 
     def set_page(self, page):
-        """Set which page to scrape for when having multiple pages to scrape."""
+        """Escolhe a pagina a ser raspada quando se há varias."""
         self.page = page
         self.file_name = (str(self.page))
 
@@ -168,11 +168,11 @@ class Scraper:
     def processFacebookPageFeedStatus(
         self, status, total_reaction, total_comments, total_shares
     ):
-    """
-    Responsável pelo processamento do total de reações,comentário,
-    compartilhamentos e posts.
-    """
+        """
+        Responsável pelo processamento dos dados.
 
+        Sendo eles o total de reações,comentários,compartilhamentos e posts.
+        """
         # The status is now a Python dictionary, so for top-level items,
         # we can simply call the key.
 
