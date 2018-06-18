@@ -60,6 +60,13 @@ else
 	pycodestyle tests/. scraper/. server/. --ignore=E402,W504
 endif
 
+doc:
+ifeq ($(OS), Windows_NT)
+	pydocstyle tests\. scraper\. server\. --ignore=E402,W504
+else
+	pydocstyle tests/. scraper/. server/.
+endif
+
 cov:
 ifeq ($(OS), Windows_NT)
 	make clean
@@ -85,6 +92,8 @@ else
 	coverage html scraper/page_scraper.py scraper/token_manager.py
 	make style
 endif
+
+documentation:style doc
 
 cc:
 	radon cc scraper -s

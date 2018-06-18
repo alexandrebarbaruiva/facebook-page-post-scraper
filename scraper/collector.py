@@ -1,4 +1,4 @@
-"""All functions related to collecting multiple pages automatically."""
+"""Todas as funções referentes a coleta de dados de várias páginas."""
 import os
 import csv
 from time import strftime
@@ -22,6 +22,7 @@ def read_entidades(pages, entidades='entidades'):
 
 
 def checkin_updating_token():
+    """Verifica se o token é válido e atualiza o mesmo caso necessário."""
     scraper = Scraper(retrieve_token_file())
 
     # Verifica se o token ainda é válido
@@ -35,6 +36,7 @@ def checkin_updating_token():
 
 
 def collect_all_pages():
+    """Raspa informações de todas as páginas."""
     pages = []
     pages = read_entidades(pages)
     checkin_updating_token()
@@ -57,67 +59,8 @@ def collect_all_pages():
     scraper.write_actors_and_date_file()
 
 
-def collect_2018():
-    """
-    Collects all data from 2018.
-
-    Retrieves all data from 2018 day by day, generates lots of files.
-    """
-    pages = []
-    pages = read_entidades(pages)
-    checkin_updating_token()
-    scraper = Scraper(retrieve_token_file())
-
-    for page in pages:
-        try:
-            scraper.set_page(page)
-            print(scraper.page)
-            for month in range(1, 6):
-                for day in range(1, 31):
-                    if not scraper.check_valid_token():
-                        collect_token_automatically(
-                            *get_user_password_decrypted()
-                        )
-                        scraper = Scraper(retrieve_token_file())
-                    if (not scraper.valid_page()):
-                        print("Page doesn't exist")
-                        break
-                    if (month == int(strftime("%m"))) \
-                            and (day == (int(strftime("%d")) + 1)):
-                        print("end of collection")
-                        break
-                    try:
-                        scraper.get_page_name_and_like()
-                        since_date = \
-                            strftime("%Y-") + \
-                            "{0:02d}".format(month) + "-" + \
-                            "{0:02d}".format(day)
-                        until_date = \
-                            strftime("%Y-") + \
-                            "{0:02d}".format(month) + "-" + \
-                            "{0:02d}".format(day + 1)
-                        print(since_date, until_date)
-                        filename = \
-                            str(page) + "_" + \
-                            strftime("%Y-%m-%d") + "_" + \
-                            since_date + "_" + \
-                            until_date + ".json"
-                        scraper.get_reactions(
-                            since_date=since_date, until_date=until_date
-                        )
-                        scraper.write_to_json(file=filename)
-                    except Exception as inst:
-                        print("Day {0} not found.".format(day + 1))
-                        print(inst)
-                        pass
-        except Exception as inst:
-            print("Page not found.", inst)
-
-
 def collect_new_data():
-    """
-    Fuction used to check what sort of output the Graph API generates
-    """
+    """Função usada para checar o formato dos novos dados."""
     new_info = []
     pages = []
     pages = read_entidades(pages)
