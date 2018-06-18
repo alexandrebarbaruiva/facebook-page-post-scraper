@@ -5,6 +5,7 @@ import datetime
 from time import strftime
 import requests
 import facebook
+from .get_posts import process_posts
 import psycopg2
 
 
@@ -21,8 +22,8 @@ class Scraper:
         self.date_list = []
         if not os.path.exists('csv/'):
             os.makedirs('csv/')
-        if not os.path.exists('json/'):
-            os.makedirs('json/')
+        if not os.path.exists('json/posts'):
+            os.makedirs('json/posts')
 
     def check_valid_token(self):
         """
@@ -181,11 +182,11 @@ class Scraper:
         status_published = status_published + \
             datetime.timedelta(hours=-3)  # Brasilia time
         status_published = status_published.strftime(
-            '%Y-%m-%d %H:%M:%S')  # Converting from the way facebook gives us
+            '%Y-%m-%d %H:%M:%S')
+        # Converting from the way facebook gives us
         # the created time to a more readable
 
         # Nested items require chaining dictionary keys.
-
         num_reactions = 0 if 'reactions' not in status else \
             status['reactions']['summary']['total_count']
         num_comments = 0 if 'comments' not in status else \
@@ -223,8 +224,16 @@ class Scraper:
         while has_next_page:
             after = '' if after == '' else "&after={}".format(after)
             fields = "fields=message,created_time,type,id," + \
-                "comments.limit(0).summary(true),shares,reactions" + \
-                ".limit(0).summary(true)"
+                     "comments.limit(100).summary(total_count),shares," + \
+                     "reactions.limit(0).summary(true),link,reactions." + \
+                     "type(LIKE).limit(0).summary(total_count).as(like)" + \
+                     ",reactions.type(WOW).limit(0).summary(total_count)" + \
+                     ".as(wow),reactions.type(SAD).limit(0)." + \
+                     "summary(total_count).as(sad),reactions.type(LOVE)" + \
+                     ".limit(0).summary(total_count).as(love)," + \
+                     "reactions.type(HAHA).limit(0).summary(total_count)" + \
+                     ".as(haha),reactions.type(ANGRY).limit(0)." + \
+                     "summary(total_count).as(angry)"
 
             statuses = graph.get_object(
                 id=str(self.page) + '/posts?' + after +
@@ -232,6 +241,10 @@ class Scraper:
                 fields=fields
             )
             for status in statuses['data']:
+                post_message = graph.get_object(
+                    id=status['id'],
+                    fields="message,story"
+                )
                 # Ensure it is a status with the expected metadata
                 if 'reactions' in status:
                     status_data = self.processFacebookPageFeedStatus(
@@ -241,6 +254,11 @@ class Scraper:
                     total_comments = status_data[6]
                     total_shares = status_data[7]
                     total_posts += 1
+                    if not os.path.exists('json/posts/' + str(self.page)):
+                        os.makedirs('json/posts/' + str(self.page))
+                    process_posts(
+                        self.page, status, post_message, status_data[1]
+                    )
                 num_processed += 1
                 if num_processed % 100 == 0:
                     print(
