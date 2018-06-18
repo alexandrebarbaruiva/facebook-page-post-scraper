@@ -225,6 +225,7 @@ def check_semi_automatic_collection(file='config.ini',
 
 
 def check_manual_collection(file='config.ini'):
+    """Faz a coleta manual do token."""
     os.system("clear")
     print("1. Login on your Facebook Account" +
           "\n2. Click on \"Get token\" then \"Get User Access Token\"." +
@@ -248,9 +249,9 @@ def check_manual_collection(file='config.ini'):
 
 def collect_token(file='config.ini'):
     """
-    Collect token manually if it's the first time.
+    Coleta token manualmente para quem é a primeira vez.
 
-    Or automatically if user has done the process at least once.
+    Ou automaticamente caso o usuario ja tenha o feito.
     """
     os.system("clear")
     cond = "something"
@@ -270,7 +271,7 @@ def collect_token(file='config.ini'):
 
 
 def encrypt_user_password(user, password):
-    """Encrypts user name and password to store on config.ini."""
+    """Encripta o email e a senha e salva no config.ini."""
     key = Fernet.generate_key()
     cipher_suite = Fernet(key)
     user_byte = str.encode(user)
@@ -281,7 +282,7 @@ def encrypt_user_password(user, password):
 
 
 def decrypt_user_password(**kwargs):
-    """Decrypts user name and password given a user token."""
+    """Descriptografa o email e senha do config.ini para um dado token."""
     if {'user', 'password', 'utoken'} <= set(kwargs):
         try:
             kwargs['utoken'] = kwargs['utoken'][2:-1].encode()
@@ -297,7 +298,7 @@ def decrypt_user_password(**kwargs):
 
 
 def get_user_password_decrypted(file='config.ini'):
-    """Decrypts user name and password from config.ini."""
+    """Descriptografa o usuario e senha do config.ini."""
     try:
         return decrypt_user_password(**retrieve_password_file(file))
     except Exception as inst:
