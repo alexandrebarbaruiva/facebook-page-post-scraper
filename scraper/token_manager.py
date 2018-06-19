@@ -130,15 +130,13 @@ def collect_token_automatically(email, password, file='config.ini'):
             print("\x1b[04;01;31m" + "Wrong User Login" + '\x1b[0m')
             return 'Wrong Facebook user or password'
         browser_accessus = browser.find_by_text(
-            'Get User Access Token'
-        )
+            'Get User Access Token')
         browser_accessus.click()
         browser_token = browser.find_by_text('Get Access Token')
         browser_token.click()
         # Acha e pega o novo token.
         browser_token = browser.find_by_css(
-            'label[class="_2toh _36wp _55r1 _58ak"]'
-        )
+            'label[class="_2toh _36wp _55r1 _58ak"]')
         browser_token = browser_token.first.html
         browser_token = browser_token.split("value", 1)[1]
         browser_token = browser_token.split("\"", 1)[1]
@@ -220,12 +218,13 @@ def check_semi_automatic_collection(file='config.ini',
         return True
     except Exception:
         # Alguma coisa deu errado na coleta.
-        print("\x1b[04;01;31m" + "Auto Token function Failed!" + "\x1b[0m")
+        print("\x1b[04;01;31mAuto Token function Failed!\x1b[0m")
         return False
 
 
 def check_manual_collection(file='config.ini'):
     """Faz a coleta manual do token."""
+    string = "\x1b[04;01;32mAuto Token function Completed\x1b[0m"
     os.system("clear")
     print("1. Login on your Facebook Account" +
           "\n2. Click on \"Get token\" then \"Get User Access Token\"." +
@@ -237,12 +236,10 @@ def check_manual_collection(file='config.ini'):
     sleep(3.0)
     token_is_valid = collect_token_manually(file)
     if token_is_valid.check_valid_token():
-        print("\x1b[04;01;32mSet Token Is Valid\x1b[0m\n")
-        print("\x1b[04;01;32mAuto Token function Completed\x1b[0m")
+        print("\x1b[04;01;32mSet Token Is Valid\x1b[0m\n" + string)
         sleep(1.0)
         return True
-    print("\x1b[04;01;31mSet Token is not Valid\x1b[0m\n")
-    print("\x1b[04;01;32mAuto Token function Completed\x1b[0m")
+    print("\x1b[04;01;31mSet Token is not Valid\x1b[0m\n" + string)
     sleep(1.0)
     return False
 
@@ -260,9 +257,8 @@ def collect_token(file='config.ini'):
         return check_automatic_collection(file)
     else:
         while (cond != "Y" and cond != "N"):
-            print(
-                "Is it your first time getting User Access Token?" +
-                "\nType \"Y\" OR \"N\"")
+            print("Is it your first time getting User Access Token?" +
+                  "\nType \"Y\" OR \"N\"")
             cond = input().upper()
         if(cond == "N"):
             return check_semi_automatic_collection(file)
