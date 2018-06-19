@@ -126,6 +126,9 @@ else
 	rm -f $(CsvDir)*.csv
 	rm -rf ./htmlcov
 	rm -f ./.coverage
+	rm -f ./*.json
+	rm -f $(JsonDir)*.json
+	rm -f $(CsvDir)*.csv
 endif
 
 pylint:
