@@ -14,6 +14,6 @@ def job_function():
 
 
 
-sched.add_job(job_function,'cron', day_of_week='mon-sun', hour=14, minute=15)
+sched.add_job(job_function,'cron', day_of_week='mon-sun', hour=8, minute=00)
 
 sched.start()
