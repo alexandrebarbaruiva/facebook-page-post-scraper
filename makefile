@@ -60,15 +60,24 @@ else
 	pycodestyle tests/. scraper/. server/. --ignore=E402,W504
 endif
 
+doc:
+ifeq ($(OS), Windows_NT)
+	pydocstyle tests\. scraper\. server\. --ignore=E402,W504
+else
+	pydocstyle tests/. scraper/. server/.
+endif
+
 cov:
 ifeq ($(OS), Windows_NT)
-	coverage run -m py.test tests\test_page_scraper.py
-	coverage report -m scraper\page_scraper.py
-	coverage html scraper\page_scraper.py
+	make clean
+	coverage run -m py.test tests/test_page_scraper.py tests/test_token_manager.py
+	coverage report -m scraper/page_scraper.py scraper/token_manager.py
+	coverage html scraper/page_scraper.py scraper/token_manager.py
 else
-	coverage run -m py.test tests/test_page_scraper.py
-	coverage report -m scraper/page_scraper.py
-	coverage html scraper/page_scraper.py
+	make clean
+	coverage run -m py.test tests/test_page_scraper.py tests/test_token_manager.py
+	coverage report -m scraper/page_scraper.py scraper/token_manager.py
+	coverage html scraper/page_scraper.py scraper/token_manager.py
 endif
 
 full:
@@ -83,6 +92,8 @@ else
 	coverage html scraper/page_scraper.py scraper/token_manager.py
 	make style
 endif
+
+documentation:style doc
 
 cc:
 	radon cc scraper -s
@@ -122,13 +133,12 @@ ifeq ($(OS), Windows_NT)
 	rm -f .\csv\*.csv
 	rm -rf .\htmlcov
 	rm -f .\.coverage
+	rm -f .\json
 else
 	rm -f $(CsvDir)*.csv
 	rm -rf ./htmlcov
 	rm -f ./.coverage
-	rm -f ./*.json
-	rm -f $(JsonDir)*.json
-	rm -f $(CsvDir)*.csv
+	rm -rf ./json/
 endif
 
 pylint:

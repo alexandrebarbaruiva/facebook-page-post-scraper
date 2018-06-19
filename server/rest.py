@@ -2,13 +2,12 @@ from flask import Flask, jsonify
 import json
 import os
 import sys
+from server.service import DBService
 sys.path.append(
     os.path.dirname(
         os.path.dirname(os.path.realpath(__file__))
     )
 )
-from server.service import DBService
-
 
 app = Flask(__name__)
 access_db = DBService()
