@@ -9,10 +9,10 @@ home = Path.home()
 sched = BlockingScheduler()
 
 def job_function():
-	print("coletando\n")
+	# print("coletando\n")
 	collect_all_pages()
 	#collect_new_data()
 
-sched.add_job(job_function,'cron', day_of_week='mon-sun', hour=22, minute=40)
+sched.add_job(job_function,'cron', day_of_week='mon-sun', hour=8, minute=00)
 
 sched.start()
