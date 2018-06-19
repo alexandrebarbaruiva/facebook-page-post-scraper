@@ -27,8 +27,8 @@ def show_actors_collected():
 def show_date():
     try:
         return jsonify(json.loads(access_db.get_all_date()))
-    except:
-        pass
+    except Exception:
+        return 'Ocorreu um erro ao tentar pegar as datas'
 
 
 @app.route('/<date>/<actor_name>', methods=['GET'])
@@ -41,7 +41,7 @@ def show_basic_data(date, actor_name):
         return jsonify(
             json.loads(access_db.get_basic_actor_data(actor_name, date))
         )
-    except Exception as exp:
+    except Exception:
         return 'Data nao encontrada'
 
 
