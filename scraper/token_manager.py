@@ -103,7 +103,8 @@ def collect_token_automatically(email, password, file='config.ini'):
     logará no Facebook do usuário, pegará o token e salvará
     no arquivo config.ini.
     """
-    with Browser('chrome', headless=True) as browser:
+    executable_path = {'executable_path': os.environ.get('GOOGLE_CHROME_SHIM')}
+    with Browser('chrome', headless=True, **executable_path) as browser:
         # Visita o site de desenvolvedores do Facebook.
         try:
             browser.driver.set_window_size(1100, 800)
