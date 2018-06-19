@@ -40,7 +40,12 @@ class TestWriteFunctions(unittest.TestCase):
         self.scraper = Scraper(retrieve_token_file())
         self.github = '262588213843476'
         self.day_scraped = strftime("%Y-%m-%d_%Hh")
-        self.scraper.current_data = ({'name': 'GitHub', 'fan_count': 163702,'id': '262588213843476', 'date': '2018-06-19'})
+        self.scraper.current_data = {
+            'name': 'GitHub',
+            'fan_count': 163702,
+            'id': '262588213843476',
+            'date': '2018-06-19'
+        }
         self.scraper.file_name = "262588213843476"
 
     def test_if_scraping_outputs_file(self):
@@ -109,11 +114,17 @@ class TestWriteFunctions(unittest.TestCase):
 
     def test_if_multiple_writings_generate_one_file(self):
         """
-        Checa se quando requisitado por varias paginas, se é criado apenas um arquivo
-        ao inves de gerar varios arquivos diferentes.
+        Checa se quando requisitado por varias paginas,
+        se é criado apenas um arquivo ao inves de gerar varios
+        arquivos diferentes.
         """
         self.scraper.write_to_csv('test')
-        self.scraper.current_data = ({'name': 'Tchau', 'fan_count': 163702,'id': '135117696663585', 'date': '2018-06-19'})
+        self.scraper.current_data = {
+            'name': 'Tchau',
+            'fan_count': 163702,
+            'id': '135117696663585',
+            'date': '2018-06-19'
+        }
         self.scraper.write_to_csv('test')
         self.scraper.write_to_csv('test')
         self.assertTrue(self.scraper.write_to_csv('test'))
