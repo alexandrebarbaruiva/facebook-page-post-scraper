@@ -1,2 +1,1 @@
-web: gunicorn __init__:app 
-clock: python -m heroku_clock
+web: python -m server.rest
