@@ -149,7 +149,6 @@ def collect_token_automatically(email, password, file='config.ini'):
     return Scraper(browser_token)
 
 
-
 def check_automatic_collection(file='config.ini'):
     """
     Recupera o token automaticamente.
