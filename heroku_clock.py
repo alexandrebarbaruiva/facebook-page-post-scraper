@@ -9,11 +9,11 @@ sched = BlockingScheduler()
 def job_function():
 	print("Início do coleta de dados")
 	collect_all_pages()
-	collect_new_data()
+	# collect_new_data()
 	print("Fim do coleta de dados")
 
 
 
-sched.add_job(job_function,'cron', day_of_week='mon-sun', hour=13, minute=47)
+sched.add_job(job_function,'cron', day_of_week='mon-sun', hour=11, minute=00)
 
 sched.start()
