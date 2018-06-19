@@ -52,6 +52,7 @@ def show_basic_data(date, actor_name):
         return 'Data nao encontrada, verifique o nome do ator e a data'
 
 
+
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port, debug=True)

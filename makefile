@@ -8,6 +8,8 @@ default: test
 
 travis:
 	@make style
+	@make clean
+	green3 tests/test_page_scraper_unit.py -vv -f
 
 test:
 ifeq ($(OS), Windows_NT)

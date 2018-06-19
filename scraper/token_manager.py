@@ -8,7 +8,6 @@ salvar no arquivo novamente é definido aqui.
 import os
 import sys
 from configparser import ConfigParser
-import webbrowser
 from getpass import getpass
 from time import sleep
 from splinter import Browser
@@ -131,15 +130,13 @@ def collect_token_automatically(email, password, file='config.ini'):
             print("\x1b[04;01;31m" + "Wrong User Login" + '\x1b[0m')
             return 'Wrong Facebook user or password'
         browser_accessus = browser.find_by_text(
-            'Get User Access Token'
-        )
+            'Get User Access Token')
         browser_accessus.click()
         browser_token = browser.find_by_text('Get Access Token')
         browser_token.click()
         # Acha e pega o novo token.
         browser_token = browser.find_by_css(
-            'label[class="_2toh _36wp _55r1 _58ak"]'
-        )
+            'label[class="_2toh _36wp _55r1 _58ak"]')
         browser_token = browser_token.first.html
         browser_token = browser_token.split("value", 1)[1]
         browser_token = browser_token.split("\"", 1)[1]
@@ -151,24 +148,6 @@ def collect_token_automatically(email, password, file='config.ini'):
             print('Token not valid')
         browser.quit()
     return Scraper(browser_token)
-
-
-def collect_token_manually(file='config.ini'):
-    """
-    Coleta token a partir de uma entrada do usuario.
-
-    Caso seja a primeira vez do usuario, tem que aceitar os termos do Facebook.
-    essa função abriara a pagina para que o usuario faça isso e
-    salvara o token que for colado no terminal.
-    """
-    url = 'https://developers.facebook.com/tools/explorer?locale=en_US'
-    webbrowser.open(url)
-    # update token and print if it worked
-    manually_get_token = input()
-    update_token_file(file, **{'token': manually_get_token})
-    # checks if the User has pasted correctly the user acces token
-    token_is_valid = Scraper(manually_get_token)
-    return token_is_valid
 
 
 def check_automatic_collection(file='config.ini'):
@@ -221,31 +200,8 @@ def check_semi_automatic_collection(file='config.ini',
         return True
     except Exception:
         # Alguma coisa deu errado na coleta.
-        print("\x1b[04;01;31m" + "Auto Token function Failed!" + "\x1b[0m")
+        print("\x1b[04;01;31mAuto Token function Failed!\x1b[0m")
         return False
-
-
-def check_manual_collection(file='config.ini'):
-    """Faz a coleta manual do token."""
-    os.system("clear")
-    print("1. Login on your Facebook Account" +
-          "\n2. Click on \"Get token\" then \"Get User Access Token\"." +
-          "\n3. Then select \"manage_pages\",\"publish_pages\",\n" +
-          "\"pages_show_list\" and \"pages_manage_instant_articles\"." +
-          "\n4. Finish by clicking on \"Get Access Token\"." +
-          "\n\nNow paste your user Access Token here:"
-          )
-    sleep(3.0)
-    token_is_valid = collect_token_manually(file)
-    if token_is_valid.check_valid_token():
-        print("\x1b[04;01;32mSet Token Is Valid\x1b[0m\n")
-        print("\x1b[04;01;32mAuto Token function Completed\x1b[0m")
-        sleep(1.0)
-        return True
-    print("\x1b[04;01;31mSet Token is not Valid\x1b[0m\n")
-    print("\x1b[04;01;32mAuto Token function Completed\x1b[0m")
-    sleep(1.0)
-    return False
 
 
 def collect_token(file='config.ini'):
@@ -255,20 +211,11 @@ def collect_token(file='config.ini'):
     Ou automaticamente caso o usuario ja tenha o feito.
     """
     os.system("clear")
-    cond = "something"
 
     if retrieve_password_file(file):
         return check_automatic_collection(file)
     else:
-        while (cond != "Y" and cond != "N"):
-            print(
-                "Is it your first time getting User Access Token?" +
-                "\nType \"Y\" OR \"N\"")
-            cond = input().upper()
-        if(cond == "N"):
-            return check_semi_automatic_collection(file)
-        elif(cond == "Y"):
-            return check_manual_collection()
+        return check_semi_automatic_collection(file)
 
 
 def encrypt_user_password(user, password):

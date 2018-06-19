@@ -21,7 +21,7 @@
 * [BuildPacks](#buildpacks)
 * [Projeto de](#um-projeto-de)
 
-## Fazendo tudo rodar 
+## Fazendo tudo rodar
 
 Uma vez que se tenha instalado python 3 e Git, baixado o repositório e
 esteja com um editor de texto adequado (Atom, VSCode, Sublime ou Pycharm), deve-se
@@ -71,7 +71,7 @@ make run
 
 ## Rodando os testes
 
-Por enquanto rodar testes é a principal funcionalidade. Em breve serão adicionadas 
+Por enquanto rodar testes é a principal funcionalidade. Em breve serão adicionadas
 mais funções. Portanto, para testes
 
 ```
@@ -86,7 +86,8 @@ make cov
 
 ## Verificando estilo
 
-Para verificar se o seu código encontra-se bem indentado e bonito, use o seguinte comando
+Para verificar se o seu código encontra-se bem indentado e bonito, use
+o seguinte comando
 
 ```
 make style
