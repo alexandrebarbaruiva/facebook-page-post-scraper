@@ -25,18 +25,24 @@ def show_actors_collected():
 
 @app.route('/date', methods=['GET'])
 def show_date():
-    return jsonify(json.loads(access_db.get_all_date()))
+    try:
+        return jsonify(json.loads(access_db.get_all_date()))
+    except Exception:
+        return 'Ocorreu um erro ao tentar pegar as datas'
 
 
-@app.route('/basic/<date>/<actor_name>', methods=['GET'])
+@app.route('/<date>/<actor_name>', methods=['GET'])
 def show_basic_data(date, actor_name):
-    if(date == 'latest'):
-        data = json.loads(access_db.get_all_date())
-        date = data['latest']
-        print(date)
-    return jsonify(
-        json.loads(access_db.get_basic_actor_data(actor_name, date))
-    )
+    try:
+        if(date == 'latest'):
+            data = json.loads(access_db.get_all_date())
+            date = data['latest']
+            print(date)
+        return jsonify(
+            json.loads(access_db.get_basic_actor_data(actor_name, date))
+        )
+    except Exception:
+        return 'Data nao encontrada'
 
 
 if __name__ == '__main__':
