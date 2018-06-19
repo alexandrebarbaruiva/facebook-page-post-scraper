@@ -51,7 +51,10 @@ class Scraper:
         if page is None:
             page = self.page
         valid_url = 'https://www.facebook.com/' + str(page)
-        valid_status_code = requests.get(valid_url).status_code
+        try:
+            valid_status_code = requests.get(valid_url).status_code
+        except Exception:
+            valid_status_code = 400
         return(valid_status_code == 200)
 
     def scrape_current_page(self, page=None, feed=False, query=''):
