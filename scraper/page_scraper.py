@@ -2,7 +2,7 @@ import os
 import json
 import csv
 import datetime
-from time import strftime
+from time import strftime, sleep
 import requests
 import facebook
 from .get_posts import process_posts
@@ -199,8 +199,32 @@ class Scraper:
         return status_id, status_published, num_reactions, num_comments, \
             num_shares, total_reaction, total_comments, total_shares
 
-    def get_reactions(self, page=None, since_date=None, until_date=None):
+    def get_data(self, id_statuses, id_posts, fields):
         graph = facebook.GraphAPI(access_token=self.token, version="2.12")
+        try:
+            statuses = graph.get_object(
+                id=id_statuses,
+                fields=fields
+            )
+            post_message = graph.get_object(
+                id=id_posts,
+                fields="message,story"
+            )
+        except Exception as e:
+            print('Erro na busca dos dados ' + str(e) +
+                  '\nTentando de novo...')
+            sleep(5.0)
+            statuses = graph.get_object(
+                id=id_statuses,
+                fields=fields
+            )
+            post_message = graph.get_object(
+                id=id_posts,
+                fields="message,story"
+            )
+        return (statuses, post_message)
+
+    def get_reactions(self, page=None, since_date=None, until_date=None):
         if page is None:
             page = self.page
         if not self.valid_page(page):
@@ -217,6 +241,7 @@ class Scraper:
         has_next_page = True
         num_processed = 0
         after = ''
+        after_post = ''
         since = "&since={}".format(since_date) if since_date \
             != '' else ''
         until = "&until={}".format(until_date) if until_date \
@@ -234,17 +259,13 @@ class Scraper:
                      "reactions.type(HAHA).limit(0).summary(total_count)" + \
                      ".as(haha),reactions.type(ANGRY).limit(0)." + \
                      "summary(total_count).as(angry)"
-
-            statuses = graph.get_object(
-                id=str(self.page) + '/posts?' + after +
-                '&limit=100' + since + until,
-                fields=fields
-            )
+            id_statuses = str(self.page) + '/posts?' + after + \
+                '&limit=100' + since + until
+            id_posts = str(self.page) + '/posts?' + after_post + \
+                '&limit=100' + since + until
+            statuses, post_message = self.get_data(
+                id_statuses, id_posts, fields)
             for status in statuses['data']:
-                post_message = graph.get_object(
-                    id=status['id'],
-                    fields="message,story"
-                )
                 # Ensure it is a status with the expected metadata
                 if 'reactions' in status:
                     status_data = self.processFacebookPageFeedStatus(
@@ -257,7 +278,9 @@ class Scraper:
                     if not os.path.exists('json/posts/' + str(self.page)):
                         os.makedirs('json/posts/' + str(self.page))
                     process_posts(
-                        self.page, status, post_message, status_data[1]
+                        self.page, status,
+                        post_message['data'][num_processed % 100],
+                        status_data[1]
                     )
                 num_processed += 1
                 if num_processed % 100 == 0:
@@ -269,6 +292,7 @@ class Scraper:
             # if there is no next page, we're done.
             if 'paging' in statuses:
                 after = statuses['paging']['cursors']['after']
+                after_post = post_message['paging']['cursors']['after']
             else:
                 has_next_page = False
         if total_posts != 0:

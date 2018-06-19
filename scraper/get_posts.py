@@ -6,7 +6,7 @@ import json
 
 def process_posts(page, status, message, status_published):
     post = pretty_post(status, message)
-    post = get_reactions_info(post, status)
+    post = get_reactions_info(post, status, message)
     post['published'] = status_published
     specific_comments = {}
     num_of_comment = 0
@@ -34,7 +34,7 @@ def pretty_post(status, message):
     return post
 
 
-def get_reactions_info(post, status):
+def get_reactions_info(post, status, message):
     post['story'] = message['story'] if 'story' in message.keys() else ''
     reactions = ['like', 'wow', 'sad', 'love', 'haha', 'angry',
                  'reactions', 'comments']
@@ -59,12 +59,12 @@ def write_posts_to_csv():
                 content = json.load(json_post)
             list_of_content.append(get_info(content, columns))
         actor_file_name = 'csv/' + time + '/' + actor + '.csv'
-        dump_to_csv(actor_file_name, list_of_content)
+        dump_to_csv(actor_file_name, list_of_content, columns)
 
 
-def dump_to_csv(path, list_of_content):
+def dump_to_csv(path, list_of_content, columns):
     with open(path, 'w', encoding='utf8') as csv_file:
-        info = csv.writer(csv_file)
+        info = csv.writer(csv_file, delimiter=';')
         info.writerow(columns)
         for row in list_of_content:
             info.writerow(row)
@@ -93,13 +93,13 @@ def write_comments_to_csv():
             with open(json_post, 'r', encoding='utf8') as json_post:
                 content = json.load(json_post)
                 list_of_comments.append(content['id'])
-                list_of_comments = dict_to_list(content['specific_comments'])
+                list_of_comments = dict_to_list(
+                    content['specific_comments'], list_of_comments)
             comments_info.writerow(list_of_comments)
         csv_comt_file.close()
 
 
-def dict_to_list(dictionary):
-    list_of_comments = []
+def dict_to_list(dictionary, list_of_comments):
     for comment in dictionary.values():
         list_of_comments.append(comment)
     return list_of_comments
