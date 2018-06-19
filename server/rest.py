@@ -15,14 +15,14 @@ access_db = DBService()
 
 @app.route("/")
 def hello():
-    return ('Facebook Scraper.<br/><br/><br/>' + \
-            'Endpoints:<br/>' + \
-                    '/actors - lista todos os atores<br/>' + \
-                    '/date - lista as datas de coleta<br/>' + \
-                    '/&ltdate&gt;/&ltactor&gt; - lista os dados coletados' + \
-                            'do ator na determinada data<br/>' + \
-                    '/latest/&ltactor&gt; - lista os dados dos atores' + \
-                            ' na ultima data coletada')  
+    return """Facebook Scraper.<br/><br/><br/>
+            Endpoints:<br/>
+                    /actors - lista todos os atores<br/>
+                    /date - lista as datas de coleta<br/>
+                    /&ltdate&gt;/&ltactor&gt; - lista os dados coletados
+                        do ator na determinada data<br/>
+                    /latest/&ltactor&gt; - lista os dados dos atores
+                        na ultima data coletada"""
 
 
 @app.route('/actors', methods=['GET'])
