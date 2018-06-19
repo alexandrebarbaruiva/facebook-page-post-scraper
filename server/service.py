@@ -11,7 +11,7 @@ class DBService:
             "user": "outvrxddgqtmwt",
             "password": "e4f2c7675d8bacc541b8e0162d5e023c63ce" +
             "63df91bcfbeaf9f1a3e803800add"
-
+        }
 
     def get_actors_from_db(self):
         conn = psycopg2.connect(**self.params)
