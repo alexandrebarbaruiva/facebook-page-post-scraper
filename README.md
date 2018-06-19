@@ -48,17 +48,18 @@ pip install -r requirements.txt
 
 Uma vez instalados todos os módulos, é necessário configurar o token.
 Para isso devemos baixar o ChromeDriver, seguindo as instruções do Splinter de acordo
-com seu sistema operacional: 
-([Instruções para baixar ChromeDriver](https://splinter.readthedocs.io/en/latest/drivers/chrome.html)).
+com seu sistema operacional: ([Instruções para baixar ChromeDriver](https://splinter.readthedocs.io/en/latest/drivers/chrome.html)).
 
 Uma vez com o ChromeDriver instalado corretamente, é necessário setar uma variável de ambiente da 
-seguinte forma: 
-Utilizando um editor de texto, vá em venv/bin/activate e, logo abaixo de deactivate()
+seguinte forma: utilizando um editor de texto, vá em venv/bin/activate e, logo abaixo de deactivate()
 coloque o seguinte comando:
+
 ``` 
 unset GOOGLE_CHROME_SHIM
 ```
-E, na última linha do arquivo escreva:   
+
+E, na última linha do arquivo escreva:  
+ 
 ```
 export GOOGLE_CHROME_SHIM=$HOME/bin/chromedriver
 ```
