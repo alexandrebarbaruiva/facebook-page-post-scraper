@@ -47,16 +47,23 @@ pip install -r requirements.txt
 ```
 
 Uma vez instalados todos os módulos, é necessário configurar o token.
-Para isso devemos baixar o ChromeDriver. Para Linux e MacOS basta utilizar o comando
-
-```
-make chromedriver
-```
-
-Para Windows, é necessário seguir as instruções do Splinter para Windows:
+Para isso devemos baixar o ChromeDriver, seguindo as instruções do Splinter de acordo
+com seu sistema operacional: 
 ([Instruções para baixar ChromeDriver](https://splinter.readthedocs.io/en/latest/drivers/chrome.html)).
-Uma vez com o ChromeDriver instalado corretamente,para a aquisição do Token basta digitar
 
+Uma vez com o ChromeDriver instalado corretamente, é necessário setar uma variável de ambiente da 
+seguinte forma: 
+Utilizando um editor de texto, vá em venv/bin/activate e, logo abaixo de deactivate()
+coloque o seguinte comando:
+``` 
+unset GOOGLE_CHROME_SHIM
+```
+E, na última linha do arquivo escreva:   
+```
+export GOOGLE_CHROME_SHIM=$HOME/bin/chromedriver
+```
+
+Agora, para coletar um token, basta utilizar o comando:
 ```
 make autotoken
 ```
@@ -112,7 +119,7 @@ Formato do arquivo:
 clock: python heroku_clock.py
 
 runtime.txt - especifica a versão do python que é suportada pela aplicação.
-python-3.5.2
+python-3.6.5
 
 Link Heroku - ([facebook-page-post-scraper](https://dashboard.heroku.com/apps/facebook-page-post-scraper)).
 

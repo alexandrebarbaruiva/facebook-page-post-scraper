@@ -14,6 +14,9 @@ class DBService:
         }
 
     def get_actors_from_db(self):
+        """
+        Coleta os atores no banco de dados para vizualiação web
+        """
         conn = psycopg2.connect(**self.params)
         sql_cmd = "SELECT DISTINCT file_name FROM Facebook"
         cur = conn.cursor()
@@ -31,6 +34,10 @@ class DBService:
         return actors
 
     def get_basic_actor_data(self, actor, date):
+        """
+        Coleta no banco de dados as informações sobre o ator
+        de acordo com a data especificada
+        """
         actor_dict = {}
         conn = psycopg2.connect(**self.params)
         cur = conn.cursor()
@@ -58,6 +65,9 @@ class DBService:
         return actor
 
     def get_all_date(self):
+        """
+        Coleta no banco de dados as datas para vizualização web
+        """
         date_dict = {'date': []}
         conn = psycopg2.connect(**self.params)
         cur = conn.cursor()
