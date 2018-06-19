@@ -215,9 +215,3 @@ class TestTokenCollection(unittest.TestCase):
             )
         else:
             self.fail('No user/password informed. Use autotoken.')
-
-    # def test_collect_token(self):
-    #     if retrieve_password_file():
-    #         self.assertEqual(collect_token(), True)
-    #     else:
-    #         print('No token detected.')
