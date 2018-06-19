@@ -1,6 +1,5 @@
 # User addition
 .DS_Store
-config.ini
 /csv/*.csv
 /json/*.json 
 /json
