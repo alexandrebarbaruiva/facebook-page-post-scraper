@@ -8,7 +8,6 @@ salvar no arquivo novamente é definido aqui.
 import os
 import sys
 from configparser import ConfigParser
-import webbrowser
 from getpass import getpass
 from time import sleep
 from splinter import Browser
@@ -150,23 +149,6 @@ def collect_token_automatically(email, password, file='config.ini'):
     return Scraper(browser_token)
 
 
-def collect_token_manually(file='config.ini'):
-    """
-    Coleta token a partir de uma entrada do usuario.
-
-    Caso seja a primeira vez do usuario, tem que aceitar os termos do Facebook.
-    essa função abriara a pagina para que o usuario faça isso e
-    salvara o token que for colado no terminal.
-    """
-    url = 'https://developers.facebook.com/tools/explorer?locale=en_US'
-    webbrowser.open(url)
-    # update token and print if it worked
-    manually_get_token = input()
-    update_token_file(file, **{'token': manually_get_token})
-    # checks if the User has pasted correctly the user acces token
-    token_is_valid = Scraper(manually_get_token)
-    return token_is_valid
-
 
 def check_automatic_collection(file='config.ini'):
     """
@@ -222,28 +204,6 @@ def check_semi_automatic_collection(file='config.ini',
         return False
 
 
-def check_manual_collection(file='config.ini'):
-    """Faz a coleta manual do token."""
-    string = "\x1b[04;01;32mAuto Token function Completed\x1b[0m"
-    os.system("clear")
-    print("1. Login on your Facebook Account" +
-          "\n2. Click on \"Get token\" then \"Get User Access Token\"." +
-          "\n3. Then select \"manage_pages\",\"publish_pages\",\n" +
-          "\"pages_show_list\" and \"pages_manage_instant_articles\"." +
-          "\n4. Finish by clicking on \"Get Access Token\"." +
-          "\n\nNow paste your user Access Token here:"
-          )
-    sleep(3.0)
-    token_is_valid = collect_token_manually(file)
-    if token_is_valid.check_valid_token():
-        print("\x1b[04;01;32mSet Token Is Valid\x1b[0m\n" + string)
-        sleep(1.0)
-        return True
-    print("\x1b[04;01;31mSet Token is not Valid\x1b[0m\n" + string)
-    sleep(1.0)
-    return False
-
-
 def collect_token(file='config.ini'):
     """
     Coleta token manualmente para quem é a primeira vez.
@@ -251,19 +211,11 @@ def collect_token(file='config.ini'):
     Ou automaticamente caso o usuario ja tenha o feito.
     """
     os.system("clear")
-    cond = "something"
 
     if retrieve_password_file(file):
         return check_automatic_collection(file)
     else:
-        while (cond != "Y" and cond != "N"):
-            print("Is it your first time getting User Access Token?" +
-                  "\nType \"Y\" OR \"N\"")
-            cond = input().upper()
-        if(cond == "N"):
-            return check_semi_automatic_collection(file)
-        elif(cond == "Y"):
-            return check_manual_collection()
+        return check_semi_automatic_collection(file)
 
 
 def encrypt_user_password(user, password):
