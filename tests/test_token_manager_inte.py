@@ -6,9 +6,9 @@ from scraper.page_scraper import Scraper
 from scraper.token_manager import \
     retrieve_token_file, update_token_file, generate_token_file, \
     retrieve_password_file, encrypt_user_password, decrypt_user_password, \
-    collect_token_manually, collect_token_automatically, \
+    collect_token_automatically, \
     check_automatic_collection, get_user_password_decrypted, \
-    check_semi_automatic_collection, check_manual_collection
+    check_semi_automatic_collection
 
 
 class TestTokenFunctions(unittest.TestCase):
@@ -135,33 +135,6 @@ class TestTokenSecurity(unittest.TestCase):
             len(get_user_password_decrypted()),
             len(decrypt_user_password(**retrieve_password_file()))
         )
-
-
-class TestTokenCollectionWithBrowser(unittest.TestCase):
-
-    def test_collect_token_manually(self):
-        user_input = 'EDA0EdEloEse0cB'
-        with patch('builtins.input', return_value=user_input):
-            self.assertEqual(
-                type(collect_token_manually(file='default.ini')),
-                type(Scraper(''))
-            )
-        try:
-            os.remove(str(os.getcwd()) + '/scraper/default.ini')
-        except FileNotFoundError:
-            pass
-
-    def test_check_function_for_manual_token(self):
-        user_input = 'EDA0EdEloEse0cB'
-        with patch('builtins.input', return_value=user_input):
-            self.assertEqual(
-                type(check_manual_collection(file='default.ini')),
-                type(False)
-            )
-        try:
-            os.remove(str(os.getcwd()) + '/scraper/default.ini')
-        except FileNotFoundError:
-            pass
 
 
 class TestTokenCollection(unittest.TestCase):
