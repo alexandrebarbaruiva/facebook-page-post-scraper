@@ -12,6 +12,7 @@ def job_function():
 	collect_new_data()
 	print("Fim do coleta de dados")
 
-sched.add_job(job_function,'cron', day_of_week='mon-sun', hour=8, minute=00)
+
+sched.add_job(job_function,'cron', day_of_week='mon-sun', hour=11, minute=40)
 
 sched.start()
