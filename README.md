@@ -16,6 +16,8 @@
 * [Usando o Programa](#usando-o-programa)
 * [Rodando os testes](#rodando-os-testes)
 * [Verificando estilo](#verificando-estilo)
+* [Heroku](#heroku)
+* [Banco de dados Heroku](#banco-de-dados-heroku)
 * [APScheduled](#apscheduled)
 * [Agendamento](#agendamento)
 * [BuildPacks](#buildpacks)
