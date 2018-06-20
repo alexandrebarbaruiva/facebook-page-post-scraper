@@ -307,14 +307,17 @@ class Scraper:
 
     def calldb(self, actor_name=None, file=None):
         """Responsável pela chamada do banco de dados."""
+        """Abre o arquivo JSON criado na função write_to_json"""
         if file is None:
             file = self.file_name
         with open(
             'json/' + strftime("%Y-%m-%d") + '/' + file + '.json',
             'r', encoding='utf8'
         ) as data_file:
+        """Carrega o arquivo para a variável data"""
             data = json.load(data_file)
         data['file_name'] = file
+        """Seta os parametros para conexão com o banco de dados"""
         params = {
             "host": "ec2-23-23-247-245.compute-1.amazonaws.com",
             "database": "dcut7901ku63t1",
@@ -322,7 +325,9 @@ class Scraper:
             "password": "e4f2c7675d8bacc541b8e0162d5e023c" +
             "63ce63df91bcfbeaf9f1a3e803800add"
         }
+        """Conecta com o banco"""
         conn = psycopg2.connect(**params)
+        """Seta o comando para inserir os dados do arquivo JSON no banco"""
         sql_cmd = """INSERT INTO Facebook(
             file_name, name, fan_count, id, date, since_date,
             until_date, total_reactions, total_comments, total_shares,
@@ -343,9 +348,11 @@ class Scraper:
                 CAST(src.MyJSON->>'average_comments' AS INTEGER)
             FROM ( SELECT CAST(%s AS JSONB) AS MyJSON ) src"""
         # Convert dictionary to native JSON data type
+        """Converte o dicionário em um JSON nativo"""
         data_str = json.dumps(data)
         sql_params = (data_str,)
         try:
+            """Executa o comando no banco com o JSON nativo"""
             cur = conn.cursor()
             cur.execute(sql_cmd, sql_params)
             conn.commit()
