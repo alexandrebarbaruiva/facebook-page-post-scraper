@@ -141,6 +141,7 @@ else
 	rm -rf ./htmlcov
 	rm -f ./.coverage
 	rm -rf ./json/
+
 endif
 
 pylint:
