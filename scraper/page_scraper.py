@@ -339,7 +339,7 @@ class Scraper:
                 CAST(src.MyJSON->>'average_reactions' AS INTEGER),
                 CAST(src.MyJSON->>'average_comments' AS INTEGER)
             FROM ( SELECT CAST(%s AS JSONB) AS MyJSON ) src"""
-        
+
         """Converte o dicionário em um JSON nativo"""
         data_str = json.dumps(data)
         sql_params = (data_str,)
