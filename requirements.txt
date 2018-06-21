@@ -6,7 +6,7 @@ sphinx==1.7.5
 -e git+https://github.com/mobolic/facebook-sdk.git#egg=facebook-sdk
 splinter==0.8.0
 cryptography==2.2.2
-radon
+radon==2.2.0
 pylint
 flask
 pydocstyle
