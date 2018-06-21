@@ -314,7 +314,7 @@ class Scraper:
             'json/' + strftime("%Y-%m-%d") + '/' + file + '.json',
             'r', encoding='utf8'
         ) as data_file:
-        """Carrega o arquivo para a variável data"""
+            """Carrega o arquivo para a variável data"""
             data = json.load(data_file)
         data['file_name'] = file
         """Seta os parametros para conexão com o banco de dados"""
