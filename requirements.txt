@@ -1,5 +1,5 @@
 psycopg2-binary==2.7.5
-green
+green==2.12.1
 pytest-cov
 pycodestyle==2.4.0
 sphinx
