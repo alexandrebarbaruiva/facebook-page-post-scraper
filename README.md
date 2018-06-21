@@ -16,6 +16,8 @@
 * [Usando o Programa](#usando-o-programa)
 * [Rodando os testes](#rodando-os-testes)
 * [Verificando estilo](#verificando-estilo)
+* [Heroku](#heroku)
+* [Banco de dados Heroku](#banco-de-dados-heroku)
 * [APScheduled](#apscheduled)
 * [Agendamento](#agendamento)
 * [BuildPacks](#buildpacks)
@@ -138,6 +140,33 @@ git pull heroku master
 Link Heroku - Git ([Deploying with Git](https://devcenter.heroku.com/articles/git)).
 
 Link Heroku - Agendamento ([Scheduled (Agendamento)](https://devcenter.heroku.com/articles/scheduled-jobs-custom-clock-processes)).
+
+## Banco de dados Heroku
+
+Utilizamos o banco de dados Heroku Postgres que funciona como um add-on instalado
+ dentro do heroku.
+
+Para a criação da tabela no banco de dados foi necessário instalar o psql na máquina.
+Depois disso é necessário utilizar o comando abaixo para se conectar com o banco:
+
+```
+psql -h "Host" -U "User" "Database"
+```
+
+As aspas representam as credenciais do banco que podem ser encontradas ao entrar
+ no Heroku Postgres, ir em 'Settings' e depois 'View Credentials'.
+
+Agora que estamos conectados no banco de dados podemos executar vários comandos
+ como criar tabelas, fazer select em tabelas existentes, excluir tabelas, inserir
+ e excluir dados, entre outros.
+Para a criação da tabela é necessário utilizar o comando:
+
+```
+CREATE TABLE Nome_da_tabela(nome_do_campo tipo_do_campo, ...);
+```
+
+A tabela criada deve ser a utilizada no comando executado na função calldb, portanto,
+ela deve conter o campos que são utilizados para inserir dados na tabela.
 
 ## APScheduled
 
