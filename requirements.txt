@@ -4,7 +4,7 @@ pytest-cov==2.5.1
 pycodestyle==2.4.0
 sphinx==1.7.5
 -e git+https://github.com/mobolic/facebook-sdk.git#egg=facebook-sdk
-splinter
+splinter==0.8.0
 cryptography
 radon
 pylint
