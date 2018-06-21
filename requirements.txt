@@ -1,4 +1,4 @@
-psycopg2-binary
+psycopg2-binary==2.7.5
 green
 pytest-cov
 pycodestyle==2.4.0
