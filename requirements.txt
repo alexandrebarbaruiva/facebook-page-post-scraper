@@ -10,5 +10,5 @@ radon==2.2.0
 pylint==1.9.2
 flask==1.0.2
 pydocstyle==2.1.1
-APScheduler==3.0.0
+APScheduler==3.5.1
 gunicorn
