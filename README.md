@@ -22,6 +22,7 @@
 * [Agendamento](#agendamento)
 * [BuildPacks](#buildpacks)
 * [Projeto de](#um-projeto-de)
+* [Showcases](#showcases)
 
 ## Fazendo tudo rodar
 
@@ -204,3 +205,8 @@ Universidade de Brasília
 [resocie]:./.github/Images/resocie.jpg
 
 Resocie : Repensando as Relações entre Sociedade e Estado
+
+## Showcases
+
+[Apresentação interna pdf](./Resocie.pdf)
+[Link da apresentação interna no canva](https://www.canva.com/design/DAC7AQM8vco/85lnoZTb57_TbLWPpDPeEQ/view?utm_content=DAC7AQM8vco&utm_campaign=designshare&utm_medium=link&utm_source=sharebutton)
