@@ -176,14 +176,6 @@ class Scraper:
 
         Sendo eles o total de reações,comentários,compartilhamentos e posts.
         """
-        # The status is now a Python dictionary, so for top-level items,
-        # we can simply call the key.
-
-        # Additionally, some items may not always exist,
-        # so must check for existence first
-
-        # Time needs special care since a) it's in UTC and
-        # b) it's not easy to use in statistical programs.
         status_id = status['id']
 
         status_published = datetime.datetime.strptime(
@@ -347,7 +339,7 @@ class Scraper:
                 CAST(src.MyJSON->>'average_reactions' AS INTEGER),
                 CAST(src.MyJSON->>'average_comments' AS INTEGER)
             FROM ( SELECT CAST(%s AS JSONB) AS MyJSON ) src"""
-        # Convert dictionary to native JSON data type
+        
         """Converte o dicionário em um JSON nativo"""
         data_str = json.dumps(data)
         sql_params = (data_str,)
