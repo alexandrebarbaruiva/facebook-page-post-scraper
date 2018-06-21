@@ -9,6 +9,6 @@ cryptography==2.2.2
 radon==2.2.0
 pylint==1.9.2
 flask==1.0.2
-pydocstyle
+pydocstyle==2.1.1
 APScheduler==3.0.0
 gunicorn
