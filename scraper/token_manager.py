@@ -13,6 +13,7 @@ from time import sleep
 from splinter import Browser
 from cryptography.fernet import Fernet
 from scraper.page_scraper import Scraper
+from selenium import webdriver
 sys.path.append(
     os.path.dirname(
         os.path.dirname(os.path.realpath(__file__))
@@ -102,8 +103,15 @@ def collect_token_automatically(email, password, file='config.ini'):
     logará no Facebook do usuário, pegará o token e salvará
     no arquivo config.ini.
     """
-    executable_path = {'executable_path': os.environ.get('GOOGLE_CHROME_SHIM')}
-    with Browser('chrome', headless=True, **executable_path) as browser:
+    # executable_path={'executable_path':os.environ.get('GOOGLE_CHROME_SHIM')}
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.add_argument('--disable-gpu')
+    chrome_options.add_argument('--no-sandbox')
+    chrome_options.add_argument('--headless')
+    chrome_options.add_argument('--remote-debbuging-port=9222')
+    chrome_options.binary_location = os.environ.get('GOOGLE_CHROME_SHIM', None)
+
+    with Browser('chrome', options=chrome_options) as browser:
         # Visita o site de desenvolvedores do Facebook.
         try:
             browser.driver.set_window_size(1100, 800)
