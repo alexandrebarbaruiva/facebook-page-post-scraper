@@ -1,20 +1,19 @@
 """
-@token_manager responsible for dealing with token information.
+@token_manager Responsavel por lidar com tudo referente ao token.
 
-Everything related to token (get from file, update from Facebook,
-save on file), is dealt with a function described here.
-
+Tudo relacionado ao token, desde pegar do arquivo, atualiza-lo e
+salvar no arquivo novamente é definido aqui.
 """
 
 import os
 import sys
 from configparser import ConfigParser
-import webbrowser
 from getpass import getpass
 from time import sleep
 from splinter import Browser
 from cryptography.fernet import Fernet
 from scraper.page_scraper import Scraper
+from selenium import webdriver
 sys.path.append(
     os.path.dirname(
         os.path.dirname(os.path.realpath(__file__))
@@ -25,9 +24,8 @@ sys.path.append(
 path = str(os.getcwd()) + '/scraper/'
 
 
-# TODO: make retrieve_config_file()
 def retrieve_token_file(file='config.ini'):
-    """Retrieve token from config.ini file on scraper folder."""
+    """Recebe token do arquivo config.ini."""
     try:
         config = ConfigParser()
         config.read_file(open(path + file))
@@ -40,7 +38,7 @@ def retrieve_token_file(file='config.ini'):
 
 
 def retrieve_password_file(file='config.ini'):
-    """Retrieve user and password from config.ini file on scraper folder."""
+    """Recupera usuario e senha do arquivo config.ini."""
     try:
         config = ConfigParser()
         config.read_file(open(path + file))
@@ -59,19 +57,19 @@ def retrieve_password_file(file='config.ini'):
 
 
 def update_token_file(file='config.ini', **kwargs):
-    """Update token from config.ini file on scraper folder."""
+    """Atualiza o token no arquivo config.ini."""
     config = ConfigParser()
     config.read(path + file)
 
     if len(kwargs.keys()) > 0:
-        # if kwargs has all info for password
+        # Se kwargs tem todas as informaçoes para a senha.
         if {'user', 'password', 'utoken'} == set(kwargs):
             config['USER'] = kwargs
             with open(path + file, 'w') as configfile:
                 config.write(configfile)
             return 'User and password updated.'
 
-        # if kwargs has token info
+        # Se kwargs tem infromações para o token.
         if ('token' in kwargs.keys()):
             config['DEFAULT'] = {'token': kwargs['token']}
             with open(path + file, 'w') as configfile:
@@ -84,9 +82,9 @@ def update_token_file(file='config.ini', **kwargs):
 
 def generate_token_file(new_token=None, file='config.ini'):
     """
-    Generate empty token file with token provided.
+    Gera um arquivo config.ini vazio caso não exista.
 
-    Else returns that token already exists.
+    Caso exista, retona vazio.
     """
     if(not retrieve_token_file(file)):
         token_data = '[DEFAULT]\ntoken = \'' + str(new_token) + '\''
@@ -99,57 +97,59 @@ def generate_token_file(new_token=None, file='config.ini'):
 
 def collect_token_automatically(email, password, file='config.ini'):
     """
-    Login to facebook and update token.
+    Loga no Facebook e atualiza o token.
 
-    When user has already accepted Facebook Terms and Conditions,
-    this function will login on user's Facebook and get his
-    "User Token Acces" and save in config.ini.
+    Quando o usuario aceitar os termos do Facebook, essa função
+    logará no Facebook do usuário, pegará o token e salvará
+    no arquivo config.ini.
     """
-    with Browser('chrome', headless=True) as browser:
-        # Visit Facebook developers web site
+    # executable_path={'executable_path':os.environ.get('GOOGLE_CHROME_SHIM')}
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.add_argument('--disable-gpu')
+    chrome_options.add_argument('--no-sandbox')
+    chrome_options.add_argument('--headless')
+    chrome_options.add_argument('--remote-debbuging-port=9222')
+    chrome_options.binary_location = os.environ.get('GOOGLE_CHROME_SHIM', None)
+
+    with Browser('chrome', options=chrome_options) as browser:
+        # Visita o site de desenvolvedores do Facebook.
         try:
             browser.driver.set_window_size(1100, 800)
             url = "https://developers.facebook.com/tools/explorer" \
                 "/?locale=en_US"
             browser.visit(url)
-            # Find the login button, if not found means error
-            # conecting with the Facebook
+            # Procura o butão de login, caso nao encontre resulta em erro.
+            # Coneta no facebook.
             browser.click_link_by_partial_href('login')
         except Exception:
             print("\x1b[04;01;31mCouldn't open Facebook Dev site\x1b[0m")
             return 'Wasn`t possible to reach Facebook site. Are you online?'
-        # Click on login button
+        # Clica no butão de login.
         browser_login = browser.find_by_name('login')
-        # Login with email and password from the user
+        # Loga com o email e senha do usuario.
         try:
             browser.fill('email', email)
             browser.fill('pass', password)
             browser_login.click()
-        # Request the updated User access token
+        # Requer a atualização do token.
             browser_access = browser.find_by_text('Get Token')
             browser_access.click()
         except Exception:
-            # try:
-            #     os.remove(str(os.getcwd())+'/scraper/'+file)
-            # except Exception as inst:
-            #     pass
             print("\x1b[04;01;31m" + "Wrong User Login" + '\x1b[0m')
             return 'Wrong Facebook user or password'
         browser_accessus = browser.find_by_text(
-            'Get User Access Token'
-        )
+            'Get User Access Token')
         browser_accessus.click()
         browser_token = browser.find_by_text('Get Access Token')
         browser_token.click()
-        # find and catch the new user acces token
+        # Acha e pega o novo token.
         browser_token = browser.find_by_css(
-            'label[class="_2toh _36wp _55r1 _58ak"]'
-        )
+            'label[class="_2toh _36wp _55r1 _58ak"]')
         browser_token = browser_token.first.html
         browser_token = browser_token.split("value", 1)[1]
         browser_token = browser_token.split("\"", 1)[1]
         browser_token = browser_token.split("\"", 1)[0]
-        # update new token into config.ini and print if it worked
+        # atualiza o token no config.ini.
         if Scraper(browser_token).check_valid_token():
             update_token_file(file, **{'token': browser_token})
         else:
@@ -158,51 +158,26 @@ def collect_token_automatically(email, password, file='config.ini'):
     return Scraper(browser_token)
 
 
-def collect_token_manually(file='config.ini'):
-    """
-    Collect token with user input.
-
-    Case is the first time the User try to get the Token, User
-    will have to accept Facebook Terms and Conditions,
-    this function will open facebook page so he can login on user's Facebook,
-    get his "User Token Acces", paste on the terminal so we save in config.ini.
-    """
-    url = 'https://developers.facebook.com/tools/explorer?locale=en_US'
-    webbrowser.open(url)
-    # update token and print if it worked
-    manually_get_token = input()
-    update_token_file(file, **{'token': manually_get_token})
-    # checks if the User has pasted correctly the user acces token
-    token_is_valid = Scraper(manually_get_token)
-    return token_is_valid
-
-
 def check_automatic_collection(file='config.ini'):
     """
-    Retrieve token from facebook automatically.
+    Recupera o token automaticamente.
 
-    Once token file has email and password, the process will happen
-    automatically.
+    A partir do momento que config.ini tem o email e
+    senha do usuario, atualiza automaticamente o token.
     """
     try:
-        # tried to get the token
-        print(
-            "\x1b[04;01;32m" +
-            "Getting credentials and collecting token" +
-            "\x1b[0m\n"
-        )
+        # Tenta pegar o token.
         email, password = get_user_password_decrypted(file)
         token_is_valid = collect_token_automatically(email, password)
         if(token_is_valid.check_valid_token()):
-            print("\x1b[04;01;32m" + "Set Token Is Valid" + '\x1b[0m\n')
-            print("\x1b[04;01;32m" + "Auto Token function Completed" +
-                  "\x1b[0m")
+            print("\x1b[04;01;32mSet Token Is Valid\x1b[0m\n")
+            print("\x1b[04;01;32mAuto Token function Completed\x1b[0m")
             return True
         print("\x1b[04;01;31mSet Token is not Valid\x1b[0m\n")
         return False
     except Exception:
         # something went wrong getting the token
-        print("\x1b[04;01;31m" + "Auto Token function Failed!" + "\x1b[0m")
+        print("\x1b[04;01;31mAuto Token function Failed!\x1b[0m")
         return 'Wrong user or password.'
 
 
@@ -210,10 +185,10 @@ def check_semi_automatic_collection(file='config.ini',
                                     email=None,
                                     password=None):
     """
-    Collect token but still demands some user input.
+    Coleta o token mas necessita do input do usuario.
 
-    Most part is done automatically, however user has to input facebook
-    email and password.
+    Maior parte da coleta é automatica, mas necessita
+    do email e senha do usuario como input.
     """
     os.system("clear")
     print('Email from your Facebook Account:')
@@ -223,76 +198,36 @@ def check_semi_automatic_collection(file='config.ini',
         password = getpass()
     update_token_file(file, **encrypt_user_password(email, password))
     try:
-        # tried to get the token
+        # tTenta pegar o token.
         token_is_valid = collect_token_automatically(email, password)
         if(token_is_valid.check_valid_token()):
-            print(
-                "\x1b[04;01;32m" +
-                "Set Token Is Valid" +
-                "\x1b[0m\n"
-            )
+            print("\x1b[04;01;32mSet Token Is Valid\x1b[0m\n")
         else:
             print("\x1b[04;01;31mSet Token is not Valid\x1b[0m\n")
-        print(
-            "\x1b[04;01;32m" +
-            "Auto Token function Completed" +
-            "\x1b[0m"
-        )
+        print("\x1b[04;01;32mAuto Token function Completed\x1b[0m")
         return True
     except Exception:
-        # something went wrong getting the token
-        print("\x1b[04;01;31m" + "Auto Token function Failed!" + "\x1b[0m")
+        # Alguma coisa deu errado na coleta.
+        print("\x1b[04;01;31mAuto Token function Failed!\x1b[0m")
         return False
-
-
-def check_manual_collection(file='config.ini'):
-    os.system("clear")
-    print(
-        "1. Login on your Facebook Account" +
-        "\n2. Click on \"Get token\" then \"Get User Access Token\"." +
-        "\n3. Then select \"manage_pages\",\"publish_pages\",\n" +
-        "\"pages_show_list\" and \"pages_manage_instant_articles\"." +
-        "\n4. Finish by clicking on \"Get Access Token\"." +
-        "\n\nNow paste your user Access Token here:"
-    )
-    sleep(3.0)
-    token_is_valid = collect_token_manually(file)
-    if token_is_valid.check_valid_token():
-        print("\x1b[04;01;32mSet Token Is Valid\x1b[0m\n")
-        print("\x1b[04;01;32mAuto Token function Completed\x1b[0m")
-        sleep(1.0)
-        return True
-    print("\x1b[04;01;31mSet Token is not Valid\x1b[0m\n")
-    print("\x1b[04;01;32mAuto Token function Completed\x1b[0m")
-    sleep(1.0)
-    return False
 
 
 def collect_token(file='config.ini'):
     """
-    Collect token manually if it's the first time.
+    Coleta token manualmente para quem é a primeira vez.
 
-    Or automatically if user has done the process at least once.
+    Ou automaticamente caso o usuario ja tenha o feito.
     """
     os.system("clear")
-    cond = "something"
 
     if retrieve_password_file(file):
         return check_automatic_collection(file)
     else:
-        while (cond != "Y" and cond != "N"):
-            print(
-                "Is it your first time getting User Access Token?" +
-                "\nType \"Y\" OR \"N\"")
-            cond = input().upper()
-        if(cond == "N"):
-            return check_semi_automatic_collection(file)
-        elif(cond == "Y"):
-            return check_manual_collection()
+        return check_semi_automatic_collection(file)
 
 
 def encrypt_user_password(user, password):
-    """Encrypts user name and password to store on config.ini."""
+    """Encripta o email e a senha e salva no config.ini."""
     key = Fernet.generate_key()
     cipher_suite = Fernet(key)
     user_byte = str.encode(user)
@@ -303,7 +238,7 @@ def encrypt_user_password(user, password):
 
 
 def decrypt_user_password(**kwargs):
-    """Decrypts user name and password given a user token."""
+    """Descriptografa o email e senha do config.ini para um dado token."""
     if {'user', 'password', 'utoken'} <= set(kwargs):
         try:
             kwargs['utoken'] = kwargs['utoken'][2:-1].encode()
@@ -319,7 +254,7 @@ def decrypt_user_password(**kwargs):
 
 
 def get_user_password_decrypted(file='config.ini'):
-    """Decrypts user name and password from config.ini."""
+    """Descriptografa o usuario e senha do config.ini."""
     try:
         return decrypt_user_password(**retrieve_password_file(file))
     except Exception as inst:

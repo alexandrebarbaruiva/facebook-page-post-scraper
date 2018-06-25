@@ -1,4 +1,4 @@
-﻿JsonDir = ./json/
+JsonDir = ./json/
 CsvDir = ./csv/
 UNAME := $(shell uname)
 face_file1 = venv/src/facebook-sdk/facebook/__init__.py
@@ -8,6 +8,8 @@ default: test
 
 travis:
 	@make style
+	@make clean
+	green3 tests/test_page_scraper_unit.py -vv -f
 
 test:
 ifeq ($(OS), Windows_NT)
@@ -23,7 +25,7 @@ data:
 
 run:
 ifeq ($(OS), Windows_NT)
-	python -m scraper.collector
+	python -m scraper\collector
 else
 	mkdir -p $(JsonDir)
 	mkdir -p $(CsvDir)
@@ -60,6 +62,13 @@ else
 	pycodestyle tests/. scraper/. server/. --ignore=E402,W504
 endif
 
+doc:
+ifeq ($(OS), Windows_NT)
+	pydocstyle tests\. scraper\. server\. --ignore=E402,W504
+else
+	pydocstyle tests/. scraper/. server/.
+endif
+
 cov:
 ifeq ($(OS), Windows_NT)
 	make clean
@@ -85,6 +94,8 @@ else
 	coverage html scraper/page_scraper.py scraper/token_manager.py
 	make style
 endif
+
+documentation:style doc
 
 cc:
 	radon cc scraper -s
@@ -130,6 +141,7 @@ else
 	rm -rf ./htmlcov
 	rm -f ./.coverage
 	rm -rf ./json/
+
 endif
 
 pylint:

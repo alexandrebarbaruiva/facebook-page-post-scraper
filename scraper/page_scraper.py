@@ -1,3 +1,5 @@
+"""@page_scraper Responsavel por definir Scraper e seus metodos."""
+
 import os
 import json
 import csv
@@ -5,15 +7,14 @@ import datetime
 from time import strftime, sleep
 import requests
 import facebook
-from .get_posts import process_posts
 import psycopg2
 
 
 class Scraper:
-    """
-    Scraper responsible for collecting posts from Facebook
-    """
+    """Scraper responsável por coletar posts do Facebook."""
+
     def __init__(self, token):
+        """Construtor da classe, recebe token do Facebook como parâmetro."""
         self.token = token
         self.status_code = 400
         self.current_data = ''
@@ -22,13 +23,11 @@ class Scraper:
         self.date_list = []
         if not os.path.exists('csv/'):
             os.makedirs('csv/')
-        if not os.path.exists('json/posts'):
-            os.makedirs('json/posts')
+        if not os.path.exists('json/'):
+            os.makedirs('json/')
 
     def check_valid_token(self):
-        """
-        Checks if token provided is valid
-        """
+        """Verifica se o token disponível é válido."""
         if (self.status_code is not 200):
             url = 'https://graph.facebook.com/v2.12/me?access_token=' \
                 + str(self.token)
@@ -36,27 +35,30 @@ class Scraper:
         return(self.status_code == 200)
 
     def set_page(self, page):
-        """
-        Set which page to scrape, useful for when having multiple pages
-        to scrape.
-        """
+        """Escolhe a pagina a ser raspada quando se há varias."""
         self.page = page
         self.file_name = (str(self.page))
 
     def get_current_page(self):
+        """Verifica se uma página foi selecionada."""
         try:
             return self.page
         except Exception:
             return 'Page not set'
 
     def valid_page(self, page=None):
+        """Verifica se uma página selecionada é válida."""
         if page is None:
             page = self.page
         valid_url = 'https://www.facebook.com/' + str(page)
-        valid_status_code = requests.get(valid_url).status_code
+        try:
+            valid_status_code = requests.get(valid_url).status_code
+        except Exception:
+            valid_status_code = 400
         return(valid_status_code == 200)
 
     def scrape_current_page(self, page=None, feed=False, query=''):
+        """Raspa dados de uma página selecionada."""
         if page is not None:
             self.set_page(page)
         graph = facebook.GraphAPI(access_token=self.token, version="2.12")
@@ -78,6 +80,7 @@ class Scraper:
             return 'Page not defined or bad query structure'
 
     def write_to_json(self, actor_name=None, file=None):
+        """Grava informações da página raspada em um arquivo JSON."""
         if file is None:
             file = self.file_name
         with open(
@@ -92,6 +95,7 @@ class Scraper:
         return True
 
     def get_page_name_and_like(self, page=None):
+        """Grava nome e quantidade de likes da página raspada."""
         self.scrape_current_page(page, query='name,fan_count')
         return([
             self.current_data['name'],
@@ -101,6 +105,7 @@ class Scraper:
         ])
 
     def write_to_csv(self, file_name='scraped'):
+        """Grava informações da página raspada em um arquivo CSV."""
         def dict_to_list():
             content = []
             for column in column_names:
@@ -166,15 +171,11 @@ class Scraper:
     def processFacebookPageFeedStatus(
         self, status, total_reaction, total_comments, total_shares
     ):
+        """
+        Responsável pelo processamento dos dados.
 
-        # The status is now a Python dictionary, so for top-level items,
-        # we can simply call the key.
-
-        # Additionally, some items may not always exist,
-        # so must check for existence first
-
-        # Time needs special care since a) it's in UTC and
-        # b) it's not easy to use in statistical programs.
+        Sendo eles o total de reações,comentários,compartilhamentos e posts.
+        """
         status_id = status['id']
 
         status_published = datetime.datetime.strptime(
@@ -182,11 +183,11 @@ class Scraper:
         status_published = status_published + \
             datetime.timedelta(hours=-3)  # Brasilia time
         status_published = status_published.strftime(
-            '%Y-%m-%d %H:%M:%S')
-        # Converting from the way facebook gives us
+            '%Y-%m-%d %H:%M:%S')  # Converting from the way facebook gives us
         # the created time to a more readable
 
         # Nested items require chaining dictionary keys.
+
         num_reactions = 0 if 'reactions' not in status else \
             status['reactions']['summary']['total_count']
         num_comments = 0 if 'comments' not in status else \
@@ -225,6 +226,7 @@ class Scraper:
         return (statuses, post_message)
 
     def get_reactions(self, page=None, since_date=None, until_date=None):
+        """Raspa informações da página referentes a reações."""
         if page is None:
             page = self.page
         if not self.valid_page(page):
@@ -311,6 +313,7 @@ class Scraper:
         self.current_data['average_comments'] = average_comments
 
     def write_actors_and_date_file(self):
+        """Escreve atores e datas no arquivo."""
         data = {'date': [], 'latest': strftime("%Y-%m-%d")}
         actors_dict = {'actors': self.actors_list}
         with open('json/' + 'actors.json', 'w', encoding='utf8') as actor_file:
@@ -336,15 +339,18 @@ class Scraper:
                 )
 
     def calldb(self, actor_name=None, file=None):
-        # conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+        """Responsável pela chamada do banco de dados."""
+        """Abre o arquivo JSON criado na função write_to_json"""
         if file is None:
             file = self.file_name
         with open(
             'json/' + strftime("%Y-%m-%d") + '/' + file + '.json',
             'r', encoding='utf8'
         ) as data_file:
+            """Carrega o arquivo para a variável data"""
             data = json.load(data_file)
         data['file_name'] = file
+        """Seta os parametros para conexão com o banco de dados"""
         params = {
             "host": "ec2-23-23-247-245.compute-1.amazonaws.com",
             "database": "dcut7901ku63t1",
@@ -352,7 +358,9 @@ class Scraper:
             "password": "e4f2c7675d8bacc541b8e0162d5e023c" +
             "63ce63df91bcfbeaf9f1a3e803800add"
         }
+        """Conecta com o banco"""
         conn = psycopg2.connect(**params)
+        """Seta o comando para inserir os dados do arquivo JSON no banco"""
         sql_cmd = """INSERT INTO Facebook(
             file_name, name, fan_count, id, date, since_date,
             until_date, total_reactions, total_comments, total_shares,
@@ -372,10 +380,12 @@ class Scraper:
                 CAST(src.MyJSON->>'average_reactions' AS INTEGER),
                 CAST(src.MyJSON->>'average_comments' AS INTEGER)
             FROM ( SELECT CAST(%s AS JSONB) AS MyJSON ) src"""
-        # Convert dictionary to native JSON data type
+
+        """Converte o dicionário em um JSON nativo"""
         data_str = json.dumps(data)
         sql_params = (data_str,)
         try:
+            """Executa o comando no banco com o JSON nativo"""
             cur = conn.cursor()
             cur.execute(sql_cmd, sql_params)
             conn.commit()

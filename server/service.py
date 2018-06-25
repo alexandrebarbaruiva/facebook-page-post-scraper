@@ -12,13 +12,16 @@ class DBService:
             "password": "e4f2c7675d8bacc541b8e0162d5e023c63ce" +
             "63df91bcfbeaf9f1a3e803800add"
         }
+        self.conn = psycopg2.connect(**self.params)
 
     def get_actors_from_db(self):
-        conn = psycopg2.connect(**self.params)
+        """
+        Coleta os atores no banco de dados para vizualiação web
+        """
         sql_cmd = "SELECT DISTINCT file_name FROM Facebook"
-        cur = conn.cursor()
+        cur = self.conn.cursor()
         cur.execute(sql_cmd)
-        conn.commit()
+        self.conn.commit()
         actors = {'actors': []}
         actors_tuple = cur.fetchall()
         actors_list = []
@@ -31,14 +34,17 @@ class DBService:
         return actors
 
     def get_basic_actor_data(self, actor, date):
+        """
+        Coleta no banco de dados as informações sobre o ator
+        de acordo com a data especificada
+        """
         actor_dict = {}
-        conn = psycopg2.connect(**self.params)
-        cur = conn.cursor()
+        cur = self.conn.cursor()
         cur.execute(
             """SELECT DISTINCT * FROM Facebook
                WHERE file_name=%s AND date=%s""", (str(actor), str(date))
         )
-        conn.commit()
+        self.conn.commit()
         actor_tuple = cur.fetchall()
         actor_dict['name'] = actor_tuple[0][0]
         actor_dict['fan_count'] = actor_tuple[0][1]
@@ -58,14 +64,16 @@ class DBService:
         return actor
 
     def get_all_date(self):
+        """
+        Coleta no banco de dados as datas para vizualização web
+        """
         date_dict = {'date': []}
-        conn = psycopg2.connect(**self.params)
-        cur = conn.cursor()
+        cur = self.conn.cursor()
         cur.execute("SELECT DISTINCT date FROM Facebook")
         date_tuple = cur.fetchall()
         cur.execute("SELECT MAX(date) FROM Facebook")
         latest = cur.fetchall()
-        conn.commit()
+        self.conn.commit()
         for row in date_tuple:
             date_dict['date'].append(row[0])
         date_dict['latest'] = latest[0][0]
