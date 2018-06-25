@@ -261,8 +261,8 @@ class Scraper:
                      "summary(total_count).as(angry)"
             id_statuses = str(self.page) + '/posts?' + after + \
                 '&limit=100' + since + until
-            id_posts = str(self.page) + '/posts?' + after_post + \
-                '&limit=100' + since + until
+            id_posts = str(self.page) + '/posts?' + after_post + '&limit=100' \
+            + since + until
             statuses, post_message = self.get_data(
                 id_statuses, id_posts, fields)
             for status in statuses['data']:

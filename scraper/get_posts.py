@@ -46,8 +46,8 @@ def get_reactions_info(post, status, message):
 def write_posts_to_csv():
     path = 'json/posts'
     columns = ['id', 'message', 'type', 'published', 'story',
-               'reactions', 'love', 'like', 'wow', 'sad', 'angry', 'haha',
-               'link_to_post']
+               'reactions', 'love', 'like', 'wow', 'sad', 'angry',
+               'haha', 'link_to_post']
     list_of_actors = os.listdir(path)
     time = strftime("%Y-%m-%d")
     for actor in list_of_actors:
@@ -64,7 +64,7 @@ def write_posts_to_csv():
 
 def dump_to_csv(path, list_of_content, columns):
     with open(path, 'w', encoding='utf8') as csv_file:
-        info = csv.writer(csv_file, delimiter=';')
+        info = csv.writer(csv_file)
         info.writerow(columns)
         for row in list_of_content:
             info.writerow(row)
