@@ -6,6 +6,7 @@ from scraper.page_scraper import Scraper
 from scraper.token_manager import \
     retrieve_token_file, retrieve_password_file, \
     collect_token_automatically, get_user_password_decrypted
+from platform import system
 
 
 class TestPageScraperBasics(unittest.TestCase):
@@ -158,7 +159,10 @@ class TestPageScraping(unittest.TestCase):
             pages = 0
             for row in reader:
                 pages += 1
-            self.assertEqual(pages, 1)
+            if system() == 'Linux' or system() == 'Darwin':
+                self.assertEqual(pages, 1)
+            elif system() == 'Windows':
+                self.assertEqual(pages, 3)
         # Deletar arqquivo na pasta
         try:
             os.remove(
@@ -195,7 +199,10 @@ class TestPageScraping(unittest.TestCase):
             pages = 0
             for row in reader:
                 pages += 1
-            self.assertEqual(pages, 2)
+            if system() == 'Linux' or system() == 'Darwin':
+                self.assertEqual(pages, 2)
+            elif system() == 'Windows':
+                self.assertEqual(pages, 5)
         # Deletar arqquivo na pasta
         try:
             os.remove(
@@ -222,7 +229,10 @@ class TestPageScraping(unittest.TestCase):
             pages = 0
             for row in reader:
                 pages += 1
-            self.assertEqual(pages, 1)
+            if system() == 'Linux' or system() == 'Darwin':
+                self.assertEqual(pages, 1)
+            elif system() == 'Windows':
+                self.assertEqual(pages, 3)
         try:
             os.remove(
                 str(os.getcwd()) + '/csv/react_' + self.day_scraped + '.csv'
@@ -258,7 +268,10 @@ class TestPageScraping(unittest.TestCase):
             pages = 0
             for row in reader:
                 pages += 1
-            self.assertEqual(pages, 2)
+            if system() == 'Linux' or system() == 'Darwin':
+                self.assertEqual(pages, 2)
+            elif system() == 'Windows':
+                self.assertEqual(pages, 5)
         # Deletar arqquivo na pasta
         try:
             os.remove(
