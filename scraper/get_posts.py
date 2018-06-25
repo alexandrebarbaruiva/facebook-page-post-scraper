@@ -5,6 +5,7 @@ import json
 
 
 def process_posts(page, status, message, status_published):
+    """Escreve os posts de forma clara e concisa no JSON"""
     post = pretty_post(status, message)
     post = get_reactions_info(post, status, message)
     post['published'] = status_published
@@ -24,6 +25,7 @@ def process_posts(page, status, message, status_published):
 
 
 def pretty_post(status, message):
+    """Transforma o dicionariario em algo mais legível"""
     post = {}
     post['id'] = status['id']
     post['type'] = status['type']
@@ -35,6 +37,7 @@ def pretty_post(status, message):
 
 
 def get_reactions_info(post, status, message):
+    """Pega as reações específicas como likes, sad dentre outras"""
     post['story'] = message['story'] if 'story' in message.keys() else ''
     reactions = ['like', 'wow', 'sad', 'love', 'haha', 'angry',
                  'reactions', 'comments']
@@ -44,6 +47,9 @@ def get_reactions_info(post, status, message):
 
 
 def write_posts_to_csv():
+    """
+    Escreve os posts no arquivo CSV conforme solicitado pelo cliente
+    """
     path = 'json/posts'
     columns = ['id', 'message', 'type', 'published', 'story',
                'reactions', 'love', 'like', 'wow', 'sad', 'angry',
@@ -63,6 +69,7 @@ def write_posts_to_csv():
 
 
 def dump_to_csv(path, list_of_content, columns):
+    """Joga toda info coletada no CSV"""
     with open(path, 'w', encoding='utf8') as csv_file:
         info = csv.writer(csv_file)
         info.writerow(columns)
@@ -71,6 +78,7 @@ def dump_to_csv(path, list_of_content, columns):
 
 
 def get_info(content, keys):
+    """Função auxiliar de write_posts_to_csv"""
     list_of_content = []
     for key in keys:
         list_of_content.append(content[key])
@@ -78,6 +86,7 @@ def get_info(content, keys):
 
 
 def write_comments_to_csv():
+    """Escreve os comentários no arquivo CSV"""
     path = 'json/posts'
     list_of_actors = os.listdir(path)
     time = strftime("%Y-%m-%d")
@@ -100,6 +109,7 @@ def write_comments_to_csv():
 
 
 def dict_to_list(dictionary, list_of_comments):
+    """Transforma um dicionário numa lista"""
     for comment in dictionary.values():
         list_of_comments.append(comment)
     return list_of_comments

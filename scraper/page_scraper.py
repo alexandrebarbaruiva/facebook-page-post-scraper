@@ -202,6 +202,7 @@ class Scraper:
             num_shares, total_reaction, total_comments, total_shares
 
     def get_data(self, id_statuses, id_posts, fields):
+        """Pega as informações brutas retornadas pela GraphAPI"""
         graph = facebook.GraphAPI(access_token=self.token, version="2.12")
         try:
             statuses = graph.get_object(
