@@ -49,7 +49,7 @@ endif
 ps:
 ifeq ($(OS), Windows_NT)
 	make clean
-	green3 tests\test_page_scraper.py -vv
+	green3 tests\test_page_scraper_inte.py -vv
 else
 	make clean
 	green3 tests/test_page_scraper.py -vvv -f
@@ -57,7 +57,7 @@ endif
 
 style:
 ifeq ($(OS), Windows_NT)
-	pycodestyle tests\. scraper\. server/. --ignore=E402,W504
+	pycodestyle tests\. scraper\. server\. --ignore=E402,W504
 else
 	pycodestyle tests/. scraper/. server/. --ignore=E402,W504
 endif
@@ -132,10 +132,10 @@ json:
 .PHONY: clean
 clean:
 ifeq ($(OS), Windows_NT)
-	rm -f .\csv\*.csv
-	rm -rf .\htmlcov
-	rm -f .\.coverage
-	rm -f .\json
+	rmdir .\json /S /Q
+	rmdir .\csv /S /Q
+	rmdir .\htmlcov /S /Q
+	rmdir .\.coverage /S /Q
 else
 	rm -f $(CsvDir)*.csv
 	rm -rf ./htmlcov

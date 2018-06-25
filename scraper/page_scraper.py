@@ -249,6 +249,7 @@ class Scraper:
             != '' else ''
         until = "&until={}".format(until_date) if until_date \
             != '' else ''
+        time_limit = since + until
         while has_next_page:
             after = '' if after == '' else "&after={}".format(after)
             fields = "fields=message,created_time,type,id," + \
@@ -263,7 +264,7 @@ class Scraper:
                      ".as(haha),reactions.type(ANGRY).limit(0)." + \
                      "summary(total_count).as(angry)"
             id_statuses = str(self.page) + '/posts?' + after + \
-                '&limit=100' + since + until
+                '&limit=100' + time_limit
             id_posts = str(self.page) + '/posts?' + after_post + '&limit=100' \
                 + since + until
             statuses, post_message = self.get_data(
