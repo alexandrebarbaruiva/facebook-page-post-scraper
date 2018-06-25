@@ -104,7 +104,7 @@ o seguinte comando
 make style
 ```
 
-Importante usar este comando antes de mandar uma PR para garantir código mais legível..
+Importante usar este comando antes de mandar uma PR para garantir código mais legível.
 
 ## Heroku
 
@@ -182,7 +182,7 @@ python heroku_clock.py
 
 ## BuildPacks
 
-Os buildpacks são responsáveis ​​por transformar o código implantado
+Os buildpacks são responsáveis por transformar o código implantado
 no Heroku, que pode ser executado em um dyno.
 Os buildpacks são compostos por um conjunto de scripts e,
 dependendo da linguagem de programação.
@@ -190,7 +190,7 @@ Para adicionar um BuildPack segue os passos:
 Settings -> Add buildpack
 
 Segue aqui o [link do BuildPack](https://github.com/jontewks/puppeteer-heroku-buildpack)
-da depedência(chromemium-browser) projeto necessita
+da dependência (chromium-browser) projeto necessita
 
 ## Um projeto de
 
@@ -205,6 +205,16 @@ Universidade de Brasília
 [resocie]:./.github/Images/resocie.jpg
 
 Resocie : Repensando as Relações entre Sociedade e Estado
+
+O projeto consiste na coleta sistêmica de informações quantitativas da
+plataforma Facebook das páginas cadastradas no arquivo de entidades.csv
+com o objetivo de subsidiar a análise comportamental política dos candidatos
+durante o período eletorial brasileiro 2018.
+Além do objetivo principal da coleta sistêmica das informações, o projeto
+tem também por intuito servir de aprendizado de trabalho em time, de
+tecnologias utilizadas e integração social entre os alunos da disciplina
+Engenharia de Software do Departamento de Ciência da Computação da UnB
+do 1º semestre de 2018.
 
 ## Showcases
 
