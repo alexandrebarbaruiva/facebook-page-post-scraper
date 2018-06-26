@@ -169,6 +169,21 @@ CREATE TABLE Nome_da_tabela(nome_do_campo tipo_do_campo, ...);
 A tabela criada deve ser a utilizada no comando executado na função calldb, portanto,
 ela deve conter o campos que são utilizados para inserir dados na tabela.
 
+## API Rest
+
+Para exportação dos dados pela web utilizamos uma API Rest e um dyno web no 
+ heroku. A API Rest foi implementada em server/rest.py, que disponibiliza os 
+ dados em formato JSON de acordo com os endpoints especificados.
+Para visualizar os endpoints, basta acessar a página inicial:
+```
+https://<nome-do-app>.herokuapp.com/
+```
+Também é possível rodar localmente, utilizando o Flask, basta usar:
+```
+python3 server/rest.py
+```
+Para se informar mais sobre [O que é uma API Rest](https://github.com/unb-cic-esw/Desenvolvendo-Software/wiki/O-que-%C3%A9-uma-API-REST-e-como-implementar-uma%3F).
+
 ## APScheduled
 
 É uma biblioteca em python que permite realizar agendamento de tarefas (jobs). ([APScheduled](http://apscheduler.readthedocs.io/en/latest/modules/triggers/cron.html)).
