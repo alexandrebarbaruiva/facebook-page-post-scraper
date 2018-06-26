@@ -1,14 +1,14 @@
 ---
 name: Bug report
 about: Crie um report para nos ajudar a melhorar
-
+required: 1, 2 e 3
 ---
 
-## Descreva o bug
+## 1. Descreva o bug
 
 Uma descrição clara e concisa sobre o que é o bug.
 
-## Para reproduzir
+## 2. Para reproduzir
 
 Passos para reproduzir o comportamento:
 
@@ -17,7 +17,7 @@ Passos para reproduzir o comportamento:
 3. Desça até '....'
 4. Veja o erro
 
-## Comportamento esperado
+## 3. Comportamento esperado
 
 Uma descrição clara e concisa sobre o que você esperava que acontecesse.
 
@@ -31,6 +31,6 @@ Se aplicável, adicione capturas de tela para ajudar a explicar seu problema.
 * Browser [e.g. chrome, safari]
 * Version [e.g. 22]
 
-## Additional context
+## Contexto adicional
 
 Adicione qualquer outro contexto sobre o problema.
