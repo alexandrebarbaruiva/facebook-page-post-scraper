@@ -27,8 +27,6 @@ run:
 ifeq ($(OS), Windows_NT)
 	python -m scraper.collector
 else
-	mkdir -p $(JsonDir)
-	mkdir -p $(CsvDir)
 	python3 -m scraper.collector
 endif
 
