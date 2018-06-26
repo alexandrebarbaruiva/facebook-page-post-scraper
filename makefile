@@ -1,4 +1,4 @@
-﻿nDir = ./json/
+﻿JsonDir = ./json/
 CsvDir = ./csv/
 UNAME := $(shell uname)
 face_file1 = venv/src/facebook-sdk/facebook/__init__.py
