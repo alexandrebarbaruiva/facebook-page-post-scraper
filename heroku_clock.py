@@ -20,7 +20,7 @@ def job_function():
 	print("Fim do coleta de dados")
 
 
-sched.add_job(job_function,'cron', day_of_week='mon-sun', hour=11, minute=2)
+sched.add_job(job_function,'cron', day_of_week='mon-sun', hour=15, minute=23)
 """ Configuração básica dos dias da semana e do horário que a função será executada """
 
 sched.start()
