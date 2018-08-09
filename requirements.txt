@@ -2,14 +2,14 @@ psycopg2-binary==2.7.5
 green==2.12.1
 pytest-cov==2.5.1
 pycodestyle==2.4.0
-sphinx==1.7.5
+sphinx==1.7.6
 -e git+https://github.com/mobolic/facebook-sdk.git#egg=facebook-sdk
 splinter==0.8.0
-cryptography==2.2.2
+cryptography==2.3
 radon==2.2.0
-pylint==1.9.2
+pylint==2.1.1
 flask==1.0.2
 pydocstyle==2.1.1
 APScheduler==3.5.1
 gunicorn==19.8.1
-selenium==3.13.0
+selenium==3.14.0
