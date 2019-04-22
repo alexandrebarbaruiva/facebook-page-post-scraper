@@ -5,7 +5,7 @@ pycodestyle==2.5.0
 sphinx==2.0.1
 -e git+https://github.com/mobolic/facebook-sdk.git#egg=facebook-sdk
 splinter==0.10.0
-cryptography==2.4.2
+cryptography==2.6.1
 radon==2.4.0
 pylint==2.2.2
 flask==1.0.2
