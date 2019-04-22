@@ -2,7 +2,7 @@ psycopg2-binary==2.8.2
 green==2.15.0
 pytest-cov==2.6.1
 pycodestyle==2.5.0
-sphinx==1.8.3
+sphinx==2.0.1
 -e git+https://github.com/mobolic/facebook-sdk.git#egg=facebook-sdk
 splinter==0.10.0
 cryptography==2.4.2
