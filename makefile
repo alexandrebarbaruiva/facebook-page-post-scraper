@@ -55,9 +55,9 @@ endif
 
 style:
 ifeq ($(OS), Windows_NT)
-	pycodestyle tests\. scraper\. server\. --ignore=E402,W504
+	pycodestyle tests\. scraper\. server\. --ignore=E402,W504,E127
 else
-	pycodestyle tests/. scraper/. server/. --ignore=E402,W504
+	pycodestyle tests/. scraper/. server/. --ignore=E402,W504,E127
 endif
 
 doc:
@@ -145,7 +145,6 @@ endif
 pylint:
 	pylint -j 2 scraper/page_scraper.py scraper/token_manager.py --reports=y
 
-# Call for *.json clean up
 .PHONY: createconfig
 createconfig:
 	echo '[DEFAULT]\ntoken = YOURTOKENHERE' >./scraper/config.ini
@@ -164,7 +163,7 @@ ifeq ($(OS), Windows_NT)
 	@echo  make ps..........= Runs only the tests on page scraping
 	@echo  make run.........= Collects all pages in entidades.csv
 	@echo  make install.....= Installs the requirements necessary for this project
-	@echo  make style.......= Checks if your code is our pattern of coding for this
+	@echo  make style.......= Checks if your code is using our pattern of coding for this
 	@echo                     project
 	@echo  make json........= Creates a json dir and moves all .json files there
 	@echo  make cov.........= Checks tests coverage

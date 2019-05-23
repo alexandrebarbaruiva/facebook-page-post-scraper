@@ -13,3 +13,4 @@ pydocstyle==3.0.0
 APScheduler==3.5.3
 gunicorn==19.9.0
 selenium==3.141.0
+invoke

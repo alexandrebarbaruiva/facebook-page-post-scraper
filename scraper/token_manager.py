@@ -175,9 +175,10 @@ def check_automatic_collection(file='config.ini'):
             return True
         print("\x1b[04;01;31mSet Token is not Valid\x1b[0m\n")
         return False
-    except Exception:
+    except Exception as e:
         # something went wrong getting the token
         print("\x1b[04;01;31mAuto Token function Failed!\x1b[0m")
+        print("\x1b[04;01;31mException:", e, '\x1b[0m')
         return 'Wrong user or password.'
 
 
@@ -206,9 +207,10 @@ def check_semi_automatic_collection(file='config.ini',
             print("\x1b[04;01;31mSet Token is not Valid\x1b[0m\n")
         print("\x1b[04;01;32mAuto Token function Completed\x1b[0m")
         return True
-    except Exception:
+    except Exception as e:
         # Alguma coisa deu errado na coleta.
         print("\x1b[04;01;31mAuto Token function Failed!\x1b[0m")
+        print("\x1b[04;01;31mException:", e, '\x1b[0m')
         return False
 
 

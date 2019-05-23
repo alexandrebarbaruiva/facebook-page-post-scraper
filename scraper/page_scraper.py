@@ -31,9 +31,9 @@ class Scraper:
         """Verifica se o token disponível é válido."""
         if (self.status_code is not 200):
             url = 'https://graph.facebook.com/v2.12/me?access_token=' \
-                + str(self.token)
+                  + str(self.token)
             self.status_code = requests.get(url).status_code
-        return(self.status_code == 200)
+        return (self.status_code == 200)
 
     def set_page(self, page):
         """Escolhe a pagina a ser raspada quando se há varias."""
@@ -56,7 +56,7 @@ class Scraper:
             valid_status_code = requests.get(valid_url).status_code
         except Exception:
             valid_status_code = 400
-        return(valid_status_code == 200)
+        return (valid_status_code == 200)
 
     def scrape_current_page(self, page=None, feed=False, query=''):
         """Raspa dados de uma página selecionada."""
@@ -85,12 +85,12 @@ class Scraper:
         if file is None:
             file = self.file_name
         with open(
-            'json/' + strftime("%Y-%m-%d") + '/' + file + '.json',
-            'w', encoding='utf8'
+                'json/' + strftime("%Y-%m-%d") + '/' + file + '.json',
+                'w', encoding='utf8'
         ) as data_file:
-                data_file.write(
-                    json.dumps(self.current_data, indent=2, ensure_ascii=False)
-                )  # pretty json
+            data_file.write(
+                json.dumps(self.current_data, indent=2, ensure_ascii=False)
+            )  # pretty json
         if actor_name is not None:
             self.actors_list.append(actor_name)
         return True
@@ -98,7 +98,7 @@ class Scraper:
     def get_page_name_and_like(self, page=None):
         """Grava nome e quantidade de likes da página raspada."""
         self.scrape_current_page(page, query='name,fan_count')
-        return([
+        return ([
             self.current_data['name'],
             # self.current_data['fan_count'],
             # self.current_data['id'],
@@ -107,11 +107,13 @@ class Scraper:
 
     def write_to_csv(self, file_name='scraped'):
         """Grava informações da página raspada em um arquivo CSV."""
+
         def dict_to_list():
             content = []
             for column in column_names:
                 content.append(str(self.current_data[column]))
             return content
+
         try:
             column_names = self.current_data.keys()
             if set(column_names) == {
@@ -127,9 +129,9 @@ class Scraper:
                     'average_comments'
                 ]
             elif set(column_names) == {
-                    'name', 'id', 'date', 'fan_count', 'total_posts',
-                    'total_reactions', 'total_comments', 'total_shares',
-                    'average_reactions', 'average_comments'
+                'name', 'id', 'date', 'fan_count', 'total_posts',
+                'total_reactions', 'total_comments', 'total_shares',
+                'average_reactions', 'average_comments'
             }:
                 column_names = [
                     'name', 'id', 'date', 'fan_count', 'total_posts',
@@ -169,8 +171,8 @@ class Scraper:
             info.writerow(content)
         return True
 
-    def processFacebookPageFeedStatus(
-        self, status, total_reaction, total_comments, total_shares
+    def process_facebook_page_feed_status(
+            self, status, total_reaction, total_comments, total_shares
     ):
         """
         Responsável pelo processamento dos dados.
@@ -181,8 +183,8 @@ class Scraper:
 
         status_published = datetime.datetime.strptime(
             status['created_time'], '%Y-%m-%dT%H:%M:%S+0000')
-        status_published = status_published + \
-            datetime.timedelta(hours=-3)  # Brasilia time
+        # Heroku is 3 hours ahead of Brasilia time
+        status_published = status_published + datetime.timedelta(hours=-3)
         status_published = status_published.strftime(
             '%Y-%m-%d %H:%M:%S')  # Converting from the way facebook gives us
         # the created time to a more readable
@@ -199,7 +201,7 @@ class Scraper:
         total_shares = total_shares + num_shares
 
         return status_id, status_published, num_reactions, num_comments, \
-            num_shares, total_reaction, total_comments, total_shares
+               num_shares, total_reaction, total_comments, total_shares
 
     def get_data(self, id_statuses, id_posts, fields):
         """Pega as informações brutas retornadas pela GraphAPI"""
@@ -247,9 +249,9 @@ class Scraper:
         after = ''
         after_post = ''
         since = "&since={}".format(since_date) if since_date \
-            != '' else ''
+                                                  != '' else ''
         until = "&until={}".format(until_date) if until_date \
-            != '' else ''
+                                                  != '' else ''
         time_limit = since + until
         while has_next_page:
             after = '' if after == '' else "&after={}".format(after)
@@ -265,15 +267,15 @@ class Scraper:
                      ".as(haha),reactions.type(ANGRY).limit(0)." + \
                      "summary(total_count).as(angry)"
             id_statuses = str(self.page) + '/posts?' + after + \
-                '&limit=100' + time_limit
+                          '&limit=100' + time_limit
             id_posts = str(self.page) + '/posts?' + after_post + '&limit=100' \
-                + since + until
+                       + since + until
             statuses, post_message = self.get_data(
                 id_statuses, id_posts, fields)
             for status in statuses['data']:
                 # Ensure it is a status with the expected metadata
                 if 'reactions' in status:
-                    status_data = self.processFacebookPageFeedStatus(
+                    status_data = self.process_facebook_page_feed_status(
                         status, total_reaction, total_comments, total_shares
                     )
                     total_reaction = status_data[5]
@@ -341,14 +343,14 @@ class Scraper:
                     json.dumps(data, indent=2, ensure_ascii=False)
                 )
 
-    def calldb(self, actor_name=None, file=None):
+    def call_db(self, actor_name=None, file=None):
         """Responsável pela chamada do banco de dados."""
         """Abre o arquivo JSON criado na função write_to_json"""
         if file is None:
             file = self.file_name
         with open(
-            'json/' + strftime("%Y-%m-%d") + '/' + file + '.json',
-            'r', encoding='utf8'
+                'json/' + strftime("%Y-%m-%d") + '/' + file + '.json',
+                'r', encoding='utf8'
         ) as data_file:
             """Carrega o arquivo para a variável data"""
             data = json.load(data_file)
@@ -359,7 +361,7 @@ class Scraper:
             "database": "dcut7901ku63t1",
             "user": "outvrxddgqtmwt",
             "password": "e4f2c7675d8bacc541b8e0162d5e023c" +
-            "63ce63df91bcfbeaf9f1a3e803800add"
+                        "63ce63df91bcfbeaf9f1a3e803800add"
         }
         """Conecta com o banco"""
         conn = psycopg2.connect(**params)

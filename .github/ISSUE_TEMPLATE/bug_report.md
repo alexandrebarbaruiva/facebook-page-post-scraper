@@ -1,36 +1,36 @@
 ---
 name: Bug report
-about: Crie um report para nos ajudar a melhorar
-required: 1, 2 e 3
+about: Create a report to help us improve
+required: 1, 2 and 3
 ---
 
-## 1. Descreva o bug
+## 1. Description of the bug
 
-Uma descrição clara e concisa sobre o que é o bug.
+A brief and concise description about the bug.
 
-## 2. Para reproduzir
+## 2. Reproduction
 
-Passos para reproduzir o comportamento:
+Steps to reproduce the behavior:
 
-1. Vá para '...'
-2. Clique em '....'
-3. Desça até '....'
-4. Veja o erro
+1. Go to '...'
+2. Click on '....'
+3. Scroll to '....'
+4. See the error
 
-## 3. Comportamento esperado
+## 3. Expected behavior
 
-Uma descrição clara e concisa sobre o que você esperava que acontecesse.
+A brief and concise description about what you expected to happen.
 
-## Capturas de tela
+## Screenshot
 
-Se aplicável, adicione capturas de tela para ajudar a explicar seu problema.
+If applicable, add screenshots to help explain your problem.
 
-## Equipamento usado
+## Equipment used
 
 * OS: [e.g. iOS]
 * Browser [e.g. chrome, safari]
 * Version [e.g. 22]
 
-## Contexto adicional
+## Comments
 
-Adicione qualquer outro contexto sobre o problema.
+Anything else you'd like to add?
