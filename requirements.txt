@@ -7,7 +7,7 @@ sphinx==2.1.1
 splinter==0.10.0
 cryptography==2.7
 radon==3.0.3
-pylint==2.2.2
+pylint==2.3.1
 flask==1.0.2
 pydocstyle==3.0.0
 APScheduler==3.5.3
